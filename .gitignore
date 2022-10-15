@@ -1,6 +1,8 @@
 # Ignore the built documentation
 doc/html/
 
+# Ignore VSCode config files
+.vscode/
 
 # ==============================================================================
 # Standard C++ gitignore file from GitHub
