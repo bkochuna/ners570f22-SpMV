@@ -36,7 +36,7 @@ namespace SpMV
       SparseMatrix_JDS(const size_t nrows, const size_t ncols) : SparseMatrix<fp_type>::SparseMatrix(nrows,ncols){}
 
       /**
-       * @brief Assemble the COO data structures
+       * @brief Assemble the JDS data structures
        *
        */
       void assembleStorage();
