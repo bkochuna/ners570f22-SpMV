@@ -60,6 +60,7 @@ namespace SpMV
         
         //return new SparseMatrix(this->_ncols,this->_nrows);
     }
+    
 }
 
 #endif
