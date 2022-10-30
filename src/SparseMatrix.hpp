@@ -2,10 +2,13 @@
 #define _SPMV570_
 
 #include <iostream>
+#include <fstream>
 #include <cstddef>
 #include <cassert>
 #include <map>
 #include <utility>
+#include <string>
+#include <sstream>
 
 using namespace std;
 
@@ -29,6 +32,7 @@ namespace SpMV
 
     public:
         SparseMatrix(const int nrows, const int ncols);
+        void importMatrix(char* fileName);
         virtual ~SparseMatrix();
 
         void setCoefficient(const size_t row, const size_t col, const fp_type aij);
@@ -69,6 +73,62 @@ namespace SpMV
         this->_buildCoeff[ make_pair(row,col) ] = aij; 
         this->_nnz = this->_buildCoeff.size();
         assert(this->_state == building);
+    }
+
+    //Function to import matrix
+    //Function will overwrite all existing data and build with all coefficients in the file
+    template <class fp_type>
+    void SparseMatrix<fp_type>::importMatrix(char* fileName)
+    {
+        //If matrix has been initialized/is building, notify user that their data will be ovewrit
+        if(this->_state != undefined){
+            cout<<"This matrix is already intialized/building"<<endl;
+            cout<<"This import will overwrite all existing data in the matrix"<<endl;
+        }
+        this->_buildCoeff.clear();
+
+        //Opens file and checks if file is available, otherwise kills the program
+        ifstream fileStream;
+        fileStream.open(fileName);
+        if(fileStream.fail()){
+            cout<<"File "<<fileName<<" cannot be found"<<endl;
+            assert(false);
+            return;
+        }
+
+        //Getting matrix metadata to initialize the matrix
+        int numHolder = 0;
+        string lineHolder;
+        while(getline(fileStream,lineHolder)){
+            if(lineHolder.at(0)!='%'){
+                //There has to be a better way to do this
+                stringstream lineStream(lineHolder);
+                string sublineHolder;
+                lineStream>>sublineHolder;
+                this->_nrows = stoi(sublineHolder);
+                lineStream>>sublineHolder;
+                this->_ncols = stoi(sublineHolder);
+                lineStream>>sublineHolder;
+                numHolder = stoi(sublineHolder);
+                break;
+            }
+        }
+
+        //Reads in the data entry by entry and builds the coefficient
+        string entryHolder = "";
+        for(int i = 0; i<numHolder; ++i){
+            fileStream>>entryHolder;
+            size_t rowHolder = (size_t) stoi(entryHolder)-1;
+            fileStream>>entryHolder;
+            size_t colHolder = (size_t) stoi(entryHolder)-1;
+            fileStream>>entryHolder;
+            fp_type dataHolder = (fp_type) stod(entryHolder);
+            setCoefficient(rowHolder, colHolder, dataHolder);
+        }
+
+        //Sets matrix state to building
+        this->_state = building;
+
     }
 
     template <class fp_type>
