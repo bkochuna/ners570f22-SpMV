@@ -1,0 +1,38 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../src/SparseMatrix.hpp
+iostream
+-
+fstream
+-
+cstddef
+-
+cassert
+-
+map
+-
+utility
+-
+string
+-
+sstream
+-
+
+../src/SparseMatrix_COO.hpp
+SparseMatrix.hpp
+../src/SparseMatrix.hpp
+
+/mnt/c/users/colto/NERS570/homework/homework4/ners570f22-SpMV/examples/example_main.cpp
+iostream
+-
+SparseMatrix.hpp
+/mnt/c/users/colto/NERS570/homework/homework4/ners570f22-SpMV/examples/SparseMatrix.hpp
+SparseMatrix_COO.hpp
+/mnt/c/users/colto/NERS570/homework/homework4/ners570f22-SpMV/examples/SparseMatrix_COO.hpp
+

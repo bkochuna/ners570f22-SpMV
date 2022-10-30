@@ -1,0 +1,3 @@
+/mnt/c/users/colto/NERS570/homework/homework4/ners570f22-SpMV/examples/CMakeFiles/rebuild_cache.dir
+/mnt/c/users/colto/NERS570/homework/homework4/ners570f22-SpMV/examples/CMakeFiles/edit_cache.dir
+/mnt/c/users/colto/NERS570/homework/homework4/ners570f22-SpMV/examples/CMakeFiles/example_main.dir
