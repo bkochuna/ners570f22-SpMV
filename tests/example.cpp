@@ -4,6 +4,15 @@
 // Include code needed to test
 #include <vector>
 
+// Tests both double and float implementation
+#ifdef TEST_DOUBLE
+using fp_type = double;
+#endif
+
+#ifdef TEST_FLOAT
+using fp_type = float;
+#endif
+
 /* Here are some examples of unit tests for std::vector, the code being tested
  * is included as well as the unit testing framework file. The unit testing
  * framework defines all the macros and functions you'll need. Define a unit
@@ -25,8 +34,8 @@
 // Create a unit test
 TEST(vectorTest) {
   // Initialize variables for testing
-  std::vector<double> a = {1, 2, 3};
-  std::vector<double> b = {3, 2, 3.00001};
+  std::vector<fp_type> a = {1, 2, 3};
+  std::vector<fp_type> b = {3, 2, 3.00001};
 
   // Assertions for unit testing
   ASSERT_NOT_EQUAL(a[0], b[0]);            // 1 != 3
@@ -37,8 +46,8 @@ TEST(vectorTest) {
 // Create a unit test
 TEST(vectorSquence) {
   // Initialize variables for testing
-  std::vector<int> a = {1, 2, 3};
-  std::vector<int> b = {1, 2, 3};
+  std::vector<fp_type> a = {1, 2, 3};
+  std::vector<fp_type> b = {1, 2, 3};
 
   // Assertions
   ASSERT_SEQUENCE_EQUAL(a, b);
@@ -47,7 +56,7 @@ TEST(vectorSquence) {
 // Create a unit test
 TEST(vectorEmpty) {
   // Initialize testing data
-  std::vector<int> a;
+  std::vector<fp_type> a;
 
   // Assert vector is empty
   ASSERT_TRUE(a.empty());
