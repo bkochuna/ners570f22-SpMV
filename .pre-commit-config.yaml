@@ -24,7 +24,7 @@ repos:
     rev: v14.0.6
     hooks:
     -   id: clang-format
--   repo: https://github.com/pocc/pre-commit-hooks
-    rev: v1.3.5
-    hooks:
-    - id: clang-tidy
+# -   repo: https://github.com/pocc/pre-commit-hooks
+#     rev: v1.3.5
+#     hooks:
+#     - id: clang-tidy
