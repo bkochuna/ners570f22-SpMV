@@ -6,6 +6,7 @@ All PR's to this repo must pass formatting and linting checks before they can be
 To have these checks performed locally on your commits, run the following commands:
 
 ```bash
+pip install pre-commit
 pre-commit install
 ```
 
