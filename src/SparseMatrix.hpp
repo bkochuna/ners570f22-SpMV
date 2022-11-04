@@ -33,7 +33,13 @@ namespace SpMV {
        * @brief Convert the assembled matrix data back to the format used for building
        *
        */
-      void _unAssemble();
+      virtual void _unAssemble() = 0;
+
+      /**
+       * @brief Clear the the unassembled matrix data, should only be called at the end of the matrix assembly
+       *
+       */
+      virtual inline void _clearBuildCoeff() { this->_buildCoeff.clear(); }
 
     public:
       /**
@@ -98,6 +104,14 @@ namespace SpMV {
        *
        */
       virtual void getFormat();
+
+      /**
+       * @brief Compute the matrix vector product y = A*x
+       *
+       * @param x Vector x
+       * @param y Vector y
+       */
+      virtual void computeMatVecProduct(const fp_type &x, fp_type &y) = 0;
   };
 
   template <class fp_type>

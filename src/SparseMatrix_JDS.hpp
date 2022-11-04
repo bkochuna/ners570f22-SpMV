@@ -11,6 +11,7 @@ Jagged Diagonal Sparse Matrix (JDS) implementation
 // =============================================================================
 // Standard Library Includes
 // =============================================================================
+#include <algorithm>
 #include <vector>
 
 // =============================================================================
@@ -45,7 +46,21 @@ namespace SpMV {
        */
       /*Some return type*/ void getFormat(/*some args*/);
 
+      /**
+       * @brief Compute the product of this matrix and a vector (y = Ax)
+       *
+       * @note The contents of y are overwritten by this operation
+       *
+       * @param x Array to multiply with
+       * @param y Array to store result in
+       */
       void computeMatVecProduct(const fp_type &x, fp_type &y);
+
+      /**
+       * @brief Convert the assembled matrix data back to the format used for building
+       *
+       */
+      void _unAssemble();
 
     private:
       size_t *_colIndices;          ///< Column indices
@@ -62,11 +77,14 @@ namespace SpMV {
   template <class fp_type>
   void SparseMatrix_JDS<fp_type>::assembleStorage() {
 
+    assert(this->_state == building);
+
     // I don't know anything about the order in which the entries will come from the map, so I will first create some 2d
     // arrays (vectors of vectors) to store the column index and values in so that we can later sort the entries in each
     // row
-    colIndMatrix = std::vector<std::vector<int> >;
-    valMatrix = std::vector<std::vector<fp_type> >;
+    std::vector<std::vector<int> > colIndMatrix(this->_nrows);
+    std::vector<std::vector<fp_type> > valMatrix(this->_nrows);
+    std::vector<size_t> rowSizes(this->_nrows);
 
     // For now, we can populate the entries of the matrices in whatever order they come out of the map, and keep track
     // of the row sizes
@@ -81,8 +99,8 @@ namespace SpMV {
     }
 
     // Then we want to get the rowPerm vector, a.k.a a the row indexes in descending order of size ---
-    rowPerm.resize(this->_nrows);
-    for (int ii = 0; ii < rows; ii++) {
+    this->rowPerm.resize(this->_nrows);
+    for (int ii = 0; ii < this->_nrows; ii++) {
       this->_rowPerm[ii] = ii;
     }
     auto sortingFunc = [&](const int &a, const int &b) { return (rowSizes[a] > rowSizes[b]); };
@@ -93,26 +111,21 @@ namespace SpMV {
 
     // For each row, we can sort in order of column index then put entries in the flat col index and value arrays
     for (int rowInd = 0; rowInd < this->_nrows; rowInd++) {
-      rowSize = rowSizes[rowInd];
+      size_t rowSize = rowSizes[rowInd];
       if (rowSize <= 0) {
         break;
       }
 
-      std::vector<int> colIndCopy(rowSize);
-      std::vector<fp_type> valCopy(rowSize);
-
       // Make copies of the current row
-      for (int ii = 0; ii < rowSize; ii++) {
-        colIndCopy[ii] = colIndMatrix[rowInd][colPerm[ii]];
-        valCopy[ii] = valMatrix[rowInd][colPerm[ii]];
-      }
+      std::vector<int> colIndCopy = colIndMatrix[rowInd];
+      std::vector<fp_type> valCopy = valMatrix[rowInd];
 
       // Create a permutation vector for the column indices and sort it
       std::vector<int> colPerm(rowSize);
       for (int ii = 0; ii < rowSize; ii++) {
         colPerm[ii] = ii;
       }
-      auto sortingFunc = [&](const int &a, const int &b) { return (colIndCopy[rowInd][a] < colIndCopy[rowInd][b]); };
+      auto sortingFunc = [&](const int &a, const int &b) { return (colIndCopy[a] < colIndCopy[b]); };
       std::sort(colPerm.begin(), colPerm.end(), sortingFunc);
 
       // And now put the sorted values back into the colInd and val matrices
@@ -144,7 +157,10 @@ namespace SpMV {
 
     // --- Finally, now that the matrix is assembled we want to release all of the memory used for the original index
     // map ---
-    this->_buildCoeff.clear();
+    this->_clearBuildCoeff();
+
+    // And we can update the state of the matrix
+    this->_state = assembled;
 
     // --- For debugging, print out the stored matrix data structures ---
     printf("values = [");
@@ -173,6 +189,28 @@ namespace SpMV {
   }
 
   template <class fp_type>
-  void SparseMatrix_JDS<fp_type>::computeMatVecProduct(const fp_type &x, fp_type &y) {}
+  void SparseMatrix_JDS<fp_type>::computeMatVecProduct(const fp_type &x, fp_type &y) {
+    // --- Check that the matrix is assembled ---
+    assert(this->_state == assembled);
+
+// Zero the output vector
+#pragma omp parallel for simd schedule(static)
+    for (int ii = 0; ii < this->_nrows; ii++) {
+      y[ii] = 0.0;
+    }
+
+// --- Compute the matrix vector product ---
+#pragma omp parallel for simd schedule(static) collapse(2)
+    for (int ii = 0; ii < this->_maxRowSize; ii++) {
+      int colLength = this->_jdPtrs[ii + 1] - this->_jdPtrs[ii];
+      int offset = this->_jdPtrs[ii];
+      for (int jj = 0; jj < colLength; jj++) {
+        y[this->_rowPerm[jj]] += this->_values[offset + jj] * x[this->_colIndices[offset + jj]];
+      }
+    }
+  }
+
+  template <class fp_type>
+  void SparseMatrix_JDS<fp_type>::_unAssemble() {}
 
 } // namespace SpMV
