@@ -1,4 +1,5 @@
 // Testing library required for testing
+#include "SparseMatrix.hpp"
 #include "unit_test_framework.hpp"
 
 // Include code needed to test
