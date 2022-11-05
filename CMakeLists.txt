@@ -13,7 +13,6 @@ include_directories("${CMAKE_CURRENT_SOURCE_DIR}/src")
 
 add_subdirectory(src)
 # add_subdirectory(examples)
-add_subdirectory(tests)
 
 enable_testing()
 add_subdirectory(tests)
