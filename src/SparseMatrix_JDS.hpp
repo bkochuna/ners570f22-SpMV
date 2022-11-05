@@ -59,6 +59,8 @@ namespace SpMV {
       /**
        * @brief Convert the assembled matrix data back to the format used for building
        *
+       * @note Calling this function will also clear the assembled matrix data
+       *
        */
       void _unAssemble();
 

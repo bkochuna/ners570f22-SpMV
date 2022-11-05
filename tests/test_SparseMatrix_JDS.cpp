@@ -32,6 +32,13 @@ using fp_type = double;
 using fp_type = float;
 #endif
 
+// Use float if neither TEST_DOUBLE or TEST_FLOAT are defined
+#ifndef TEST_DOUBLE
+#ifndef TEST_FLOAT
+using fp_type = float;
+#endif
+#endif
+
 // Check that the matrix has the correct number of rows, columns and non-zeros after setting some entries
 TEST(buildingTest) {
   // Create an NxN JDS matrix
