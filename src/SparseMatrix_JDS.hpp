@@ -54,7 +54,7 @@ namespace SpMV {
        * @param x Array to multiply with
        * @param y Array to store result in
        */
-      void computeMatVecProduct(const fp_type &x, fp_type &y);
+      void computeMatVecProduct(const fp_type x[], fp_type y[]);
 
       /**
        * @brief Convert the assembled matrix data back to the format used for building
@@ -99,7 +99,7 @@ namespace SpMV {
     }
 
     // Then we want to get the rowPerm vector, a.k.a a the row indexes in descending order of size ---
-    this->rowPerm.resize(this->_nrows);
+    this->_rowPerm.resize(this->_nrows);
     for (int ii = 0; ii < this->_nrows; ii++) {
       this->_rowPerm[ii] = ii;
     }
@@ -138,20 +138,27 @@ namespace SpMV {
     // Now we can put the column indices and values into the flattened arrays in the right order
     int entryCount = 0;
 
-    this->_colIndices = new int[this->_nnz];
+    this->_colIndices = new size_t[this->_nnz];
     this->_values = new double[this->_nnz];
-    this->_jdPtrs = new int[this->_maxRowSize + 1];
+    this->_jdPtrs = new size_t[this->_maxRowSize + 1];
     this->_jdPtrs[0] = 0;
 
     // Descend down each column until we hit a row that doesn't have an entry for that column
     for (int colInd = 0; colInd < this->_maxRowSize; colInd++) {
-      for (int rowInd = 0; rowInd < this->_nrows; rowInd++) {
+      int rowInd = 0;
+      for (rowInd = 0; rowInd < this->_nrows; rowInd++) {
         if (rowSizes[rowInd] < colInd) {
           this->_jdPtrs[colInd + 1] = entryCount + 1;
           break;
         }
         this->_colIndices[entryCount] = colIndMatrix[rowInd][colInd];
         this->_values[entryCount] = valMatrix[rowInd][colInd];
+        entryCount++;
+      }
+      // If we reached the end of a column without hitting a row that didn't have an entry for that column, we need to
+      // add the next jdPtr
+      if (rowInd == this->_nrows) {
+        this->_jdPtrs[colInd + 1] = entryCount + 1;
       }
     }
 
@@ -161,35 +168,10 @@ namespace SpMV {
 
     // And we can update the state of the matrix
     this->_state = assembled;
-
-    // --- For debugging, print out the stored matrix data structures ---
-    printf("values = [");
-    for (int ii = 0; ii < this->_nnz; ii++) {
-      printf("%f, ", this->_values[ii]);
-    }
-    printf("]\n\n");
-
-    printf("colIndices = [");
-    for (int ii = 0; ii < this->_nnz; ii++) {
-      printf("%f, ", this->_colIndices[ii]);
-    }
-    printf("]\n\n");
-
-    printf("jdPtrs = [");
-    for (int ii = 0; ii < (this->_maxRowSize + 1); ii++) {
-      printf("%f, ", this->_jdPtrs[ii]);
-    }
-    printf("]\n\n");
-
-    printf("rowPerm = [");
-    for (int ii = 0; ii < this->_nrows; ii++) {
-      printf("%f, ", this->_rowPerm[ii]);
-    }
-    printf("]\n\n");
   }
 
   template <class fp_type>
-  void SparseMatrix_JDS<fp_type>::computeMatVecProduct(const fp_type &x, fp_type &y) {
+  void SparseMatrix_JDS<fp_type>::computeMatVecProduct(const fp_type x[], fp_type y[]) {
     // --- Check that the matrix is assembled ---
     assert(this->_state == assembled);
 
@@ -199,8 +181,8 @@ namespace SpMV {
       y[ii] = 0.0;
     }
 
-// --- Compute the matrix vector product ---
-#pragma omp parallel for simd schedule(static) collapse(2)
+    // --- Compute the matrix vector product ---
+    // #pragma omp parallel for simd schedule(static) collapse(2)
     for (int ii = 0; ii < this->_maxRowSize; ii++) {
       int colLength = this->_jdPtrs[ii + 1] - this->_jdPtrs[ii];
       int offset = this->_jdPtrs[ii];
@@ -212,5 +194,8 @@ namespace SpMV {
 
   template <class fp_type>
   void SparseMatrix_JDS<fp_type>::_unAssemble() {}
+
+  template <class fp_type>
+  void SparseMatrix_JDS<fp_type>::getFormat() {}
 
 } // namespace SpMV

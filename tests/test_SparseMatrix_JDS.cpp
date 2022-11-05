@@ -15,7 +15,7 @@ JDS Matrix unit tests
 // =============================================================================
 // Extension Includes
 // =============================================================================
-#include "SparseMatrix_JDS.hpp"
+#include "../src/SparseMatrix_JDS.hpp"
 #include "unit_test_framework.hpp"
 
 // ==============================================================================
@@ -51,4 +51,44 @@ TEST(buildingTest) {
   // Check that numNonZeros = N, and that the matrix is in the building state
   ASSERT_EQUAL(matrix.getNumNonZeros(), N);
   ASSERT_EQUAL(matrix.getState(), SpMV::building);
+
+  // Assemble the matrix and check the status
+  matrix.assembleStorage();
+  ASSERT_EQUAL(matrix.getState(), SpMV::assembled);
+
+  // Check that setting another coefficient returns the matrix to the building state
+  matrix.setCoefficient(0, 0, 2.0);
+  ASSERT_EQUAL(matrix.getState(), SpMV::building);
 }
+
+// Check that we get the expected behaviour from y = A*x when A is a diagonal matrix
+TEST(IdentityMatVec) {
+  // Create an NxN JDS matrix
+  SpMV::SparseMatrix_JDS<fp_type> matrix(N, N);
+
+  // Create vectors
+  fp_type x[N], y[N], y_expected[N];
+
+  // Set the diagonals to 1 (create an identity matrix)
+  for (size_t ii = 0; ii < N; ii++) {
+    y_expected[ii] = ((fp_type)rand() / (RAND_MAX));
+    matrix.setCoefficient(ii, ii, y_expected[ii]);
+  }
+
+  matrix.assembleStorage();
+
+  // Set x to random values
+  for (unsigned int ii = 0; ii < N; ii++) {
+    x[ii] = ((fp_type)rand() / (RAND_MAX));
+    y_expected[ii] *= x[ii];
+  }
+
+  // Do the matrix vector multiplication and check that y = x
+  matrix.computeMatVecProduct(x, y);
+  for (unsigned int ii = 0; ii < N; ii++) {
+    ASSERT_EQUAL(y[ii], y_expected[ii]);
+  }
+}
+
+// Run the tests
+TEST_MAIN();

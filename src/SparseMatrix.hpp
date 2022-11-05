@@ -111,22 +111,17 @@ namespace SpMV {
        * @param x Vector x
        * @param y Vector y
        */
-      virtual void computeMatVecProduct(const fp_type &x, fp_type &y) = 0;
+      virtual void computeMatVecProduct(const fp_type x[], fp_type y[]) = 0;
   };
 
   template <class fp_type>
   SparseMatrix<fp_type>::SparseMatrix(const int nrows, const int ncols)
       : _nrows(nrows), _ncols(ncols), _nnz(0), _state(initialized) {
-    cout << "Hello from SparseMatrix Constructor!" << endl;
     assert(this->_state == initialized);
   }
 
   template <class fp_type>
   SparseMatrix<fp_type>::~SparseMatrix() {
-    cout << "Hello from SparseMatrix Destructor!" << endl;
-    cout << "this->_ncols=" << this->_ncols << endl;
-    cout << "this->_nrows=" << this->_nrows << endl;
-    cout << "this->_nnz  =" << this->_nnz << endl;
     this->_state = undefined;
     assert(this->_state == undefined);
   }
@@ -134,10 +129,9 @@ namespace SpMV {
   template <class fp_type>
   void SparseMatrix<fp_type>::setCoefficient(const size_t row, const size_t col, const fp_type aij) {
     assert(this->_state != undefined);
-    cout << "Hello from SparseMatrix::setCoefficient!" << endl;
 
-    // if(this->_state == assembled)
-    //      this->_unAssemble();
+    if (this->_state == assembled)
+      this->_unAssemble();
 
     this->_state = building;
 
@@ -149,7 +143,6 @@ namespace SpMV {
   template <class fp_type>
   void SparseMatrix<fp_type>::getFormat() {
     assert(this->_state == assembled);
-    cout << "Hello from SparseMatrix::getFormat!" << endl;
 
     // return new SparseMatrix(this->_ncols,this->_nrows);
   }
