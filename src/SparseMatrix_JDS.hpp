@@ -139,7 +139,7 @@ namespace SpMV {
     int entryCount = 0;
 
     this->_colIndices = new size_t[this->_nnz];
-    this->_values = new double[this->_nnz];
+    this->_values = new fp_type[this->_nnz];
     this->_jdPtrs = new size_t[this->_maxRowSize + 1];
     this->_jdPtrs[0] = 0;
 
@@ -172,6 +172,9 @@ namespace SpMV {
 
   template <class fp_type>
   void SparseMatrix_JDS<fp_type>::computeMatVecProduct(const fp_type x[], fp_type y[]) {
+    if (this->_state != assembled) {
+      assembleStorage();
+    }
     // --- Check that the matrix is assembled ---
     assert(this->_state == assembled);
 
