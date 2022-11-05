@@ -12,7 +12,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(add_unit_test)
 
 add_subdirectory(src)
-add_subdirectory(examples)
+# add_subdirectory(examples)
 add_subdirectory(tests)
 
 enable_testing()
