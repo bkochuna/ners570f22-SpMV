@@ -9,6 +9,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(add_unit_test)
 
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/src")
+
 add_subdirectory(src)
 add_subdirectory(examples)
 
