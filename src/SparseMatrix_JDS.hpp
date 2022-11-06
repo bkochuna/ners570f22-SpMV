@@ -209,6 +209,7 @@ namespace SpMV {
       int colLength = this->_jdPtrs[ii + 1] - this->_jdPtrs[ii];
       int offset = this->_jdPtrs[ii];
       for (int jj = 0; jj < colLength; jj++) {
+#pragma omp atomic
         y[this->_rowPerm[jj]] += this->_values[offset + jj] * x[this->_colIndices[offset + jj]];
       }
     }
