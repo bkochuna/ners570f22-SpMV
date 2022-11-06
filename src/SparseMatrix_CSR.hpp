@@ -105,6 +105,10 @@ void SparseMatrix_CSR<fp_type>::unAssemble()
 	free(this->ptr);
 	free(this->val);
 
+	this->I = nullptr;
+	this->val = nullptr;
+	this->ptr = nullptr;
+
 	this->_state = building;
 	assert(this->_state == building);
 }
