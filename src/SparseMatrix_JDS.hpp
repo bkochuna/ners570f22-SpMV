@@ -145,12 +145,14 @@ namespace SpMV {
     this->_jdPtrs = new size_t[this->_maxRowSize + 1];
     this->_jdPtrs[0] = 0;
 
-    // Descend down each column until we hit a row that doesn't have an entry for that column
+    // Descend down each column from largest to smallest row until we hit a row that doesn't have an entry for that
+    // column
     for (int colInd = 0; colInd < this->_maxRowSize; colInd++) {
-      int rowInd = 0;
-      for (rowInd = 0; rowInd < this->_nrows; rowInd++) {
-        if (rowSizes[rowInd] < colInd) {
-          this->_jdPtrs[colInd + 1] = entryCount + 1;
+      int ii = 0;
+      for (ii = 0; ii < this->_nrows; ii++) {
+        int rowInd = this->_rowPerm[ii];
+        if (rowSizes[rowInd] <= colInd) {
+          this->_jdPtrs[colInd + 1] = entryCount;
           break;
         }
         this->_colIndices[entryCount] = colIndMatrix[rowInd][colInd];
@@ -159,8 +161,8 @@ namespace SpMV {
       }
       // If we reached the end of a column without hitting a row that didn't have an entry for that column, we need to
       // add the next jdPtr
-      if (rowInd == this->_nrows) {
-        this->_jdPtrs[colInd + 1] = entryCount + 1;
+      if (ii == this->_nrows) {
+        this->_jdPtrs[colInd + 1] = entryCount;
       }
     }
 
