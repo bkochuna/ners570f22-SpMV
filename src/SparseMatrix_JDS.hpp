@@ -1,5 +1,5 @@
 /*
-=============================================================================
+============================================================================+
 Jagged Diagonal Sparse Matrix (JDS) implementation
 =============================================================================
 @File    :   SparseMatrix_JDS.hpp
@@ -59,6 +59,7 @@ namespace SpMV {
         this->_state = initialized;
 
         // likely more to do here but I am mucho confused about how or if to call assemblestorage() here
+
 
       }
 
