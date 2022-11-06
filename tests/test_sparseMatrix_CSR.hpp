@@ -1,8 +1,8 @@
 /*
 =============================================================================
-JDS Matrix unit tests
+CSR Matrix unit tests
 =============================================================================
-@File    :   test_SparseMatrix_JDS.cpp
+@File    :   test_SparseMatrix_CSR.cpp
 @Date    :   2022/11/04
 @Author  :   M.A. Saja Abdul Kaiyoom
 @Description :

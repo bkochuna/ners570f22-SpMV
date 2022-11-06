@@ -1,6 +1,6 @@
 /*
 =============================================================================
-Jagged Diagonal Sparse Matrix (CSR) implementation
+Compressed Sparse Row Matrix (CSR) implementation
 =============================================================================
 @File    :   SparseMatrix_CSR.hpp
 @Date    :   2022/11/05
