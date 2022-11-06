@@ -22,4 +22,6 @@ jobs:
         cmake -DCMAKE_BUILD_TYPE=Release ..
         make
     - name: Run tests
-      run: make CTEST_OUTPUT_ON_FAILURE=1 test
+      run: |
+        cd build
+        make CTEST_OUTPUT_ON_FAILURE=1 test
