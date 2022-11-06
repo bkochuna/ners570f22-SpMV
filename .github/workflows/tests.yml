@@ -1,16 +1,18 @@
-name: Build and run unit tests
+name: Build project and run unit tests
 
 on:
   push:
     branches: [ main ]
   pull_request:
-    branches: [ main ]
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+    - uses: awalsh128/cache-apt-pkgs-action@latest # Install and cache required apt packages
+      with:
+        packages: build-essential cmake
     - name: Build and run tests
       run: |
         mkdir build
