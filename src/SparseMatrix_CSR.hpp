@@ -28,7 +28,8 @@ public:
   void getFormat(/*some args*/);
 
   void computeMatVecProduct(/*some args*/);
-
+  
+  void unAssemble();
   //   SparseMatrix_CSR(const int nrows, const int ncols);
 
 private:
@@ -95,4 +96,16 @@ void SparseMatrix_CSR<fp_type>::computeMatVecProduct() {}
 
 template <class fp_type> void SparseMatrix_CSR<fp_type>::getFormat() {}
 
+template <class fp_type>
+void SparseMatrix_CSR<fp_type>::unAssemble()
+{
+	assert(this->_state == assembled);
+
+	free(this->I);
+	free(this->ptr);
+	free(this->val);
+
+	this->_state = building;
+	assert(this->_state == building);
+}
 } // namespace SpMV
