@@ -35,6 +35,12 @@ namespace SpMV {
       SparseMatrix_JDS(const size_t nrows, const size_t ncols) : SparseMatrix<fp_type>::SparseMatrix(nrows, ncols) {}
 
       /**
+       * @brief Destructor for JDS Sparse Matrix format. Destory objects created
+       *
+       */
+      virtual ~SparseMatrix_JDS();
+      
+      /**
        * @brief Assemble the JDS data structures from the general map based data structure used in the building phase
        *
        */
@@ -172,6 +178,14 @@ namespace SpMV {
 
     // And we can update the state of the matrix
     this->_state = assembled;
+  }
+
+  template <class fp_type> SparseMatrix_JDS<fp_type>::~SparseMatrix_JDS() {
+    cout << "Hello from SparseMatrix_JDS Destructor!" << endl;
+
+    delete[] this->_colIndices;
+    delete[] this->_values;
+    delete[] this->_jdPtrs;
   }
 
   template <class fp_type>
