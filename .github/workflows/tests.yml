@@ -24,5 +24,4 @@ jobs:
     - name: Run tests
       run: |
         cd build
-        echo "$PWD"
         make CTEST_OUTPUT_ON_FAILURE=1 test
