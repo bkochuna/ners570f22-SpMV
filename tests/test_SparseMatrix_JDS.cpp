@@ -21,8 +21,8 @@ JDS Matrix unit tests
 // ==============================================================================
 // Compile-time constants
 // ==============================================================================
-#define M 40
-#define N 50
+#define M 123
+#define N 456
 #define RAND_VALUE ((fp_type)rand() / (RAND_MAX))
 #define SPARSITY 0.15
 #define NUM_MATVEC_TESTS 100
@@ -78,6 +78,7 @@ TEST(buildingTest) {
 // Check that we get the expected behaviour from y = A*x when A is a diagonal
 // matrix
 TEST(DiagonalMatVec) {
+  srand(0);
   // Create an NxN JDS matrix
   SpMV::SparseMatrix_JDS<fp_type> matrix(N, N);
 
@@ -107,6 +108,7 @@ TEST(DiagonalMatVec) {
 
 // Test a series of random matrix-vector products
 TEST(RandomMatVec) {
+  srand(0);
 
   for (int n = 0; n < NUM_MATVEC_TESTS; n++) {
 
@@ -123,7 +125,7 @@ TEST(RandomMatVec) {
       y_expected[ii] = 0.0;
     }
 
-    // Now we will go through each entry of the matrix and randomly assign random values
+    // Go through each entry of the matrix and randomly assign random values
     for (unsigned int rowInd = 0; rowInd < M; rowInd++) {
       for (unsigned int colInd = 0; colInd < N; colInd++) {
         if (RAND_VALUE < SPARSITY) {
