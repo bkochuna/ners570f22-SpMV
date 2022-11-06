@@ -188,8 +188,8 @@ namespace SpMV {
       y[ii] = 0.0;
     }
 
-    // --- Compute the matrix vector product ---
-    // #pragma omp parallel for simd schedule(static) collapse(2)
+// --- Compute the matrix vector product ---
+#pragma omp parallel for simd schedule(static) collapse(2)
     for (int ii = 0; ii < this->_maxRowSize; ii++) {
       int colLength = this->_jdPtrs[ii + 1] - this->_jdPtrs[ii];
       int offset = this->_jdPtrs[ii];
