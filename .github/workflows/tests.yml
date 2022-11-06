@@ -15,10 +15,11 @@ jobs:
       uses: awalsh128/cache-apt-pkgs-action@latest # Install and cache required apt packages
       with:
         packages: build-essential cmake
-    - name: Build and run tests
+    - name: Build library
       run: |
         mkdir build
         cd build
         cmake -DCMAKE_BUILD_TYPE=Release ..
         make
-        make CTEST_OUTPUT_ON_FAILURE=1 test
+    - name: Run tests
+      run: make CTEST_OUTPUT_ON_FAILURE=1 test
