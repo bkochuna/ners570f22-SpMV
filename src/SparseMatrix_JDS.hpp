@@ -184,7 +184,7 @@ namespace SpMV {
 
 // Zero the output vector
 #pragma omp parallel for simd schedule(static)
-    for (int ii = 0; ii < this->_nrows; ii++) {
+    for (int ii = 0; ii < this->_ncols; ii++) {
       y[ii] = 0.0;
     }
 
