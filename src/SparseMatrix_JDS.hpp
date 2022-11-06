@@ -57,10 +57,6 @@ namespace SpMV {
         this->_nrows = nrows;
         this->_ncols = ncols;
         this->_state = initialized;
-
-        // likely more to do here but I am mucho confused about how or if to call assemblestorage() here
-
-
       }
 
       /**
