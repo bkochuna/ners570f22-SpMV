@@ -29,8 +29,8 @@ namespace SpMV {
       /**
        * @brief Construct a new JDS Sparse Matrix of given dimensions
        *
-       * @param rows Number of rows
-       * @param cols Number of columns
+       * @param nrows Number of rows
+       * @param ncols Number of columns
        */
       SparseMatrix_JDS(const size_t nrows, const size_t ncols) : SparseMatrix<fp_type>::SparseMatrix(nrows, ncols) {
         assert(this->_state == undefined);
@@ -63,6 +63,35 @@ namespace SpMV {
 
       }
 
+      /**
+       * @brief Overloaded constructor:
+       * Construct a new JDS Sparse Matrix of given dimensions AND JDS data structures
+       * 
+       * @note Skips the building phase
+       *
+       * @param nrows Number of rows
+       * @param ncols Number of columns
+       * @param perm Vector of row permutations
+       * @param jdiag Vector of actual matrix values
+       * @param col_ind Vector of column indeces
+       * @param jd_ptr Vector of jagged diagonal pointers
+       */
+      SparseMatrix_JDS(const size_t nrows, const size_t ncols, perm[], jdiag[], col_ind[], jd_ptr[]) : SparseMatrix<fp_type>::SparseMatrix(nrows, ncols) {
+        // are the following lines automatically completed via the base class constructor?
+        assert(this->_state == undefined);
+        this->_nrows = nrows;
+        this->_ncols = ncols;
+        this->_nnz = (size_t) sizeof(jdiag)/sizeof(jdiag[0]);
+        this->_state = initialized;
+
+        this->_state = building;
+        this->_rowPerm = perm;
+        this->_values = jdiag;
+        this->_colIndices = col_ind;
+        this->_jdPtrs = jd_ptr;
+
+        assert(this->_state == building);
+      }
       /**
        * @brief Assemble the JDS data structures from the general map based data structure used in the building phase
        *
