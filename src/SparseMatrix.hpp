@@ -30,8 +30,6 @@ namespace SpMV
     public:
         SparseMatrix(const int nrows, const int ncols);
         virtual ~SparseMatrix();
-
-        /* void setCoefficient(const size_t row, const size_t col, const fp_type aij); */
         void setCoefficient(size_t *row, size_t *col, fp_type *val, size_t num_vals);
         virtual void assembleStorage() =0;
         virtual void getFormat();
