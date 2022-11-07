@@ -21,8 +21,8 @@ namespace SpMV
             {
                 cout << "Hello From SparseMartix_ELL" << endl;
             };
-
-	    virtual ~SparseMatrix_ELL();
+            
+            virtual ~SparseMatrix_ELL();
 
             void assembleStorage();
             /*Some return type*/ void getFormat(/*some args*/);
@@ -58,22 +58,20 @@ namespace SpMV
     template <class fp_type> SparseMatrix_ELL<fp_type>::~SparseMatrix_ELL() {
     	cout << "Hello from SparseMatrix_ELL Destructor!" << endl;
 
-	if (this->I != NULL) 
-		free(this->I);
+        if (this->I != NULL) {
+            free(this->I);
+            this->I = NULL;
+        }
 
-	if (this->J != NULL)
-		free(this->J);
+        if (this->J != NULL) {
+            free(this->J);
+            this->J = NULL;
+        }
 
-	if this(->val != NULL)
-		free(this->val);
-
-	this->I = NULL;
-	this->J = NULL;
-	this->val = NULL;
-
-	delete[] this->I;
-	delete[] this->J;
-	delete[] this->val;
+        if this(->val != NULL) {
+            free(this->val);
+            this->val = NULL;
+        }
     }
 
     template <class fp_type>
