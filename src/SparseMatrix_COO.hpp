@@ -44,8 +44,9 @@ namespace SpMV
                 cout << "Hello From SparseMartix_COO" << endl;
             };
 	    virtual ~SparseMatrix_COO();
+	    virtual ~SparseMatrix_COO();
             void assembleStorage();
-            /*Some return type*/ void getFormat(/*some args*/);
+            SparseMartix_COO<fp_type> getFormat();
     /**
        * @brief Compute the product of this matrix and a vector (y = Ax)
        *
@@ -88,7 +89,9 @@ namespace SpMV
     template <class fp_type>
     void SparseMatrix_COO<fp_type>::~SparseMatrix_COO()
     {
-	    // Deallocate memory and assign null pointers
+	    // Deallocate memory and assi~SparseMatrix_COO()
+    {
+	    // Deallocate memory and assign null pointn null pointers
 	    if (this->I != nullptr)
 	    {
 		    free(this->I);
@@ -128,10 +131,30 @@ namespace SpMV
     }
 
     template <class fp_type>
+    SparseMatrix_COO<fp_type> SparseMatrix_COO<fp_type>::gers
+	    if (this->I != nullptr)
+	    {
+		    free(this->I);
+		    this->I = nullptr;
+	    }
+	    if (this->J != nullptr)
+            {
+                    free(this->J);
+                    this->J = nullptr;
+            }
+	    if (this->val != nullptr)
+            {
+                    free(this->val);
+                    this->val = nullptr;
+            }
+    }
+
+    template <class fp_type>
     SparseMatrix_COO<fp_type> SparseMatrix_COO<fp_type>::getFormat()
     {
         assert(this->_state == assembled);
         cout << "Hello from SparseMatrix_COO::getFormat!" << endl;
+        SparseMartix_COO<fp_type> B;
         SparseMartix_COO<fp_type> B;
         
         int i;
@@ -144,6 +167,8 @@ namespace SpMV
         return B;
     }
     
+    
 }
 
 #endif
+
