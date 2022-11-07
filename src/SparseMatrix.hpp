@@ -33,6 +33,7 @@ namespace SpMV
     public:
         SparseMatrix(const int nrows, const int ncols);
         void importMatrix(char* fileName);
+        void exportMatrix(char* fileName);
         virtual ~SparseMatrix();
 
         void setCoefficient(const size_t row, const size_t col, const fp_type aij);
@@ -130,6 +131,65 @@ namespace SpMV
         this->_state = building;
 
     }
+    
+
+    // Method to export to MM file
+    template <class fp_type>
+    void SparseMatrix<fp_type>::exportMatrix(char* fileName)
+    {
+        //If matrix has been initialized/is building, notify user that their data will be ovewrit
+        if(this->_state != assembled){
+            cout<<"State error: This matrix is not assembled"<<endl;
+        }
+        this->_unAssemble();
+        this->_buildCoeff();
+        outMat = getFormat(this,"COO")
+
+        //Open file
+        ofstream outfile;
+        outfile.open(fileName);
+        
+        //Write preamble
+        private char preamble =
+           " %%MatrixMarket matrix coordinate real general"
+           " %================================================================================="
+           " %"
+           " % This ASCII file represents a sparse MxN matrix with L "
+           " % nonzeros in the following Matrix Market format:"
+           " %"
+           " % +----------------------------------------------+"
+           " % |%%MatrixMarket matrix coordinate real general | <--- header line"
+           " % |%                                             | <--+"
+           " % |% comments                                    |    |-- 0 or more comment lines"
+           " % |%                                             | <--+         "
+           " % |    M  N  L                                   | <--- rows, columns, entries"
+           " % |    I1  J1  A(I1, J1)                         | <--+"
+           " % |    I2  J2  A(I2, J2)                         |    |"
+           " % |    I3  J3  A(I3, J3)                         |    |-- L lines"
+           " % |        . . .                                 |    |"
+           " % |    IL JL  A(IL, JL)                          | <--+"
+           " % +----------------------------------------------+   "
+           " %"
+           " % Indices are 1-based, i.e. A(1,1) is the first element."
+           " %"
+           " %=================================================================================";
+        outfile << m.write << endl
+        
+        // Write header line with matrix meta-data
+        outfile << outMat._nrows
+        outfile << outMat._ncols
+        outfile << outMat._nnz << endl
+      
+        // Write data of each nonzero matrix element
+        for{int n=0; n<nnz; i++} {
+            outfile << outMat.J[n]
+            outfile << outMat.I[n]
+            outfile << outMat.val[n] << endl
+        }
+         
+        
+    }
+
 
     template <class fp_type>
     void SparseMatrix<fp_type>::getFormat()
