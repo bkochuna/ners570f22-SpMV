@@ -32,7 +32,7 @@ namespace SpMV {
        * @param nrows Number of rows
        * @param ncols Number of columns
        */
-      SparseMatrix_JDS(const size_t nrows, const size_t ncols) : SparseMatrix<fp_type>::SparseMatrix(nrows, ncols) {}
+      SparseMatrix_JDS(const size_t nrows, const size_t ncols) : SparseMatrix<fp_type>::SparseMatrix(nrows, ncols) {};
 
       /**
        * @brief Overloaded constructor:

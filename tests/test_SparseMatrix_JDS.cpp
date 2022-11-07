@@ -78,8 +78,14 @@ TEST(alternateBuildingTest) {
   size_t rows=6;
   size_t cols=6;
 
+  fp_type matMul[6];
+  fp_type testVec[6]={0,1,0,0,0,0};
+  fp_type expectedEntry = -3;
+
   // Create an NxN JDS matrix
   SpMV::SparseMatrix_JDS<fp_type> matrix(rows, cols, perm, jdiag, col_ind, jd_ptr);
+  matrix.computeMatVecProduct(testVec,matMul);
+  ASSERT_EQUAL(matMul[0],expectedEntry);
 
   // Check that numRows and numCols are N, that numNonZeros = 0, and that the matrix is in the initialized state
   ASSERT_EQUAL(matrix.getNumRows(), rows);
