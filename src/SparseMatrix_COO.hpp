@@ -46,6 +46,8 @@ namespace SpMV
 	    virtual ~SparseMatrix_COO();
 	    virtual ~SparseMatrix_COO();
             void assembleStorage();
+            void _unAssemble();
+
             SparseMartix_COO<fp_type> getFormat();
     /**
        * @brief Compute the product of this matrix and a vector in COO format (y = Ax)
@@ -57,6 +59,7 @@ namespace SpMV
        */
       void computeMatVecProduct(const fp_type x[], fp_type y[]);
             SparseMartix_COO<fp_type> getFormat();
+
 
     };
 
@@ -81,10 +84,36 @@ namespace SpMV
         }
 
         // Destroy _buildCoeff
+        _buildCoeff.clear()
+            //this->_clearBuildCoeff();
 
         this->_state = assembled;
         assert(this->_state == assembled);
     }
+    
+    template <class fp_type>
+              void SparseMatrix_COO<fp_type>::_unAssemble()
+            {
+                   assert(this->_state == assembled);
+                  
+                    //this->_buildCoeff[ make_pair(_nnz,_nnz), _nnz ] = make_pair(I,J),val;
+                    size_t n=0;
+                    for(n=0; n<this->_nnz; n++)
+                    {
+                        _buildCoeff.append(make_pair(I[n],J[n]),val[n]); 
+                        //this->_buildCoeff[make_pair(I[n],J[n]),val[n]]; 
+                        //this->_nnz = this->_buildCoeff.size();
+                       // I[n]   = coeff.first.first;
+                        //J[n]   = coeff.first.second;
+                        //val[n] = coeff.second;
+         
+                    }
+                   free(this->J);
+                   free(this->I);
+                   free(this->val);
+                   this->_state = unassembled;
+                   assert(this->_state == unassembled);
+               }
 
     template <class fp_type>
     void SparseMatrix_COO<fp_type>::~SparseMatrix_COO()
@@ -149,4 +178,6 @@ namespace SpMV
 }
 
 #endif
+
+
 
