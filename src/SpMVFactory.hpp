@@ -24,7 +24,7 @@ namespace SpMV
         public:
             SpMV::SparseMatrix<fp_type>* createSparseMatrix()
             {
-                return &SpMV::SparseMatrix_COO<fp_type>();
+                return new SpMV::SparseMatrix_COO<fp_type>();
             };
     };
     // Concrete factory to instantiate ELL SparseMatrix.
@@ -34,7 +34,7 @@ namespace SpMV
         public:
             SpMV::SparseMatrix<fp_type>* createSparseMatrix()
             {
-                return &SpMV::SparseMatrix_ELL<fp_type>();
+                return new SpMV::SparseMatrix_ELL<fp_type>();
             };
     };
     // Concrete factory to instantiate DEN SparseMatrix.
@@ -44,7 +44,7 @@ namespace SpMV
         public:
             SpMV::SparseMatrix<fp_type>* createSparseMatrix()
             {
-                return &SpMV::SparseMatrix_DEN<fp_type>();
+                return new SpMV::SparseMatrix_DEN<fp_type>();
             };
     };
     // Concrete factory to instantiate JDS SparseMatrix.
@@ -54,7 +54,7 @@ namespace SpMV
         public:
             SpMV::SparseMatrix<fp_type>* createSparseMatrix()
             {
-                return &SpMV::SparseMatrix_JDS<fp_type>();
+                return new SpMV::SparseMatrix_JDS<fp_type>();
             };
     };
     // Concrete factory to instantiate CSR SparseMatrix.
@@ -64,7 +64,7 @@ namespace SpMV
         public:
             SpMV::SparseMatrix<fp_type>* createSparseMatrix()
             {
-                return &SpMV::SparseMatrix_CSR<fp_type>();
+                return new SpMV::SparseMatrix_CSR<fp_type>();
             };
     };
 
