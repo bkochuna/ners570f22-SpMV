@@ -32,12 +32,7 @@ namespace SpMV {
        * @param nrows Number of rows
        * @param ncols Number of columns
        */
-      SparseMatrix_JDS(const size_t nrows, const size_t ncols) : SparseMatrix<fp_type>::SparseMatrix(nrows, ncols) {
-        assert(this->_state == undefined);
-        this->_nrows = nrows;
-        this->_ncols = ncols;
-        this->_state = initialized;
-      }
+      SparseMatrix_JDS(const size_t nrows, const size_t ncols) : SparseMatrix<fp_type>::SparseMatrix(nrows, ncols) {}
 
       /**
        * @brief Overloaded constructor:
@@ -94,6 +89,7 @@ namespace SpMV {
   // ==============================================================================
   // Method implementations
   // ==============================================================================
+
   template <class fp_type>
   SparseMatrix_JDS<fp_type>::SparseMatrix_JDS(const size_t nrows, const size_t ncols, size_t perm[], size_t jdiag[], int col_ind[], fp_type jd_ptr[]) : SparseMatrix<fp_type>::SparseMatrix(nrows, ncols) {
         this->_nnz = (size_t) sizeof(jdiag)/sizeof(jdiag[0]);

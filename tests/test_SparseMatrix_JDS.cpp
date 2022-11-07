@@ -72,7 +72,7 @@ TEST(buildingTest) {
 TEST(alternateBuildingTest) {
   // creating example from HW2 assignment sheet
   fp_type jdiag[17]={6,9,3,10,9,5,7,6,8,-3,13,-1,5,-2,7,1,4};
-  size_t col_ind[17]={2,2,1,1,5,5,4,3,3,2,6,6,5,5,4,4,6};
+  int col_ind[17]={2,2,1,1,5,5,4,3,3,2,6,6,5,5,4,4,6};
   size_t perm[6]={4,2,3,1,5,6};
   size_t jd_ptr[4]={1,7,13,17};
   size_t rows=6;
