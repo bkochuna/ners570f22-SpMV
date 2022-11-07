@@ -74,19 +74,19 @@ namespace SpMV
     }
 
     template <class fp_type>
-    SparseMatrix_COO<fp_type> SparseMatrix_COO<fp_type>::getFormat()
+    SparseMatrix<fp_type> SparseMatrix_COO<fp_type>::getFormat()
     {
-        assert(this->_state == assembled);
         cout << "Hello from SparseMatrix_COO::getFormat!" << endl;
-        SparseMartix_COO<fp_type> B;
+        if(this->_state == assembled):
+            _unAssemble;
+        SparseMartix<fp_type> B;
         
-        int i;
-        for(i=0; i < _nnz; i++)
-        {
-            B.I[i] = I[i];
-            B.J[i] = J[i];
-            B.val[i] = val[i];
-        }
+        B._ncols = this->_ncols;
+        B._nrows = this->_nrows;
+        B._nnz = this->_nnz;
+        B._buildCoeff = this->_buildCoeff;
+        B.assembleStorage()
+        
         return B;
     }
     
