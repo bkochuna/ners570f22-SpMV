@@ -122,6 +122,11 @@ void SparseMatrix_CSR<fp_type>::_unAssemble()
 	// check if the matrix is assembled
 	assert(this->_state == assembled);
         
+	// change the state to building (state before assembled)
+	// setCoefficient checks whether the state is building
+        this->_state = building;
+	assert(this->_state == building);
+
         // recreate buildCoeff
 	int n = this->_nrows;
 	int nnz = this->_nnz;
@@ -151,8 +156,5 @@ void SparseMatrix_CSR<fp_type>::_unAssemble()
 	this->val = nullptr;
 	this->ptr = nullptr;
 	
-	// change the state to building (state before assembled)
-	this->_state = building;
-	assert(this->_state == building);
 }
 } // namespace SpMV
