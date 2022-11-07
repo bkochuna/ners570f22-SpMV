@@ -44,7 +44,6 @@ namespace SpMV
                 cout << "Hello From SparseMartix_COO" << endl;
             };
 	    virtual ~SparseMatrix_COO();
-	    virtual ~SparseMatrix_COO();
             void assembleStorage();
             void _unAssemble();
 
@@ -118,7 +117,7 @@ namespace SpMV
     template <class fp_type>
     void SparseMatrix_COO<fp_type>::~SparseMatrix_COO()
     {
-	    // Deallocate memory and assign null pointn null pointers
+	    // Deallocate memory and assign null pointer
 	    if (this->I != nullptr)
 	    {
 		    free(this->I);
