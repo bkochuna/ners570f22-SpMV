@@ -84,12 +84,19 @@ namespace SpMV
     }
 
     template <class fp_type>
-    void SparseMatrix_ELL<fp_type>::getFormat()
+    SparseMartix<fp_type> SparseMatrix_ELL<fp_type>::getFormat()
     {
-        assert(this->_state == assembled);
         cout << "Hello from SparseMatrix_ELL::getFormat!" << endl;
+        if(this->_state == assembled): unAssemble();
         
-        //return new SparseMatrix(this->_ncols,this->_nrows);
+        SparseMartix<fp_type> B;
+        
+        B._ncols = this->_ncols;
+        B._nrows = this->_nrows;
+        B._nnz = this->_nnz;
+        B._buildCoeff = this->_buildCoeff;
+        B.assembleStorage()
+        return B;
     }
 
     template <class fp_type>
