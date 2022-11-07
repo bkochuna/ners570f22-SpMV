@@ -20,3 +20,6 @@ add_subdirectory(examples)
 # Allow unit tests and add testing directory
 enable_testing()
 add_subdirectory(tests)
+
+# Install
+install(TARGETS SpMV DESTINATION bin)
