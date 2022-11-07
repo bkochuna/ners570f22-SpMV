@@ -58,7 +58,7 @@ namespace SpMV
        * @param y Array to store result in
        */
       void computeMatVecProduct(const fp_type x[], fp_type y[]);
-            SparseMartix_COO<fp_type> getFormat();
+            SparseMartix<fp_type> getFormat();
 
 
     };
@@ -164,6 +164,7 @@ namespace SpMV
     SparseMatrix<fp_type> SparseMatrix_COO<fp_type>::getFormat()
     {
         cout << "Hello from SparseMatrix_COO::getFormat!" << endl;
+        if(this->_state == assembled): _unAssemble();
         SparseMartix<fp_type> B;
         
         B._ncols = this->_ncols;
