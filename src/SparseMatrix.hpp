@@ -186,7 +186,7 @@ namespace SpMV
             outfile << outMat.I[n]
             outfile << outMat.val[n] << endl
         }
-         
+        outfile.close() 
         
     }
 
