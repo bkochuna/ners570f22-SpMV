@@ -230,19 +230,24 @@ namespace SpMV {
   template <class fp_type>
   SparseMatrix<fp_type> SparseMatrix_JDS<fp_type>::getFormat() {
     //
-    int nnrows, nncols;
-    int i;
-    int nonzero;
+    if (this->_state == assembled):
+      _unAssemble();
     //
-    for (i = 0; i < this->_maxRowSize; i++) {
-      nonzero = this->_jdPtrs[i + 1];
-    }
-    // number of nonzero rows
-    nnrows = nonzero;
-    // number of nonzero columns
-    nncols = nonzero;
+    SparseMatrix<fp_type> B;
+    // newMat -> _nrows, _ncols, _nnz, _buildCoeff = mat->
+    // newMat -> assemble
+    // number of rows
+    B._nrows = this->_nrows;
+    // number of columns
+    B._ncols = this->_ncols;
     //
-    return SparseMatrix(nnrows, nncols);
+    B._nnz = this->_nnz;
+    // _buildCoeff 
+    B._buildCoeff = this->_buildCoeff;
+    // assemble() 
+    B.assembleStorage();
+    //
+    return B;
   }
 
 } // namespace SpMV
