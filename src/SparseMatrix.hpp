@@ -30,7 +30,8 @@ namespace SpMV
     public:
         SparseMatrix(const int nrows, const int ncols);
         virtual ~SparseMatrix();
-        void setCoefficient(size_t *row, size_t *col, fp_type *val, size_t num_vals);
+        void setCoefficient(size_t row, size_t col, fp_type val);
+        void setCoefficient(size_t *row, size_t *col, fp_type *val, size_t num_vals); 
         virtual void assembleStorage() =0;
         virtual void getFormat();
     };
@@ -54,6 +55,24 @@ namespace SpMV
         assert(this->_state == undefined);
     }
     
+    template <class fp_type>
+    void SparseMatrix<fp_type>::setCoefficient(size_t row, size_t col, fp_type val)
+    {
+        /* Check for undefined state */
+        assert(this->_state != undefined);
+
+        /* Go to Build state */
+        this->_state = building;
+
+        this->_buildCoeff[ make_pair(row, col) ] = val;
+
+        this->_nnz = this->_buildCoeff.size();
+
+        /* Check for building state */
+        assert(this->_state == building);
+
+    }
+
     template <class fp_type>
     void SparseMatrix<fp_type>::setCoefficient(size_t *row, size_t *col, fp_type *val, size_t num_vals)
     {
