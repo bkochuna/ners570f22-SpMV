@@ -34,7 +34,7 @@ namespace SpMV
             void assembleStorage();
             
             // Return a new SparseMatrix
-            SparseMatrix<fp_type> getFormat();
+            SparseMatrix<fp_type>* getFormat();
             
             void computeMatVecProduct(/*some args*/);
             
@@ -72,7 +72,7 @@ namespace SpMV
 /*************/
 
     template <class fp_type>
-    SparseMatrix<fp_type> SparseMatrix_DEN<fp_type>::getFormat()
+    SparseMatrix<fp_type>* SparseMatrix_DEN<fp_type>::getFormat()
     {
         assert(this->_state == assembled);
         cout << "Hello from SparseMatrix_DEN::getFormat!" << endl;
@@ -84,6 +84,7 @@ namespace SpMV
           _unAssemble();
         //
         SparseMatrix<fp_type> B;
+        SparseMatrix<fp-type>* ptr_B = B;
         // newMat -> _nrows, _ncols, _nnz, _buildCoeff = mat->
         // newMat -> assemble
         // number of rows
@@ -96,8 +97,20 @@ namespace SpMV
         B._buildCoeff = this->_buildCoeff;
         // assemble
         B.assembleStorage();
+        /*
+        // tranform
+        if (fmt == "DEN")
+        {
+        }
+        else if (fmt == "COO")
+        {
+        
+        }
+        
+        ptr_B = ptr_A;
+        */
         //
-        return B;
+        return ptr_B;
     }
 
 /************************/
