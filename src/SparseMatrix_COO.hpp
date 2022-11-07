@@ -21,6 +21,7 @@ namespace SpMV
             {
                 cout << "Hello From SparseMartix_COO" << endl;
             };
+	    virtual ~SparseMatrix_COO();
             void assembleStorage();
             /*Some return type*/ void getFormat(/*some args*/);
 
@@ -50,6 +51,26 @@ namespace SpMV
 
         this->_state = assembled;
         assert(this->_state == assembled);
+    }
+
+    template <class fp_type>
+    void SparseMatrix_COO<fp_type>::~SparseMatrix_COO()
+    {
+	    if (this->I != nullptr)
+	    {
+		    free(this->I);
+		    this->I = nullptr;
+	    }
+	    if (this->J != nullptr)
+            {
+                    free(this->J);
+                    this->J = nullptr;
+            }
+	    if (this->val != nullptr)
+            {
+                    free(this->val);
+                    this->val = nullptr;
+            }
     }
 
     template <class fp_type>
