@@ -27,6 +27,14 @@ public:
 
   void getFormat(/*some args*/);
 
+  /**
+   * @brief Compute the product of this matrix and a vector (y = Ax)
+   *
+   * @note The contents of y are overwritten by this operation
+   *
+   * @param x Input array of fp_type to multiply with
+   * @param y Array of fp_type to store result in
+   */
   void computeMatVecProduct(const fp_type *x, fp_type *y);
 
   //   SparseMatrix_CSR(const int nrows, const int ncols);
