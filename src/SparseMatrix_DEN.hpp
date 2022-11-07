@@ -121,11 +121,11 @@ namespace SpMV
     {
         assert(this->_state == assembled);
 
-	    free(this->Aij);
-
         this->n_rows = NULL;
         this->n_cols = NULL;
-	    this->Aij = nullptr;
+        free(this->Aij);
+
+        this->Aij = nullptr;
 
 	    this->_state = building;
 	    assert(this->_state == building);
@@ -143,16 +143,24 @@ namespace SpMV
         cout << "this->_nrows=" << this->_nrows << endl;
         cout << "this->_nnz  =" << this->_nnz << endl;
 
-        if (this->Aij != NULL)
+        if (this->Aij != nullptr)
+        {
             free(this->Aij);
+            this->Aij = nullptr;
+            delete[] this->Aij;
+        }
 
-        this->n_cols = NULL;
-        this->n_rows = NULL;
-        this->Aij = NULL;
+        if (this->n_rows != NULL)
+        {
+            this-> n_rows = NULL;
+            delete[] this->n_rows;
+        }
 
-        delete[] this->n_rows;
-        delete[] this->n_cols;
-        delete[] this->Aij;
+        if (this->n_cols != NULL)
+        {
+            this-> n_cols = NULL;
+            delete[] this->n_cols;
+        }
         
     }
 
