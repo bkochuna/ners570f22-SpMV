@@ -33,7 +33,8 @@ namespace SpMV
             
             void assembleStorage();
             
-            void getFormat(/*some args*/);
+            // Return a new SparseMatrix
+            SparseMatrix<fp_type> getFormat();
             
             void computeMatVecProduct(/*some args*/);
             
@@ -71,14 +72,32 @@ namespace SpMV
 /*************/
 
     template <class fp_type>
-    void SparseMatrix_DEN<fp_type>::getFormat(/*some args*/)
+    SparseMatrix<fp_type> SparseMatrix_DEN<fp_type>::getFormat()
     {
         assert(this->_state == assembled);
         cout << "Hello from SparseMatrix_DEN::getFormat!" << endl;
-
         /*
         Code for implementing getFormat for DEN
-        */      
+        */
+        // n_rows, n_cols, Aij
+        int nrows_B = 0;
+        int ncols_B = 0;
+        int i, j;
+        //for loops
+        for (i = 0; i < n_rows; i++)
+        {
+            for (j = 0; j < n_cols; j++)
+            {
+                // question: is Aij pointing at the very first element?
+                // If so, this should be fine.
+                if (*(Aij + i*n_cols + j) != 0.0)
+                {
+                    nrows_B++;
+                    ncols_B++;
+                }
+            }
+        }
+        return SparseMatrix(nrows_B, ncols_B);
     }
 
 /************************/
