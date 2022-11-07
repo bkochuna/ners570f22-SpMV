@@ -23,7 +23,7 @@ namespace SpMV
             };
 	    virtual ~SparseMatrix_COO();
             void assembleStorage();
-            /*Some return type*/ void getFormat(/*some args*/);
+            SparseMartix_COO<fp_type> getFormat();
 
     };
 
