@@ -135,15 +135,18 @@ void SparseMatrix_CSR<fp_type>::unAssemble()
 	    	ptr[i + 1] = n;
 	    	i += 1;
       	}
-
+	
+	// deallocate pointers
 	free(this->I);
 	free(this->ptr);
 	free(this->val);
-
+	
+	// assign to null pointer
 	this->I = nullptr;
 	this->val = nullptr;
 	this->ptr = nullptr;
-
+	
+	// change the state to building (state before assembled)
 	this->_state = building;
 	assert(this->_state == building);
 }
