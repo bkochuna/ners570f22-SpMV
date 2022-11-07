@@ -58,11 +58,12 @@ namespace SpMV
     template <class fp_type>
               void SparseMatrix_COO<fp_type>::_unAssemble()
             {
-                   free(J);
-                   free(I);
-                   free(val);
+                   assert(this->_state == assembled);
+                   free(this->J);
+                   free(this->I);
+                   free(this->val);
                    this->_state = unassembled;
-                    assert(this->_state == unassembled);
+                   assert(this->_state == unassembled);
                }
 
     template <class fp_type>
