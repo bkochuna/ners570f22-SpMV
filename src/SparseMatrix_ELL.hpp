@@ -114,7 +114,7 @@ namespace SpMV
         }
 
         // Destroy _buildCoeff
-         _buildCoeff.clear();
+         this->_buildCoeff.clear();
 
         this->_state = assembled;
         assert(this->_state == assembled);
