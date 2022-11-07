@@ -53,9 +53,10 @@ TEST(buildingTest) {
   matrix.assembleStorage();
   ASSERT_EQUAL(matrix.getState(), SpMV::assembled);
 
-  // Check that setting another coefficient returns the matrix to the building
-  // state
+  // Check that changing an existing value returns the matrix to a building state and doesn't change the number of
+  // non-zeros
   matrix.setCoefficient(0, 0, 2.0);
+  ASSERT_EQUAL(matrix.getNumNonZeros(), N);
   ASSERT_EQUAL(matrix.getState(), SpMV::building);
 }
 
@@ -88,6 +89,15 @@ TEST(DiagonalMatVec) {
   for (unsigned int ii = 0; ii < N; ii++) {
     ASSERT_EQUAL(y[ii], y_expected[ii]);
   }
+
+  // To test that the _unassemble/assemble process works correctly, update the values of one of the diagonal entries,
+  // recompute the matvec and check the result is as expected
+  matrix.setCoefficient(0, 0, 1.0);
+  matrix.assembleStorage();
+  ASSERT_EQUAL(matrix.getState(), SpMV::assembled);
+  ASSERT_EQUAL(matrix.getNumNonZeros(), N);
+  matrix.computeMatVecProduct(x, y);
+  ASSERT_EQUAL(y[0], x[0]);
 }
 
 // Test a series of random matrix-vector products
