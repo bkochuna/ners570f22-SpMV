@@ -630,4 +630,4 @@ void assert_almost_equal(double first, double second, double precision,
   throw TestFailure(reason.str(), line_number, assertion_text);
 }
 
-#endif // UNIT_TEST_FRAMEWORK_H
+#endif
