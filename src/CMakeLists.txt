@@ -4,5 +4,4 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 # add_library(SpMV
 #             SparseMatrix.cpp
-#             SparseMatrix_COO.cpp
-# )
+#             SparseMatrix_DEN.cpp
