@@ -18,10 +18,15 @@ This package helps to store the sparse matrix in CSR format and do the matrix-ve
 These are the functions that are critical to this package:
 
 `SparseMatrix_CSR(const size_t nrows, const size_t ncols)` : Constructor
+
 `SparseMatrix_CSR()` : Destructor
+
 `assembleStorage()` : assemble the CSR format
+
 `computeMatVecProduct(const fp_type *x,fp_type *y)`: Compute matrix-vector product
+
 `getFormat`: getting the format in CSR
+
 `_unAssemble()`: Unassemble the CSR format
 
 
