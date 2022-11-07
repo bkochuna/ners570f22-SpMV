@@ -20,6 +20,9 @@
 // For compatibility with Visual Studio
 #include <ciso646>
 
+#ifdef __SPMV_FPTYPE__
+using fp_type = __SPMV_FPTYPE__;
+#endif
 // Place the following line of code in your test file to generate a
 // main() function:
 // TEST_MAIN()
