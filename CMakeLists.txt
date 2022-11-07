@@ -20,3 +20,17 @@ add_subdirectory(examples)
 # Allow unit tests and add testing directory
 enable_testing()
 add_subdirectory(tests)
+
+# install pre-commit via pip for git formatting/linting hooks
+# Code adapted from https://www.scivision.dev/cmake-install-python-package/
+find_package(Python COMPONENTS Interpreter REQUIRED)
+
+# Do a user install if not using a virtual environment
+if(DEFINED ENV{VIRTUAL_ENV} OR DEFINED ENV{CONDA_PREFIX})
+  set(_pip_args)
+else()
+  set(_pip_args "--user")
+endif()
+
+execute_process(COMMAND ${Python_EXECUTABLE} -m pip install ${_pip_args} pre-commit)
+execute_process(COMMAND pre-commit install)
