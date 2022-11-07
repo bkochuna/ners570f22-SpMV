@@ -29,14 +29,13 @@ public:
 
   void computeMatVecProduct(/*some args*/);
   
-  void unAssemble();
   //   SparseMatrix_CSR(const int nrows, const int ncols);
 
 private:
   size_t *I = nullptr;
   fp_type *val = nullptr;
   size_t *ptr = nullptr;
-
+  void _unAssemble();
 }; // class SparseMatrix_CSR
 
 // ==============================================================================
@@ -118,23 +117,27 @@ void SparseMatrix_CSR<fp_type>::computeMatVecProduct(const fp_type* x, fp_type* 
 template <class fp_type> void SparseMatrix_CSR<fp_type>::getFormat() {}
 
 template <class fp_type>
-void SparseMatrix_CSR<fp_type>::unAssemble()
+void SparseMatrix_CSR<fp_type>::_unAssemble()
 {
+	// check if the matrix is assembled
 	assert(this->_state == assembled);
         
-        // recreate buildCoeff	
-	size_t n = 0;
-        size_t i = 0;
-      	for (auto coeff : this->_buildCoeff) {
-	    	while (n < this->_nnz && I[n] == coeff.first.first) {
-
-			I[n] = coeff.first.first;
-		  	val[n] = coeff.second;
-		  	n += 1;
-	    	}
-	    	ptr[i + 1] = n;
-	    	i += 1;
-      	}
+        // recreate buildCoeff
+	int n = this->_nrows;
+	this->_nnz = 0;
+        
+	// loop over row pointer
+	for (int ii=0; ii < n-1; ii++)
+	{
+		// number of components in a row
+		int len = ptr[ii+1] - ptr[ii];
+		// loop over the components in the row
+		for (int idx=0; idx<len; idx++)
+		{
+			int ri =  ptr[ii];
+			this->setCoefficient(ptr[ii],I[idx+ri-1],val[idx+ri-1]);
+		}
+	}
 	
 	// deallocate pointers
 	free(this->I);
