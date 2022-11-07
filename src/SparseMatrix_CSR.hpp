@@ -27,7 +27,7 @@ public:
 
   void getFormat(/*some args*/);
 
-  void computeMatVecProduct(/*some args*/);
+  void computeMatVecProduct(const fp_type* x, fp_type* y);
   
   void unAssemble();
   //   SparseMatrix_CSR(const int nrows, const int ncols);
