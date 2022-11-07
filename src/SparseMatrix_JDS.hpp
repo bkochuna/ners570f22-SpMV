@@ -225,7 +225,42 @@ namespace SpMV {
   }
 
   template <class fp_type>
-  void SparseMatrix_JDS<fp_type>::_unAssemble() {}
+  void SparseMatrix_JDS<fp_type>::_unAssemble() {
+    // Only makes sense to unassemble if the matrix is assembled
+    assert(this->_state == assembled);
+
+    // Set the state to building, otherwise `setCoefficient` will call this method and that results in a segfault
+    this->_state = building;
+
+    // --- Loop through all the assembled data and call `setCoefficient` to add it to the `_buildCeff` map ---
+    this->_nnz = 0; // Need to reset the nonzero count because setCoefficient will increment it
+    for (int ii = 0; ii < this->_maxRowSize; ii++) {
+      int colLength = this->_jdPtrs[ii + 1] - this->_jdPtrs[ii];
+      int offset = this->_jdPtrs[ii];
+      for (int jj = 0; jj < colLength; jj++) {
+        size_t rowInd = this->_rowPerm[jj];
+        size_t colInd = this->_colIndices[offset + jj];
+        fp_type val = this->_values[offset + jj];
+        this->setCoefficient(rowInd, colInd, val);
+      }
+    }
+
+    // --- Now that the matrix is un-assembled we can release all of the memory used for the assembled storage ---
+    if (_colIndices != NULL) {
+      delete[] this->_colIndices;
+      this->_colIndices = NULL;
+    }
+
+    if (_values != NULL) {
+      delete[] this->_values;
+      this->_values = NULL;
+    }
+
+    if (_jdPtrs != NULL) {
+      delete[] this->_jdPtrs;
+      this->_jdPtrs = NULL;
+    }
+  }
 
   template <class fp_type>
   SparseMatrix<fp_type> SparseMatrix_JDS<fp_type>::getFormat() {
