@@ -13,27 +13,57 @@ namespace SpMV
 
         private:
             size_t* I = nullptr;
-            size_t* J = nullptr;
+            // size_t* J = nullptr;
             size_t max_nnz = 0;
             fp_type* val = nullptr;
         
         public:
-            SparseMatrix_ELL(const size_t nrows, const size_t ncols) : SparseMatrix<fp_type>::SparseMatrix(nrows,ncols)
-            {
-                cout << "Hello From SparseMartix_ELL" << endl;
-            };
+            /**
+             * @brief Construct a new ELL Sparse Matrix of given dimensions
+             *
+             * @param nrows Number of rows
+             * @param ncols Number of columns
+             */
+            SparseMatrix_ELL(const size_t nrows, const size_t ncols) : SparseMatrix<fp_type>::SparseMatrix(nrows,ncols) {};
+            /* Overloaded constructor I have no idea if this is right */
+            // SparseMatrix_ELL(const size_t nrows, const size_t ncols, size_t data[],size_t nnz[]):SparseMatrix(nrows,ncols);
             
-            
+            /**
+             * @brief Destructor for ELL Sparse Matrix format. Destory objects created
+             *
+             */
             virtual ~SparseMatrix_ELL();
 
+            /**
+             * @brief Assemble the ELL data structures from the general map based data structure used in the building phase
+             *
+             */
             void assembleStorage();
-            /*Some return type*/ void getFormat(/*some args*/);
+
+            /**
+             * @brief I don't know what this does
+             *  // Could be getting the nonzero ncols and nrows and creating a new SparseMatrix...
+             */
+            SparseMatrix<fp_type> void getFormat();
             
-            /* Overloaded constructor I have no idea if this is right */
-            SparseMatrix_ELL(const size_t nrows, const size_t n_cols) : SparseMatrix<fp_type>::SparseMatrix(nrows,ncols){};
+            /**
+             * @brief Compute the product of this matrix and a vector (y = Ax)
+             *
+             * @note The contents of y are overwritten by this operation
+             *
+             * @param x Array to multiply with
+             * @param y Array to store result in
+             */
+            void computeMatVecProduct(const fp_type x[], fp_type y[]);
 
+            /**
+             * @brief Convert the assembled matrix data back to the format used for building
+             *
+             * @note Calling this function will also clear the assembled matrix data
+             *
+             */
+            void _unAssemble();
 
-            SparseMatrix_ELL(const size_t nrows, const size_t ncols, size_t data[],size_t nnz[]):SparseMatrix(nrows,ncols);
 
 
     };
