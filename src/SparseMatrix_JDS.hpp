@@ -39,7 +39,7 @@ namespace SpMV {
        *
        */
       virtual ~SparseMatrix_JDS();
-      
+
       /**
        * @brief Assemble the JDS data structures from the general map based data structure used in the building phase
        *
@@ -180,7 +180,8 @@ namespace SpMV {
     this->_state = assembled;
   }
 
-  template <class fp_type> SparseMatrix_JDS<fp_type>::~SparseMatrix_JDS() {
+  template <class fp_type>
+  SparseMatrix_JDS<fp_type>::~SparseMatrix_JDS() {
     cout << "Hello from SparseMatrix_JDS Destructor!" << endl;
 
     if (this->_colIndices != NULL)
@@ -221,6 +222,7 @@ namespace SpMV {
       int colLength = this->_jdPtrs[ii + 1] - this->_jdPtrs[ii];
       int offset = this->_jdPtrs[ii];
       for (int jj = 0; jj < colLength; jj++) {
+#pragma omp atomic
         y[this->_rowPerm[jj]] += this->_values[offset + jj] * x[this->_colIndices[offset + jj]];
       }
     }
