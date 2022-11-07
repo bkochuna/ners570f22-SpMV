@@ -135,8 +135,13 @@ namespace SpMV
     SparseMatrix<fp_type> SparseMatrix_COO<fp_type>::getFormat()
     {
         cout << "Hello from SparseMatrix_COO::getFormat!" << endl;
-        SparseMartix_COO<fp_type> B;
+        SparseMartix<fp_type> B;
         
+        B._ncols = this->_ncols;
+        B._nrows = this->_nrows;
+        B._nnz = this->_nnz;
+        B._buildCoeff = this->_buildCoeff;
+        B.assembleStorage()
         return B;
     }
     
