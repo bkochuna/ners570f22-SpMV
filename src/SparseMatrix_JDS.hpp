@@ -18,6 +18,7 @@ Jagged Diagonal Sparse Matrix (JDS) implementation
 // Extension Includes
 // =============================================================================
 #include "SparseMatrix.hpp"
+#include "SparseMatrix_JDS.hpp"
 
 // ==============================================================================
 // Class declaration
@@ -50,7 +51,7 @@ namespace SpMV {
        * @brief I don't know what this does
        *  // Could be getting the nonzero ncols and nrows and creating a new SparseMatrix...
        */
-      SparseMatrix<fp_type> getFormat();
+      SparseMatrix<fp_type>* getFormat();
 
       /**
        * @brief Compute the product of this matrix and a vector (y = Ax)
@@ -263,26 +264,39 @@ namespace SpMV {
   }
 
   template <class fp_type>
-  SparseMatrix<fp_type> SparseMatrix_JDS<fp_type>::getFormat() {
+  SparseMatrix<fp_type>* SparseMatrix_JDS<fp_type>::getFormat() {
     //
     if (this->_state == assembled):
       _unAssemble();
     //
     SparseMatrix<fp_type> B;
+    SparseMatrix<fp-type>* ptr_B = B;
+    // SparseMatrix_JDS<fp-type> *ptr_A = nullptr;
     // newMat -> _nrows, _ncols, _nnz, _buildCoeff = mat->
     // newMat -> assemble
     // number of rows
     B._nrows = this->_nrows;
     // number of columns
     B._ncols = this->_ncols;
-    //
     B._nnz = this->_nnz;
     // _buildCoeff 
     B._buildCoeff = this->_buildCoeff;
-    // assemble() 
+    // assemble()
     B.assembleStorage();
-    //
-    return B;
+    /*
+    // tranform
+    if (fmt == "DEN")
+    {
+
+    }
+    else if (fmt == "COO")
+    {
+      
+    }
+    
+    ptr_B = ptr_A;
+    */
+    return ptr_B;
   }
 
 } // namespace SpMV
