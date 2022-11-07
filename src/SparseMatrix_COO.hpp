@@ -87,6 +87,7 @@ namespace SpMV
     template <class fp_type>
     void SparseMatrix_COO<fp_type>::~SparseMatrix_COO()
     {
+	    // Deallocate memory and assign null pointers
 	    if (this->I != nullptr)
 	    {
 		    free(this->I);
