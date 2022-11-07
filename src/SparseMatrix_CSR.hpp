@@ -93,6 +93,11 @@ template <class fp_type> SparseMatrix_CSR<fp_type>::~SparseMatrix_CSR() {
 template <class fp_type>
 void SparseMatrix_CSR<fp_type>::computeMatVecProduct() {}
 
-template <class fp_type> void SparseMatrix_CSR<fp_type>::getFormat() {}
+template <class fp_type> void SparseMatrix_CSR<fp_type>::getFormat() {
+  cout << "Hello from SparseMatrix_CSR::getFormat!" << endl;
+  if(this->_state == assembled): _unAssemble();
+  SparseMatrix<fp_type> B;
+
+}
 
 } // namespace SpMV
