@@ -108,6 +108,7 @@ namespace SpMV
                     this->val = nullptr;
             }
     }
+    }
 
     template <class fp_type>
   void SparseMatrix_COO<fp_type>::computeMatVecProduct(const fp_type x[], fp_type y[]) {
@@ -128,25 +129,6 @@ namespace SpMV
     #pragma omp atomic
             y[this->J[ii]]+=this->val[ii]*x[this->I[ii]];
         }
-    }
-
-    template <class fp_type>
-    SparseMatrix_COO<fp_type> SparseMatrix_COO<fp_type>::gers
-	    if (this->I != nullptr)
-	    {
-		    free(this->I);
-		    this->I = nullptr;
-	    }
-	    if (this->J != nullptr)
-            {
-                    free(this->J);
-                    this->J = nullptr;
-            }
-	    if (this->val != nullptr)
-            {
-                    free(this->val);
-                    this->val = nullptr;
-            }
     }
 
     template <class fp_type>
