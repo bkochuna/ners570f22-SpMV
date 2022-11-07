@@ -37,5 +37,4 @@ execute_process(COMMAND pre-commit install)
 set_target_properties(SpMV PROPERTIES PUBLIC_HEADER "SparseMatrix.hpp;SparseMatrix_COO.hpp;SparseMatrix_JDS.hpp;SparseMatrix_ELL.hpp;SparseMatrix_CSR.hpp;SparseMatrix_DEN.hpp;unit_test_framework.cpp")
 
 # Install
-install(TARGETS SpMV LIBRARY DESTINATION bin)
-install(FILES ${PUBLIC_HEADERS} DESTINATION bin/SpMV)
+install(TARGETS SpMV LIBRARY DESTINATION lib PUBLIC_HEADER DESTINATION include)
