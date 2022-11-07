@@ -5,4 +5,4 @@
 #
 # Where file-name does not have .cpp
 add_unit_test(example)
-add_unit_test(assemble_Test_COO)
+add_unit_test(TestSparseMatrix_COO)
