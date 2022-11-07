@@ -14,6 +14,7 @@ namespace SpMV
         private:
             size_t* I = nullptr;
             size_t* J = nullptr;
+            size_t max_nnz = 0;
             fp_type* val = nullptr;
         
         public:
@@ -82,6 +83,36 @@ namespace SpMV
         
         //return new SparseMatrix(this->_ncols,this->_nrows);
     }
+
+    template <class fp_type>
+    void SparseMatrix_ELL<fp_type>::unAssemble() {
+
+        assert(this->_state == assembled);
+
+        int i, j;
+
+        // recreate buildCoeff list 
+        // assumes data array and column index array are 2d arrays (two levels of pointers)
+        // and also assumes empty values at end of row in column index arrays are -1
+        for (i = 0; i < this->_nrows; i++) {
+            j = 0
+            while ((j < this->max_nnz) && (J[i][j] != -1)) {
+                this->_buildCoeff[ make_pair(i, J[i][j]) ] = val[i][j];
+                j += 1; 
+            } 
+        } 
+        
+        free(this->J);
+        free(this->val);
+        J = nullptr;
+        val = nullptr;
+
+        this->_state = building;
+        assert(this->_state == building);
+
+    }
+
+
 }
 
 #endif
