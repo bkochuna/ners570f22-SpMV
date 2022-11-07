@@ -44,6 +44,10 @@ namespace SpMV
 // Method implementations
 // ==============================================================================
 
+/*******************/
+/* assembleStorage */
+/*******************/
+
     template <class fp_type>
     void SparseMatrix_DEN<fp_type>::assembleStorage()
     {
@@ -62,6 +66,10 @@ namespace SpMV
         assert(this->_state == assembled);
     }
 
+/*************/
+/* getFormat */
+/*************/
+
     template <class fp_type>
     void SparseMatrix_DEN<fp_type>::getFormat(/*some args*/)
     {
@@ -73,6 +81,10 @@ namespace SpMV
         */      
     }
 
+/************************/
+/* computeMatVecProduct */
+/************************/
+
     template <class fp_type>
     void SparseMatrix_DEN<fp_type>::computeMatVecProduct(/*some args*/)
     {
@@ -80,6 +92,10 @@ namespace SpMV
         Code for implementing computeMatVecProduct for DEN
         */
     }
+
+/**************/
+/* unAssemble */
+/**************/
 
     template <class fp_type>
     void SparseMatrix_DEN<fp_type>::unAssemble()
@@ -95,6 +111,10 @@ namespace SpMV
 	    this->_state = building;
 	    assert(this->_state == building);
     }
+
+/**************/
+/* Destructor */
+/**************/
 
     template <class fp_type> 
     SparseMatrix_DEN<fp_type>::~SparseMatrix_DEN()
