@@ -22,6 +22,7 @@ namespace SpMV
                 cout << "Hello From SparseMartix_COO" << endl;
             };
             void assembleStorage();
+            void _unAssemble();
             /*Some return type*/ void getFormat(/*some args*/);
 
     };
@@ -47,10 +48,22 @@ namespace SpMV
         }
 
         // Destroy _buildCoeff
+        _buildCoeff.clear()
+            //this->_clearBuildCoeff();
 
         this->_state = assembled;
         assert(this->_state == assembled);
     }
+    
+    template <class fp_type>
+              void SparseMatrix_COO<fp_type>::_unAssemble()
+            {
+                   free(J);
+                   free(I);
+                   free(val);
+                   this->_state = unassembled;
+                    assert(this->_state == unassembled);
+               }
 
     template <class fp_type>
     void SparseMatrix_COO<fp_type>::getFormat()
