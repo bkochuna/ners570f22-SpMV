@@ -59,6 +59,19 @@ namespace SpMV
               void SparseMatrix_COO<fp_type>::_unAssemble()
             {
                    assert(this->_state == assembled);
+                  
+                    //this->_buildCoeff[ make_pair(_nnz,_nnz), _nnz ] = make_pair(I,J),val;
+                    size_t n=0;
+                    for(n=0; n<this->_nnz; n++)
+                    {
+                        _buildCoeff.append(make_pair(I[n],J[n]),val[n]); 
+                        //this->_buildCoeff[make_pair(I[n],J[n]),val[n]]; 
+                        //this->_nnz = this->_buildCoeff.size();
+                       // I[n]   = coeff.first.first;
+                        //J[n]   = coeff.first.second;
+                        //val[n] = coeff.second;
+         
+                    }
                    free(this->J);
                    free(this->I);
                    free(this->val);
