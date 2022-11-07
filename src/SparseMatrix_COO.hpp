@@ -132,7 +132,7 @@ namespace SpMV
     {
         assert(this->_state == assembled);
         cout << "Hello from SparseMatrix_COO::getFormat!" << endl;
-        SparseMartix_COO B;
+        SparseMartix_COO<fp_type> B;
         
         int i;
         for(i=0; i < _nnz; i++)
