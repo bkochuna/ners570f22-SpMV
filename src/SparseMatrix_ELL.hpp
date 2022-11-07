@@ -181,8 +181,8 @@ namespace SpMV
             for (int j=0; j< this->_maxRow; j++) {
                 jj = j + this->_maxRow*i; //this row assumes that all elements in the columns are stored in contiguous memory pointers and allows indexing through one single index
                 c = this->_col[jj];
-                if ((c >= 0) && (c < _nrows)
-                    y[i] += val[jj] * x[c];
+                if ((c >= 0) && (c < this->_nrows)
+                    y[i] += this->_val[jj] * x[c];
             }
         }
     }
