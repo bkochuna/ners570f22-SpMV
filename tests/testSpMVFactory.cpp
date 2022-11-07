@@ -2,7 +2,8 @@
 #include "unit_test_framework.hpp"
 
 // Include code needed to test
-#include "SpMVFactory.hpp"
+#include "../src/SpMVFactory.hpp"
+#include <typeinfo>
 
 /* Here are some examples of unit tests for std::vector, the code being tested
  * is included as well as the unit testing framework file. The unit testing
@@ -26,22 +27,116 @@
 TEST(COOFactory) {
   // Initialize Factories
   SpMV::SpMVFactory<double> *spmvfDouble = new SpMV::SparseMatrixFactory_COO<double>();
-  SpMV::SpMVFactory<double> *spmvfFloat = new SpMV::SparseMatrixFactory_COO<float>();
+  SpMV::SpMVFactory<float> *spmvfFloat = new SpMV::SparseMatrixFactory_COO<float>();
+  // Fake row and column counts
+  size_t nRow=10, nCol = 11;
   // Initialize Matrices
-  SpMV::SparseMatrix_COO<double> *spmvDouble = spmvfDouble.createSparseMatrix();
-  SpMV::SparseMatrix_COO<double> *spmvFloat = spmvfFloat.createSparseMatrix();
+  SpMV::SparseMatrix<double> *spmvDouble = spmvfDouble->createSparseMatrix(nRow,nCol);
+  SpMV::SparseMatrix<float> *spmvFloat = spmvfFloat->createSparseMatrix(nRow,nCol);
 
   // Assertions for unit testing factory
-  ASSERT_TRUE(is_pointer(spmvfDouble));
-  ASSERT_TRUE(is_pointer(spmvfFloat));
-  ASSERT_TRUE(typeid(*spmvfDouble)==SpMV::SparseMatrixFactory_COO<double>);
-  ASSERT_TRUE(typeid(*spmvfFloat)==SpMV::SparseMatrixFactory_COO<float>);
+  ASSERT_TRUE(typeid(spmvfDouble)==typeid(SpMV::SpMVFactory<double> *));
+  ASSERT_TRUE(typeid(spmvfFloat)==typeid(SpMV::SpMVFactory<float> *));
+  ASSERT_TRUE(typeid(*spmvfDouble)==typeid(SpMV::SparseMatrixFactory_COO<double>));
+  ASSERT_TRUE(typeid(*spmvfFloat)==typeid(SpMV::SparseMatrixFactory_COO<float>));
 
   // Assertions for unit testing matrix
-  ASSERT_TRUE(is_pointer(spmvDouble));
-  ASSERT_TRUE(is_pointer(spmvFloat));
-  ASSERT_TRUE(typeid(*spmvDouble)==SpMV::SparseMatrix_COO<double>);
-  ASSERT_TRUE(typeid(*spmvFloat)==SpMV::SparseMatrix_COO<float>);
+  ASSERT_TRUE(typeid(spmvDouble)==typeid(SpMV::SparseMatrix_COO<double> *));
+  ASSERT_TRUE(typeid(spmvFloat)==typeid(SpMV::SparseMatrix_COO<float> *));
+  ASSERT_TRUE(typeid(*spmvDouble)==typeid(SpMV::SparseMatrix_COO<double>));
+  ASSERT_TRUE(typeid(*spmvFloat)==typeid(SpMV::SparseMatrix_COO<float>));
+}
+// Create a unit test
+TEST(ELLFactory) {
+  // Initialize Factories
+  SpMV::SpMVFactory<double> *spmvfDouble = new SpMV::SparseMatrixFactory_ELL<double>();
+  SpMV::SpMVFactory<float> *spmvfFloat = new SpMV::SparseMatrixFactory_ELL<float>();
+  // Fake row and column counts
+  size_t nRow=10, nCol = 11;
+  // Initialize Matrices
+  SpMV::SparseMatrix<double> *spmvDouble = spmvfDouble->createSparseMatrix(nRow,nCol);
+  SpMV::SparseMatrix<float> *spmvFloat = spmvfFloat->createSparseMatrix(nRow,nCol);
+
+  // Assertions for unit testing factory
+  ASSERT_TRUE(typeid(spmvfDouble)==typeid(SpMV::SpMVFactory<double> *));
+  ASSERT_TRUE(typeid(spmvfFloat)==typeid(SpMV::SpMVFactory<float> *));
+  ASSERT_TRUE(typeid(*spmvfDouble)==typeid(SpMV::SparseMatrixFactory_ELL<double>));
+  ASSERT_TRUE(typeid(*spmvfFloat)==typeid(SpMV::SparseMatrixFactory_ELL<float>));
+
+  // Assertions for unit testing matrix
+  ASSERT_TRUE(typeid(spmvDouble)==typeid(SpMV::SparseMatrix_ELL<double> *));
+  ASSERT_TRUE(typeid(spmvFloat)==typeid(SpMV::SparseMatrix_ELL<float> *));
+  ASSERT_TRUE(typeid(*spmvDouble)==typeid(SpMV::SparseMatrix_ELL<double>));
+  ASSERT_TRUE(typeid(*spmvFloat)==typeid(SpMV::SparseMatrix_ELL<float>));
+}
+// Create a unit test
+TEST(CSRFactory) {
+  // Initialize Factories
+  SpMV::SpMVFactory<double> *spmvfDouble = new SpMV::SparseMatrixFactory_CSR<double>();
+  SpMV::SpMVFactory<float> *spmvfFloat = new SpMV::SparseMatrixFactory_CSR<float>();
+  // Fake row and column counts
+  size_t nRow=10, nCol = 11;
+  // Initialize Matrices
+  SpMV::SparseMatrix<double> *spmvDouble = spmvfDouble->createSparseMatrix(nRow,nCol);
+  SpMV::SparseMatrix<float> *spmvFloat = spmvfFloat->createSparseMatrix(nRow,nCol);
+
+  // Assertions for unit testing factory
+  ASSERT_TRUE(typeid(spmvfDouble)==typeid(SpMV::SpMVFactory<double> *));
+  ASSERT_TRUE(typeid(spmvfFloat)==typeid(SpMV::SpMVFactory<float> *));
+  ASSERT_TRUE(typeid(*spmvfDouble)==typeid(SpMV::SparseMatrixFactory_CSR<double>));
+  ASSERT_TRUE(typeid(*spmvfFloat)==typeid(SpMV::SparseMatrixFactory_CSR<float>));
+
+  // Assertions for unit testing matrix
+  ASSERT_TRUE(typeid(spmvDouble)==typeid(SpMV::SparseMatrix_CSR<double> *));
+  ASSERT_TRUE(typeid(spmvFloat)==typeid(SpMV::SparseMatrix_CSR<float> *));
+  ASSERT_TRUE(typeid(*spmvDouble)==typeid(SpMV::SparseMatrix_CSR<double>));
+  ASSERT_TRUE(typeid(*spmvFloat)==typeid(SpMV::SparseMatrix_CSR<float>));
+}
+// Create a unit test
+TEST(JDSFactory) {
+  // Initialize Factories
+  SpMV::SpMVFactory<double> *spmvfDouble = new SpMV::SparseMatrixFactory_JDS<double>();
+  SpMV::SpMVFactory<float> *spmvfFloat = new SpMV::SparseMatrixFactory_JDS<float>();
+  // Fake row and column counts
+  size_t nRow=10, nCol = 11;
+  // Initialize Matrices
+  SpMV::SparseMatrix<double> *spmvDouble = spmvfDouble->createSparseMatrix(nRow,nCol);
+  SpMV::SparseMatrix<float> *spmvFloat = spmvfFloat->createSparseMatrix(nRow,nCol);
+
+  // Assertions for unit testing factory
+  ASSERT_TRUE(typeid(spmvfDouble)==typeid(SpMV::SpMVFactory<double> *));
+  ASSERT_TRUE(typeid(spmvfFloat)==typeid(SpMV::SpMVFactory<float> *));
+  ASSERT_TRUE(typeid(*spmvfDouble)==typeid(SpMV::SparseMatrixFactory_JDS<double>));
+  ASSERT_TRUE(typeid(*spmvfFloat)==typeid(SpMV::SparseMatrixFactory_JDS<float>));
+
+  // Assertions for unit testing matrix
+  ASSERT_TRUE(typeid(spmvDouble)==typeid(SpMV::SparseMatrix_JDS<double> *));
+  ASSERT_TRUE(typeid(spmvFloat)==typeid(SpMV::SparseMatrix_JDS<float> *));
+  ASSERT_TRUE(typeid(*spmvDouble)==typeid(SpMV::SparseMatrix_JDS<double>));
+  ASSERT_TRUE(typeid(*spmvFloat)==typeid(SpMV::SparseMatrix_JDS<float>));
+}
+// Create a unit test
+TEST(DENFactory) {
+  // Initialize Factories
+  SpMV::SpMVFactory<double> *spmvfDouble = new SpMV::SparseMatrixFactory_DEN<double>();
+  SpMV::SpMVFactory<float> *spmvfFloat = new SpMV::SparseMatrixFactory_DEN<float>();
+  // Fake row and column counts
+  size_t nRow=10, nCol = 11;
+  // Initialize Matrices
+  SpMV::SparseMatrix<double> *spmvDouble = spmvfDouble->createSparseMatrix(nRow,nCol);
+  SpMV::SparseMatrix<float> *spmvFloat = spmvfFloat->createSparseMatrix(nRow,nCol);
+
+  // Assertions for unit testing factory
+  ASSERT_TRUE(typeid(spmvfDouble)==typeid(SpMV::SpMVFactory<double> *));
+  ASSERT_TRUE(typeid(spmvfFloat)==typeid(SpMV::SpMVFactory<float> *));
+  ASSERT_TRUE(typeid(*spmvfDouble)==typeid(SpMV::SparseMatrixFactory_DEN<double>));
+  ASSERT_TRUE(typeid(*spmvfFloat)==typeid(SpMV::SparseMatrixFactory_DEN<float>));
+
+  // Assertions for unit testing matrix
+  ASSERT_TRUE(typeid(spmvDouble)==typeid(SpMV::SparseMatrix_DEN<double> *));
+  ASSERT_TRUE(typeid(spmvFloat)==typeid(SpMV::SparseMatrix_DEN<float> *));
+  ASSERT_TRUE(typeid(*spmvDouble)==typeid(SpMV::SparseMatrix_DEN<double>));
+  ASSERT_TRUE(typeid(*spmvFloat)==typeid(SpMV::SparseMatrix_DEN<float>));
 }
 
 
