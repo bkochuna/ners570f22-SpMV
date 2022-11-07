@@ -9,10 +9,4 @@ add_library(SpMV
             SparseMatrix_ELL.cpp
             SparseMatrix_CSR.cpp
             SparseMatrix_DEN.cpp
-            SparseMatrix.hpp
-            SparseMatrix_COO.hpp
-            SparseMatrix_JDS.hpp
-            SparseMatrix_ELL.hpp
-            SparseMatrix_CSR.hpp
-            SparseMatrix_DEN.hpp
 )
