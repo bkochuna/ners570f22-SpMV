@@ -23,10 +23,18 @@ namespace SpMV
                 cout << "Hello From SparseMartix_ELL" << endl;
             };
             
+            
             virtual ~SparseMatrix_ELL();
 
             void assembleStorage();
             /*Some return type*/ void getFormat(/*some args*/);
+            
+            /* Overloaded constructor I have no idea if this is right */
+            SparseMatrix_ELL(const size_t nrows, const size_t n_cols) : SparseMatrix<fp_type>::SparseMatrix(nrows,ncols){};
+
+
+            SparseMatrix_ELL(const size_t nrows, const size_t ncols, size_t data[],size_t nnz[]):SparseMatrix(nrows,ncols);
+
 
     };
 
