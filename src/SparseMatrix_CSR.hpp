@@ -92,7 +92,28 @@ template <class fp_type> SparseMatrix_CSR<fp_type>::~SparseMatrix_CSR() {
 }
 
 template <class fp_type>
-void SparseMatrix_CSR<fp_type>::computeMatVecProduct() {}
+void SparseMatrix_CSR<fp_type>::computeMatVecProduct(const fp_type* x, fp_type* y) {
+ 
+    assert(this->_state == assembled);
+
+    // ensure that output vector is all zeros at beginning of calculation
+    for (int i = 0; i < this->_nrows, i++) {
+        y[i] = 0.0;
+    }
+
+    // compute matrix vector multiplication
+    // i is row index, j is index in the val and I array
+    int j = 0;
+    for (int i = 0; i < this->_nrows, i++) {
+        // while we're not on the last row and j is less than the starting index of the next row,
+        // or (we are on the last row) and j is less than the number of nonzero entries
+        while ( ((i < this->_nrows - 1) && (j < this->ptr[i+1] - 1)) || (j < this->_nnz) ) {
+            y[i] += this->val[j] * x[this->ptr[j]];
+            j += 1;
+        }
+    }
+
+}
 
 template <class fp_type> void SparseMatrix_CSR<fp_type>::getFormat() {}
 
