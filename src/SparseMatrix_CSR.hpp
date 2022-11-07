@@ -124,13 +124,15 @@ void SparseMatrix_CSR<fp_type>::_unAssemble()
         
         // recreate buildCoeff
 	int n = this->_nrows;
+	int nnz = this->_nnz;
 	this->_nnz = 0;
         
 	// loop over row pointer
-	for (int ii=0; ii < n-1; ii++)
+	for (int ii=0; ii < n; ii++)
 	{
 		// number of components in a row
-		int len = ptr[ii+1] - ptr[ii];
+		if (ii < n-1) {int len = ptr[ii+1] - ptr[ii]};
+		else {int len = nnz - ptr[ii];}
 		// loop over the components in the row
 		for (int idx=0; idx<len; idx++)
 		{
