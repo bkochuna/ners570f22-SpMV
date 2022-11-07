@@ -3,5 +3,5 @@
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 add_library(SpMV
-            unit_test_framework.hpp
+            unit_test_framework.cpp
 )
