@@ -48,7 +48,7 @@ namespace SpMV
             void assembleStorage();
             SparseMartix_COO<fp_type> getFormat();
     /**
-       * @brief Compute the product of this matrix and a vector (y = Ax)
+       * @brief Compute the product of this matrix and a vector in COO format (y = Ax)
        *
        * @note The contents of y are overwritten by this operation
        *
