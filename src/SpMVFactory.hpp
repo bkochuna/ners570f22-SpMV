@@ -10,13 +10,14 @@
 
 namespace SpMV
 {
+    // Abstract Factory object that can create SparseMatrix of any type.
     template <class fp_type>
     class SpMVFactory
     {
         public:
             virtual SpMV::SparseMatrix<fp_type>* createSparseMatrix()=0;
     };
-
+    // Concrete factory to instantiate COO SparseMatrix.
     template <class fp_type>
     class SparseMatrixFactory_COO : public SpMVFactory<fp_type>
     {
@@ -26,6 +27,7 @@ namespace SpMV
                 return SpMV::SparseMatrix_COO<fp_type>();
             };
     };
+    // Concrete factory to instantiate ELL SparseMatrix.
     template <class fp_type>
     class SparseMatrixFactory_ELL : public SpMVFactory<fp_type>
     {
@@ -35,6 +37,7 @@ namespace SpMV
                 return SpMV::SparseMatrix_ELL<fp_type>();
             };
     };
+    // Concrete factory to instantiate DEN SparseMatrix.
     template <class fp_type>
     class SparseMatrixFactory_DEN : public SpMVFactory<fp_type>
     {
@@ -44,6 +47,7 @@ namespace SpMV
                 return SpMV::SparseMatrix_DEN<fp_type>();
             };
     };
+    // Concrete factory to instantiate JDS SparseMatrix.
     template <class fp_type>
     class SparseMatrixFactory_JDS : public SpMVFactory<fp_type>
     {
@@ -53,6 +57,7 @@ namespace SpMV
                 return SpMV::SparseMatrix_JDS<fp_type>();
             };
     };
+    // Concrete factory to instantiate CSR SparseMatrix.
     template <class fp_type>
     class SparseMatrixFactory_CSR : public SpMVFactory<fp_type>
     {
