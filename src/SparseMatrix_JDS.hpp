@@ -48,9 +48,9 @@ namespace SpMV {
 
       /**
        * @brief I don't know what this does
-       *
+       *  // Could be getting the nonzero ncols and nrows and creating a new SparseMatrix...
        */
-      /*Some return type*/ void getFormat(/*some args*/);
+      SparseMatrix<fp_type> getFormat();
 
       /**
        * @brief Compute the product of this matrix and a vector (y = Ax)
@@ -228,6 +228,21 @@ namespace SpMV {
   void SparseMatrix_JDS<fp_type>::_unAssemble() {}
 
   template <class fp_type>
-  void SparseMatrix_JDS<fp_type>::getFormat() {}
+  SparseMatrix<fp_type> SparseMatrix_JDS<fp_type>::getFormat() {
+    //
+    int nnrows, nncols;
+    int i;
+    int nonzero;
+    //
+    for (i = 0; i < this->_maxRowSize; i++) {
+      nonzero = this->_jdPtrs[i + 1];
+    }
+    // number of nonzero rows
+    nnrows = nonzero;
+    // number of nonzero columns
+    nncols = nonzero;
+    //
+    return SparseMatrix(nnrows, nncols);
+  }
 
 } // namespace SpMV
