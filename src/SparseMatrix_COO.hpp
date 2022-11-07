@@ -1,8 +1,30 @@
+/*
+=============================================================================
+Coordinate Matrix format (COO) implementation
+=============================================================================
+@File    :   SparseMatrix_COO.hpp
+@Date    :   2022/10/16
+@Description :
+*/
 #ifndef __SPMV570_COO__
 #define __SPMV570_COO__
 
+#pragma once
+
+// =============================================================================
+// Standard Library Includes
+// =============================================================================
+#include <algorithm>
+#include <vector>
+
+// =============================================================================
+// Extension Includes
+// =============================================================================
 #include "SparseMatrix.hpp"
 
+// ==============================================================================
+// Class declaration
+// ==============================================================================
 namespace SpMV
 {
     template <class fp_type>
@@ -24,6 +46,15 @@ namespace SpMV
 	    virtual ~SparseMatrix_COO();
             void assembleStorage();
             /*Some return type*/ void getFormat(/*some args*/);
+    /**
+       * @brief Compute the product of this matrix and a vector (y = Ax)
+       *
+       * @note The contents of y are overwritten by this operation
+       *
+       * @param x Array to multiply with
+       * @param y Array to store result in
+       */
+      void computeMatVecProduct(const fp_type x[], fp_type y[]);
 
     };
 
@@ -71,6 +102,27 @@ namespace SpMV
                     free(this->val);
                     this->val = nullptr;
             }
+    }
+
+    template <class fp_type>
+  void SparseMatrix_COO<fp_type>::computeMatVecProduct(const fp_type x[], fp_type y[]) {
+    if (this->_state != assembled) {
+      assembleStorage();
+    }
+    // --- Check that the matrix is assembled ---
+    assert(this->_state == assembled);
+
+    // Zero the output vector
+    #pragma omp parallel for simd schedule(static)
+        for (int ii = 0; ii < this->_nnz; ii++) {
+        y[ii] = 0.0;
+        }
+    // --- Compute the matrix vector product ---
+    #pragma omp parallel for simd schedule(static)
+        for (int ii = 0; ii < this->_nnz; ii++) {
+    #pragma omp atomic
+            y[this->J[ii]]+=this->val[ii]*x[this->I[ii]];
+        }
     }
 
     template <class fp_type>
