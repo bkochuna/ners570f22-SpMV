@@ -47,9 +47,11 @@ template <class fp_type> void SparseMatrix_CSR<fp_type>::assembleStorage() {
   cout << "Hello from SparseMatrix_COO::assembleStorage!" << endl;
 
   // Convert this buildCoeff dictionary to I, J, val
-  this->I = (size_t *)malloc(this->_nnz * sizeof(size_t));
-  this->val = (fp_type *)malloc(this->_nnz * sizeof(fp_type));
-  this->ptr = (unsigned int *)malloc(((this->rows) + 1) * sizeof(unsigned int));
+  this->I = new int[this->_nnz];
+  ;
+
+  this->val = new fp_type[this->_nnz];
+  this->ptr = new size_t[this->_nnz];
 
   size_t n = 0;
   size_t i = 0;
@@ -114,9 +116,8 @@ void SparseMatrix_CSR<fp_type>::computeMatVecProduct(const fp_type *x,
 
 template <class fp_type> void SparseMatrix_CSR<fp_type>::getFormat() {
   cout << "Hello from SparseMatrix_CSR::getFormat!" << endl;
-  if(this->_state == assembled): _unAssemble();
+  if (this->_state == assembled): _unAssemble();
   SparseMatrix<fp_type> B;
-
 }
 
 template <class fp_type> void SparseMatrix_CSR<fp_type>::_unAssemble() {
