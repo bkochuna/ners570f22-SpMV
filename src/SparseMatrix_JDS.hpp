@@ -94,7 +94,7 @@ namespace SpMV {
   template <class fp_type>
   SparseMatrix_JDS<fp_type>::SparseMatrix_JDS(const size_t nrows, const size_t ncols, size_t perm[], size_t jdiag[], int col_ind[], fp_type jd_ptr[], size_t max_row_size) : SparseMatrix<fp_type>::SparseMatrix(nrows, ncols) {
         this->_nnz = (size_t) sizeof(jdiag)/sizeof(jdiag[0]);
-        vector<size_t> vecPerm(perm,perm+sizeof(perm)/sizeof(perm[0]));
+        vector<size_t> vecPerm(perm,nrows);
 
         this->_state = building;
         this->_rowPerm = vecPerm;
