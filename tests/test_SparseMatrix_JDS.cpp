@@ -77,13 +77,14 @@ TEST(alternateBuildingTest) {
   size_t jd_ptr[4]={1,7,13,17};
   size_t rows=6;
   size_t cols=6;
+  size_t maxrows=4;
 
   fp_type matMul[6];
   fp_type testVec[6]={0,1,0,0,0,0};
   fp_type expectedEntry = -3;
 
   // Create an NxN JDS matrix
-  SpMV::SparseMatrix_JDS<fp_type> matrix(rows, cols, perm, jdiag, col_ind, jd_ptr);
+  SpMV::SparseMatrix_JDS<fp_type> matrix(rows, cols, perm, jdiag, col_ind, jd_ptr,maxrows);
   matrix.computeMatVecProduct(testVec,matMul);
   ASSERT_EQUAL(matMul[0],expectedEntry);
 
