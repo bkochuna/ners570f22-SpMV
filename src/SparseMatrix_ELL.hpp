@@ -130,6 +130,33 @@ namespace SpMV
     }
 
     template <class fp_type>
+    void SparseMatrix_ELL<fp_type>::computeMatVecProduct(const fp_type x[], fp_type y[]) {
+
+        /* I'm assuning input x and output vector y. Also I'm assuming _maxRow */
+        if (this->_state != assembled) {
+        assembleStorage();
+        }
+        // --- Check that the matrix is assembled ---
+        assert(this->_state == assembled);
+
+    // Zero the output vector
+    #pragma omp parallel for simd schedule(static)
+        for (int ii = 0; ii < this->_ncols; ii++) {
+        y[ii] = 0.0;
+        }
+
+    #pragma omp parallel for simd schedule(static) collapse(2)
+        for (int i=0; i< this->_ncols; ++i) {
+            for (int j=0; j< this->_maxRow; ++j) {
+                jj = j + this->_maxRow*i;
+                c = col[jj]
+                if ((c >= 0) && (c < n))
+                y[i] += val[jj] * x[c];
+            }
+        }
+    }
+
+    template <class fp_type>
     void SparseMatrix_ELL<fp_type>::unAssemble() {
 
         assert(this->_state == assembled);
