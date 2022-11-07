@@ -52,42 +52,7 @@ namespace SpMV {
        * @param col_ind Vector of column indeces
        * @param jd_ptr Vector of actual matrix values
        */
-      SparseMatrix_JDS(const size_t nrows, const size_t ncols) : SparseMatrix<fp_type>::SparseMatrix(nrows, ncols, perm[], jdiag[], col_ind[], jd_ptr[], val[]) {
-        assert(this->_state == undefined);
-        this->_nrows = nrows;
-        this->_ncols = ncols;
-        this->_state = initialized;
-      }
-
-      /**
-       * @brief Overloaded constructor:
-       * Construct a new JDS Sparse Matrix of given dimensions AND JDS data structures
-       * 
-       * @note Skips the building phase
-       *
-       * @param nrows Number of rows
-       * @param ncols Number of columns
-       * @param perm Vector of row permutations
-       * @param jdiag Vector of actual matrix values
-       * @param col_ind Vector of column indeces
-       * @param jd_ptr Vector of jagged diagonal pointers
-       */
-      SparseMatrix_JDS(const size_t nrows, const size_t ncols, perm[], jdiag[], col_ind[], jd_ptr[]) : SparseMatrix<fp_type>::SparseMatrix(nrows, ncols) {
-        // are the following lines automatically completed via the base class constructor?
-        assert(this->_state == undefined);
-        this->_nrows = nrows;
-        this->_ncols = ncols;
-        this->_nnz = (size_t) sizeof(jdiag)/sizeof(jdiag[0]);
-        this->_state = initialized;
-
-        this->_state = building;
-        this->_rowPerm = perm;
-        this->_values = jdiag;
-        this->_colIndices = col_ind;
-        this->_jdPtrs = jd_ptr;
-
-        assert(this->_state == building);
-      }
+      SparseMatrix_JDS(const size_t nrows, const size_t ncols, size_t perm[], size_t jdiag[], int col_ind[], fp_type jd_ptr[]) : SparseMatrix<fp_type>::SparseMatrix(nrows, ncols);
       /**
        * @brief Assemble the JDS data structures from the general map based data structure used in the building phase
        *
@@ -129,6 +94,18 @@ namespace SpMV {
   // ==============================================================================
   // Method implementations
   // ==============================================================================
+  template <class fp_type>
+  SparseMatrix_JDS<fp_type>::SparseMatrix_JDS(const size_t nrows, const size_t ncols, size_t perm[], size_t jdiag[], int col_ind[], fp_type jd_ptr[]) : SparseMatrix<fp_type>::SparseMatrix(nrows, ncols) {
+        this->_nnz = (size_t) sizeof(jdiag)/sizeof(jdiag[0]);
+
+        this->_state = building;
+        this->_rowPerm = perm;
+        this->_values = jdiag;
+        this->_colIndices = col_ind;
+        this->_jdPtrs = jd_ptr;
+
+        assert(this->_state == building);
+      }
 
   template <class fp_type>
   void SparseMatrix_JDS<fp_type>::assembleStorage() {
