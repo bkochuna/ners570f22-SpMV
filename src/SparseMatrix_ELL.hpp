@@ -12,10 +12,9 @@ namespace SpMV
         //using SparseMatrix<fp_type>::SparseMatrix;
 
         private:
-            size_t* I = nullptr;
-            // size_t* J = nullptr;
+            size_t** J = nullptr;
             size_t max_nnz = 0;
-            fp_type* val = nullptr;
+            fp_type** val = nullptr;
         
         public:
             /**
@@ -74,18 +73,44 @@ namespace SpMV
         assert(this->_state == building);
         cout << "Hello from SparseMatrix_ELL::assembleStorage!" << endl;
 
-        //Convert this buildCoeff dictionary to I, J, val
-        this->I = (size_t*)malloc(this->_nnz * sizeof(size_t));
-        this->J = (size_t*)malloc(this->_nnz * sizeof(size_t));
-        this->val = (fp_type*)malloc(this->_nnz * sizeof(fp_type));
+        //Find the max number of nonzero elements in a given row
+        this->max_nnz = 0;
+        size_t tmp_max = 0;
+        size_t current_row = 0;
+        for(auto coeff : this->_buildCoeff) {
+            if (coeff.first.first != current_row) {
+                if (tmp_max > this->max_nnz) {
+                    this->max_nnz = tmp_max;
+                }
+                tmp_max = 0;
+                current_row = coeff.first.first;
+            }
+            tmp_max += 1;
+        }
+        if (tmp_max > this->max_nnz) {
+            this->max_nnz = tmp_max;
+        }
 
-        size_t n=0;
+        //Allocate the data and column index arrays
+        this->J = new size_t*[this->_nrows];
+        this->val = new fp_type*[this->_nrows];
+        for (int i = 0; i < this->_nrows; i++) {
+            this->J[i] = new size_t[this->max_nnz];
+            this->val[i] = new fp_type[this->max_nnz];
+        }
+
+        //Fill in values of data and column index arrays
+        int j = 0;
+        current_row = 0;
         for(auto coeff : this->_buildCoeff)
         {
-            I[n]   = coeff.first.first;
-            J[n]   = coeff.first.second;
-            val[n] = coeff.second;
-            n += 1;
+            if (coeff.first.first != current_row) {
+                j = 0;
+                current_row = coeff.first.first;
+            }
+            J[coeff.first.first][j] = coeff.first.second; 
+            val[coeff.first.first][j] = coeff.second;
+            j += 1;
         }
 
         // Destroy _buildCoeff
