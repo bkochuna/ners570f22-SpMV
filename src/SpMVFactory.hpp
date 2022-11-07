@@ -28,46 +28,46 @@ namespace SpMV
             };
     };
     
-    // // Concrete factory to instantiate ELL SparseMatrix.
-    // template <class fp_type>
-    // class SparseMatrixFactory_ELL : public SpMVFactory<fp_type>
-    // {
-    //     public:
-    //         SpMV::SparseMatrix<fp_type>* createSparseMatrix(const size_t nrows, const size_t ncols)
-    //         {
-    //             return new SpMV::SparseMatrix_ELL<fp_type>(nrows,ncols);
-    //         };
-    // };
-    // // Concrete factory to instantiate DEN SparseMatrix.
-    // template <class fp_type>
-    // class SparseMatrixFactory_DEN : public SpMVFactory<fp_type>
-    // {
-    //     public:
-    //         SpMV::SparseMatrix<fp_type>* createSparseMatrix(const size_t nrows, const size_t ncols)
-    //         {
-    //             return new SpMV::SparseMatrix_DEN<fp_type>(nrows,ncols);
-    //         };
-    // };
-    // // Concrete factory to instantiate JDS SparseMatrix.
-    // template <class fp_type>
-    // class SparseMatrixFactory_JDS : public SpMVFactory<fp_type>
-    // {
-    //     public:
-    //         SpMV::SparseMatrix<fp_type>* createSparseMatrix(const size_t nrows, const size_t ncols)
-    //         {
-    //             return new SpMV::SparseMatrix_JDS<fp_type>(nrows,ncols);
-    //         };
-    // };
-    // // Concrete factory to instantiate CSR SparseMatrix.
-    // template <class fp_type>
-    // class SparseMatrixFactory_CSR : public SpMVFactory<fp_type>
-    // {
-    //     public:
-    //         SpMV::SparseMatrix<fp_type>* createSparseMatrix(const size_t nrows, const size_t ncols)
-    //         {
-    //             return new SpMV::SparseMatrix_CSR<fp_type>(nrows,ncols);
-    //         };
-    // };
+    // Concrete factory to instantiate ELL SparseMatrix.
+    template <class fp_type>
+    class SparseMatrixFactory_ELL : public SpMVFactory<fp_type>
+    {
+        public:
+            SpMV::SparseMatrix<fp_type>* createSparseMatrix(const size_t nrows, const size_t ncols)
+            {
+                return new SpMV::SparseMatrix_ELL<fp_type>(nrows,ncols);
+            };
+    };
+    // Concrete factory to instantiate DEN SparseMatrix.
+    template <class fp_type>
+    class SparseMatrixFactory_DEN : public SpMVFactory<fp_type>
+    {
+        public:
+            SpMV::SparseMatrix<fp_type>* createSparseMatrix(const size_t nrows, const size_t ncols)
+            {
+                return new SpMV::SparseMatrix_DEN<fp_type>(nrows,ncols);
+            };
+    };
+    // Concrete factory to instantiate JDS SparseMatrix.
+    template <class fp_type>
+    class SparseMatrixFactory_JDS : public SpMVFactory<fp_type>
+    {
+        public:
+            SpMV::SparseMatrix<fp_type>* createSparseMatrix(const size_t nrows, const size_t ncols)
+            {
+                return new SpMV::SparseMatrix_JDS<fp_type>(nrows,ncols);
+            };
+    };
+    // Concrete factory to instantiate CSR SparseMatrix.
+    template <class fp_type>
+    class SparseMatrixFactory_CSR : public SpMVFactory<fp_type>
+    {
+        public:
+            SpMV::SparseMatrix<fp_type>* createSparseMatrix(const size_t nrows, const size_t ncols)
+            {
+                return new SpMV::SparseMatrix_CSR<fp_type>(nrows,ncols);
+            };
+    };
 
 }
 
