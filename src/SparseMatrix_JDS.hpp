@@ -46,8 +46,9 @@ namespace SpMV {
        * @param jdiag Vector of jagged diagonal pointers
        * @param col_ind Vector of column indeces
        * @param jd_ptr Vector of actual matrix values
+       * @param max_row_size Maximum row size value for matrix
        */
-      SparseMatrix_JDS(const size_t nrows, const size_t ncols, size_t perm[], size_t jdiag[], int col_ind[], fp_type jd_ptr[]) : SparseMatrix<fp_type>::SparseMatrix(nrows, ncols);
+      SparseMatrix_JDS(const size_t nrows, const size_t ncols, size_t perm[], size_t jdiag[], int col_ind[], fp_type jd_ptr[], size_t max_row_size) : SparseMatrix<fp_type>::SparseMatrix(nrows, ncols);
       /**
        * @brief Assemble the JDS data structures from the general map based data structure used in the building phase
        *
@@ -91,16 +92,19 @@ namespace SpMV {
   // ==============================================================================
 
   template <class fp_type>
-  SparseMatrix_JDS<fp_type>::SparseMatrix_JDS(const size_t nrows, const size_t ncols, size_t perm[], size_t jdiag[], int col_ind[], fp_type jd_ptr[]) : SparseMatrix<fp_type>::SparseMatrix(nrows, ncols) {
+  SparseMatrix_JDS<fp_type>::SparseMatrix_JDS(const size_t nrows, const size_t ncols, size_t perm[], size_t jdiag[], int col_ind[], fp_type jd_ptr[], size_t max_row_size) : SparseMatrix<fp_type>::SparseMatrix(nrows, ncols) {
         this->_nnz = (size_t) sizeof(jdiag)/sizeof(jdiag[0]);
+        vector<size_t> vecPerm(perm,perm+sizeof(perm)/sizeof(perm[0]));
 
         this->_state = building;
-        this->_rowPerm = perm;
+        this->_rowPerm = vecPerm;
         this->_values = jdiag;
         this->_colIndices = col_ind;
         this->_jdPtrs = jd_ptr;
+        this->_maxRowSize = max_row_size;
+        this->state=assembled;
 
-        assert(this->_state == building);
+        assert(this->_state == assembled);
       }
 
   template <class fp_type>
