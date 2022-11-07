@@ -1,5 +1,5 @@
-#ifndef __SPMV570_COO__
-#define __SPMV570_COO__
+#ifndef __SPMV570_ELL__
+#define __SPMV570_ELL__
 
 #include "SparseMatrix.hpp"
 
@@ -19,8 +19,11 @@ namespace SpMV
         public:
             SparseMatrix_ELL(const size_t nrows, const size_t ncols) : SparseMatrix<fp_type>::SparseMatrix(nrows,ncols)
             {
-                cout << "Hello From SparseMartix_COO" << endl;
+                cout << "Hello From SparseMartix_ELL" << endl;
             };
+
+	    virtual ~SparseMatrix_ELL();
+
             void assembleStorage();
             /*Some return type*/ void getFormat(/*some args*/);
 
@@ -50,6 +53,27 @@ namespace SpMV
 
         this->_state = assembled;
         assert(this->_state == assembled);
+    }
+
+    template <class fp_type> SparseMatrix_ELL<fp_type>::~SparseMatrix_ELL() {
+    	cout << "Hello from SparseMatrix_ELL Destructor!" << endl;
+
+	if (this->I != NULL) 
+		free(this->I);
+
+	if (this->J != NULL)
+		free(this->J);
+
+	if this(->val != NULL)
+		free(this->val);
+
+	this->I = NULL;
+	this->J = NULL;
+	this->val = NULL;
+
+	delete[] this->I;
+	delete[] this->J;
+	delete[] this->val;
     }
 
     template <class fp_type>
