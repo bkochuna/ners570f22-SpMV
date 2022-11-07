@@ -30,7 +30,7 @@ COO Matrix unit tests
 // Check that the matrix has the correct number of rows, columns and non-zeros
 // after setting some entries
 TEST(buildingTest) {
-  // Create an NxN JDS matrix
+  // Create an NxN COO matrix
   SpMV::SparseMatrix_COO<fp_type> matrix(N, N);
 
   // Check that numRows and numCols are N, that numNonZeros = 0, and that the
@@ -64,8 +64,8 @@ TEST(buildingTest) {
 // matrix
 TEST(DiagonalMatVec) {
   srand(0);
-  // Create an NxN JDS matrix
-  SpMV::SparseMatrix_JDS<fp_type> matrix(N, N);
+  // Create an NxN COO matrix
+  SpMV::SparseMatrix_COO<fp_type> matrix(N, N);
 
   // Create vectors
   fp_type x[N], y[N], y_expected[N];
@@ -106,8 +106,8 @@ TEST(RandomMatVec) {
 
   for (int n = 0; n < NUM_MATVEC_TESTS; n++) {
 
-    // Create an MxN JDS matrix
-    SpMV::SparseMatrix_JDS<fp_type> matrix(M, N);
+    // Create an MxN COO matrix
+    SpMV::SparseMatrix_COO<fp_type> matrix(M, N);
 
     // Create the vector to be multiplied, the vector to store the MatVec result in, and the vector to store the
     // expected result in
