@@ -4,23 +4,11 @@ Here is a guide of how to add unit tests and the structure of the `tests` direct
 
 ## Structure
 
-Each file in `src` should have a corresponding testing file titled `test_src-file-name.cpp` where `src-file-name` is the name of the source file.
+Each file in `src` should have a corresponding testing file titled `testSourceFilename.cpp` where `SourceFilename.cpp` is the name of the source file.
 
 ## Test File Specifics
 
-The unit tests will use the functions and macros defined in the `unit_test_framework.hpp` file. In each testing file this should be included as well as any of the dependencies required such as the corresponding file that is being tested. Both `double` and `float` are tested so be sure to include the following lines at the top of the unit testing file:
-
-```cpp
-#ifdef TEST_DOUBLE
-using fp_type = double;
-#endif
-
-#ifdef TEST_FLOAT
-using fp_type = float;
-#endif
-```
-
-Anywhere the source code should be tested for double or float implementations, `fp_type` should be passed. Each unit test is defined using the `TEST` macro with the corresponding unit test name. For example:
+The unit tests will use the functions and macros defined in the `unit_test_framework.hpp` file. In each testing file this should be included as well as any of the dependencies required such as the corresponding file that is being tested. Both `double` and `float` are tested with the generic type `fp_type`. Anywhere the source code should be tested for double or float implementations, `fp_type` should be passed. Each unit test is defined using the `TEST` macro with the corresponding unit test name. For example:
 
 ```cpp
 TEST(test_name) {

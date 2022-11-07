@@ -1,18 +1,10 @@
 // Testing library required for testing
-#include "SparseMatrix.hpp"
+
 #include "unit_test_framework.hpp"
 
 // Include code needed to test
 #include <vector>
 
-// Tests both double and float implementation
-#ifdef TEST_DOUBLE
-using fp_type = double;
-#endif
-
-#ifdef TEST_FLOAT
-using fp_type = float;
-#endif
 
 /* Here are some examples of unit tests for std::vector, the code being tested
  * is included as well as the unit testing framework file. The unit testing
