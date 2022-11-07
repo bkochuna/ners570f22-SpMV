@@ -182,8 +182,6 @@ namespace SpMV {
 
   template <class fp_type>
   SparseMatrix_JDS<fp_type>::~SparseMatrix_JDS() {
-    cout << "Hello from SparseMatrix_JDS Destructor!" << endl;
-
     if (_colIndices != NULL) {
 	    delete[] this->_colIndices;
 	    this->_colIndices = NULL;
