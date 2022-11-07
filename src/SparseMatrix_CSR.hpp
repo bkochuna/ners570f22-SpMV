@@ -77,15 +77,10 @@ template <class fp_type> SparseMatrix_CSR<fp_type>::~SparseMatrix_CSR() {
   cout << "this->_ncols=" << this->_ncols << endl;
   cout << "this->_nrows=" << this->_nrows << endl;
   cout << "this->_nnz  =" << this->_nnz << endl;
-  if (this->val != NULL)
-    free(this->val);
-  if (this->I != NULL)
-    free(this->I);
-  if (this->ptr != NULL)
-    free(this->ptr->ptr);
-  this->val = NULL;
-  this->I = NULL;
-  this->ptr = NULL;
+
+  delete[] val;
+  delete[] I;
+  delete[] ptr;
 }
 
 template <class fp_type>
