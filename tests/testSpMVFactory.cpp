@@ -34,6 +34,50 @@ TEST(COOFactory) {
   ASSERT_TRUE(typeid(*spmvfDouble)==SpMV::SparseMatrixFactory_COO<double>);
   ASSERT_TRUE(typeid(*spmvfFloat)==SpMV::SparseMatrixFactory_COO<float>);
 }
+TEST(ELLFactory) {
+  // Initialize variables for testing
+  SpMV::SpMVFactory<double> *spmvfDouble = SpMV::SparseMatrixFactory_ELL<double>().createSparseMatrix();
+  SpMV::SpMVFactory<float> *spmvfFloat = SpMV::SparseMatrixFactory_ELL<float>().createSparseMatrix();
+
+  // Assertions for unit testing
+  ASSERT_TRUE(is_pointer(spmvfDouble));
+  ASSERT_TRUE(is_pointer(spmvfFloat));
+  ASSERT_TRUE(typeid(*spmvfDouble)==SpMV::SparseMatrixFactory_ELL<double>);
+  ASSERT_TRUE(typeid(*spmvfFloat)==SpMV::SparseMatrixFactory_ELL<float>);
+}
+TEST(DENFactory) {
+  // Initialize variables for testing
+  SpMV::SpMVFactory<double> *spmvfDouble = SpMV::SparseMatrixFactory_DEN<double>().createSparseMatrix();
+  SpMV::SpMVFactory<float> *spmvfFloat = SpMV::SparseMatrixFactory_DEN<float>().createSparseMatrix();
+
+  // Assertions for unit testing
+  ASSERT_TRUE(is_pointer(spmvfDouble));
+  ASSERT_TRUE(is_pointer(spmvfFloat));
+  ASSERT_TRUE(typeid(*spmvfDouble)==SpMV::SparseMatrixFactory_DEN<double>);
+  ASSERT_TRUE(typeid(*spmvfFloat)==SpMV::SparseMatrixFactory_DEN<float>);
+}
+TEST(CSRFactory) {
+  // Initialize variables for testing
+  SpMV::SpMVFactory<double> *spmvfDouble = SpMV::SparseMatrixFactory_CSR<double>().createSparseMatrix();
+  SpMV::SpMVFactory<float> *spmvfFloat = SpMV::SparseMatrixFactory_CSR<float>().createSparseMatrix();
+
+  // Assertions for unit testing
+  ASSERT_TRUE(is_pointer(spmvfDouble));
+  ASSERT_TRUE(is_pointer(spmvfFloat));
+  ASSERT_TRUE(typeid(*spmvfDouble)==SpMV::SparseMatrixFactory_CSR<double>);
+  ASSERT_TRUE(typeid(*spmvfFloat)==SpMV::SparseMatrixFactory_CSR<float>);
+}
+TEST(JDSFactory) {
+  // Initialize variables for testing
+  SpMV::SpMVFactory<double> *spmvfDouble = SpMV::SparseMatrixFactory_JDS<double>().createSparseMatrix();
+  SpMV::SpMVFactory<float> *spmvfFloat = SpMV::SparseMatrixFactory_JDS<float>().createSparseMatrix();
+
+  // Assertions for unit testing
+  ASSERT_TRUE(is_pointer(spmvfDouble));
+  ASSERT_TRUE(is_pointer(spmvfFloat));
+  ASSERT_TRUE(typeid(*spmvfDouble)==SpMV::SparseMatrixFactory_JDS<double>);
+  ASSERT_TRUE(typeid(*spmvfFloat)==SpMV::SparseMatrixFactory_JDS<float>);
+}
 
 // Run the unit tests
 TEST_MAIN();
