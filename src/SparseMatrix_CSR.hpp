@@ -121,6 +121,20 @@ template <class fp_type>
 void SparseMatrix_CSR<fp_type>::unAssemble()
 {
 	assert(this->_state == assembled);
+        
+        // recreate buildCoeff	
+	size_t n = 0;
+        size_t i = 0;
+      	for (auto coeff : this->_buildCoeff) {
+	    	while (n < this->_nnz && I[n] == coeff.first.first) {
+
+			I[n] = coeff.first.first;
+		  	val[n] = coeff.second;
+		  	n += 1;
+	    	}
+	    	ptr[i + 1] = n;
+	    	i += 1;
+      	}
 
 	free(this->I);
 	free(this->ptr);
