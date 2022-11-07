@@ -183,18 +183,18 @@ namespace SpMV {
   template <class fp_type>
   SparseMatrix_JDS<fp_type>::~SparseMatrix_JDS() {
     if (_colIndices != NULL) {
-	    delete[] this->_colIndices;
-	    this->_colIndices = NULL;
+      delete[] this->_colIndices;
+      this->_colIndices = NULL;
     }
-    
+
     if (_values != NULL) {
-	    delete[] this->_values;
-	    this->_values = NULL;
+      delete[] this->_values;
+      this->_values = NULL;
     }
 
     if (_jdPtrs != NULL) {
-	    delete[] this->_jdPtrs;
-	    this->_jdPtrs = NULL;
+      delete[] this->_jdPtrs;
+      this->_jdPtrs = NULL;
     }
   }
 

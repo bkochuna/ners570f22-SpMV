@@ -5,7 +5,6 @@
 // Include code needed to test
 #include <vector>
 
-
 /* Here are some examples of unit tests for std::vector, the code being tested
  * is included as well as the unit testing framework file. The unit testing
  * framework defines all the macros and functions you'll need. Define a unit
