@@ -156,8 +156,13 @@ namespace SpMV
 
     template <class fp_type>
     void SparseMatrix_ELL<fp_type>::computeMatVecProduct(const fp_type x[], fp_type y[]) {
-
-        /* I'm assuning input x and output vector y. Also I'm assuming _maxRow */
+        size_t c;
+        /* 
+        I'm assuning input x and output vector y. 
+        Also I'm assuming _maxRow as a class variable that contains the number of maximum nonzero elements for rows 
+        This function also assumes a private class variable _col for recording the column indices of elements in each row. Assumes size (N x _maxRow) for array
+        This function also assumes a private class variable _val for recording the values of elements in each row. Assumes size (N x _maxRow) for array
+        */
         if (this->_state != assembled) {
         assembleStorage();
         }
@@ -171,12 +176,12 @@ namespace SpMV
         }
 
     #pragma omp parallel for simd schedule(static) collapse(2)
-        for (int i=0; i< this->_ncols; ++i) {
-            for (int j=0; j< this->_maxRow; ++j) {
-                jj = j + this->_maxRow*i;
-                c = col[jj]
-                if ((c >= 0) && (c < n))
-                y[i] += val[jj] * x[c];
+        for (int i=0; i< this->_nrows; i++) {
+            for (int j=0; j< this->_maxRow; j++) {
+                jj = j + this->_maxRow*i; //this row assumes that all elements in the columns are stored in contiguous memory pointers and allows indexing through one single index
+                c = this->_col[jj];
+                if ((c >= 0) && (c < _nrows)
+                    y[i] += val[jj] * x[c];
             }
         }
     }
