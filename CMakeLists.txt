@@ -22,4 +22,5 @@ enable_testing()
 add_subdirectory(tests)
 
 # Install
-install(TARGETS SpMV DESTINATION bin)
+install(TARGETS SpMV LIBRARY DESTINATION bin)
+install(FILES ${PUBLIC_HEADERS} DESTINATION bin/SpMV)
