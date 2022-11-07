@@ -32,9 +32,9 @@ public:
   //   SparseMatrix_CSR(const int nrows, const int ncols);
 
 private:
-  size_t *I = nullptr;
-  fp_type *val = nullptr;
-  size_t *ptr = nullptr;
+  size_t *I = nullptr;    // Column pointer
+  fp_type *val = nullptr; // non zero value
+  size_t *ptr = nullptr;  // row pointer
   void _unAssemble();
 }; // class SparseMatrix_CSR
 
@@ -67,6 +67,7 @@ template <class fp_type> void SparseMatrix_CSR<fp_type>::assembleStorage() {
   }
 
   // Destroy _buildCoeff
+  this->_clearBuildCoeff();
 
   this->_state = assembled;
   assert(this->_state == assembled);
@@ -78,9 +79,9 @@ template <class fp_type> SparseMatrix_CSR<fp_type>::~SparseMatrix_CSR() {
   cout << "this->_nrows=" << this->_nrows << endl;
   cout << "this->_nnz  =" << this->_nnz << endl;
 
-  delete[] val;
-  delete[] I;
-  delete[] ptr;
+  delete[] this->val;
+  delete[] this->I;
+  delete[] this->ptr;
 }
 
 template <class fp_type>
