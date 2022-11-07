@@ -79,25 +79,25 @@ namespace SpMV
         /*
         Code for implementing getFormat for DEN
         */
-        // n_rows, n_cols, Aij
-        int nrows_B = 0;
-        int ncols_B = 0;
-        int i, j;
-        //for loops
-        for (i = 0; i < n_rows; i++)
-        {
-            for (j = 0; j < n_cols; j++)
-            {
-                // question: is Aij pointing at the very first element?
-                // If so, this should be fine.
-                if (*(Aij + i*n_cols + j) != 0.0)
-                {
-                    nrows_B++;
-                    ncols_B++;
-                }
-            }
-        }
-        return SparseMatrix(nrows_B, ncols_B);
+        //
+        if (this->_state == assembled):
+          _unAssemble();
+        //
+        SparseMatrix<fp_type> B;
+        // newMat -> _nrows, _ncols, _nnz, _buildCoeff = mat->
+        // newMat -> assemble
+        // number of rows
+        B._nrows = this->_nrows;
+        // number of columns
+        B._ncols = this->_ncols;
+        //
+        B._nnz = this->_nnz;
+        // _buildCoeff 
+        B._buildCoeff = this->_buildCoeff;
+        // assemble
+        B.assembleStorage();
+        //
+        return B;
     }
 
 /************************/
