@@ -44,11 +44,14 @@ namespace SpMV
             {
                 assert(this->_state==undefined);
                 this->_state=initialized;
-                this->Aij=a;
+                this->Aij= new fp_type[nrows][ncols];
                 size_t nnz = 0;
                 for (int i=0; i<nrows; i++) {
                     for (int j=0; j<ncols; j++) {
-                        if (Aij[i][j]!=0.0) {nnz++}
+                        Aij[i][j]=a[i][j];
+                        if (Aij[i][j]!=0.0) {
+                            nnz++;
+                        }
                     }
                 }
                 this->_nnz = nnz;
