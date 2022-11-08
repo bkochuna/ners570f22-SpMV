@@ -162,4 +162,23 @@ TEST(RandomMatVec) {
     }
   }
 }
+
+// Test if getformat function works for ELL
+TEST(getFormat){
+  // Create an NxN COO matrix with double type
+  SpMV::SparseMatrix_COO<double> matrix(N, N);
+  // Check if the number of columns and rows is N and the state of the matrix is initialized
+  ASSERT_EQUAL(matrix.getNumRows(), N);
+  ASSERT_EQUAL(matrix.getNumCols(), N);
+  ASSERT_EQUAL(matrix.getNumNonZeros(), 0);
+  ASSERT_EQUAL(matrix.getState(), SpMV::initialized);
+   
+  // create a pointer 
+  SpMV::SparseMatrix<fp_type>* ptr_B = nullptr;
+  string fmt = "ELL";
+  ptr_B = martix.getFormat(fmt);
+  ASSERT_EQUAL(ptr_B->getNumCols(), N);
+  ASSERT_EQUAL(ptr_B->getNumRows(), N);
+  ASSERT_EQUAL(ptr_B->getNumNonZeros(), 0);
+}
 TEST_MAIN(); 
