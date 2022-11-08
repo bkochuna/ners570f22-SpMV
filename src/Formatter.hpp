@@ -38,7 +38,7 @@ namespace SpMV
                     ptr_A->_buildCoeff = matx._buildCoeff;
                     ptr_A->assembleStorage();
                 default:
-                break;
+                    break;
             }
         }
     }
