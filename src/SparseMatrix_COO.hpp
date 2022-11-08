@@ -148,7 +148,7 @@ namespace SpMV
     }
 
     template <class fp_type>
-    SparseMatrix<fp_type>* SparseMatrix_COO<fp_type>::getFormat()
+    SparseMatrix<fp_type>* SparseMatrix_COO<fp_type>::getFormat(string fmt)
     {
     if (this->_state == assembled) {_unAssemble();}
 
