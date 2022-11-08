@@ -51,6 +51,7 @@ namespace SpMV {
        */
       SparseMatrix_JDS(const size_t nrows, const size_t ncols, size_t perm[], size_t jdiag[], int col_ind[], fp_type jd_ptr[], size_t max_row_size) : SparseMatrix<fp_type>::SparseMatrix(nrows, ncols);
 
+      /**
        * @brief Destructor for JDS Sparse Matrix format. Destory objects created
        *
        */
