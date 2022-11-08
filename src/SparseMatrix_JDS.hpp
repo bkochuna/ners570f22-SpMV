@@ -114,17 +114,27 @@ namespace SpMV {
                                               size_t jd_ptr[],
                                               size_t max_row_size)
       : SparseMatrix<fp_type>::SparseMatrix(nrows, ncols) {
-    this->_nnz = jd_ptr[max_row_size];
-    vector<size_t> vecPerm(perm, perm + nrows);
-
     this->_state = building;
-    this->_rowPerm = vecPerm;
-    this->_values = jdiag;
-    this->_colIndices = col_ind;
-    this->_jdPtrs = jd_ptr;
-    this->_maxRowSize = max_row_size;
-    this->_state = assembled;
 
+    this->_nnz = jd_ptr[max_row_size];
+    this->_maxRowSize = max_row_size;
+
+    this->_colIndices = new size_t[this->_nnz];
+    this->_values = new fp_type[this->_nnz];
+    for (int i=0; i<this->_nnz; i++) {
+      this->_colIndices[i]=col_ind[i];
+      this->_values[i]=jdiag[i];
+    }
+    this->_jdPtrs = new size_t[this->_maxRowSize + 1];
+    for (int i=0; i<this->_maxRowSize+1; i++) {
+      this->_jdPtrs[i]=jd_ptr[i];
+    }
+
+    vector<size_t> vecPerm(perm, perm + nrows);
+    this->_rowPerm = vecPerm;
+
+    this->_state = assembled;
+    
     assert(this->_state == assembled);
   }
 
