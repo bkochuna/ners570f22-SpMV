@@ -49,9 +49,9 @@ namespace SpMV {
 
       /**
        * @brief I don't know what this does
-       *  // Could be getting the nonzero ncols and nrows and creating a new SparseMatrix...
+       *  // transform to the exact format
        */
-      SparseMatrix<fp_type>* getFormat();
+      SparseMatrix<fp_type>* getFormat(string fmt);
 
       /**
        * @brief Compute the product of this matrix and a vector (y = Ax)
@@ -264,39 +264,56 @@ namespace SpMV {
   }
 
   template <class fp_type>
-  SparseMatrix<fp_type>* SparseMatrix_JDS<fp_type>::getFormat() {
-    //
+  SparseMatrix<fp_type>* SparseMatrix_JDS<fp_type>::getFormat(string fmt) {
     if (this->_state == assembled):
       _unAssemble();
-    //
+    // variables
     SparseMatrix<fp_type> B;
     SparseMatrix<fp-type>* ptr_B = B;
-    // SparseMatrix_JDS<fp-type> *ptr_A = nullptr;
-    // newMat -> _nrows, _ncols, _nnz, _buildCoeff = mat->
-    // newMat -> assemble
+    SparseMatrix<fp-type>* ptr_A = nullptr;
+    // newMat -> _nrows, _ncols, _nnz, _buildCoeff
     // number of rows
     B._nrows = this->_nrows;
     // number of columns
     B._ncols = this->_ncols;
+    // nonzero values
     B._nnz = this->_nnz;
     // _buildCoeff 
     B._buildCoeff = this->_buildCoeff;
-    // assemble()
+    // newMat -> assemble
     B.assembleStorage();
-    /*
-    // tranform
+    // tranform as the format
     if (fmt == "DEN")
     {
-
+      ptr_A = (SparseMatrix_DEN<fp_type> *)ptr_B;
+      ptr_A->assembleStorage();
     }
     else if (fmt == "COO")
     {
-      
+      ptr_A = (SparseMatrix_COO<fp_type> *)ptr_B;
+      ptr_A->assembleStorage();
     }
-    
-    ptr_B = ptr_A;
-    */
-    return ptr_B;
+    else if (fmt == "CSR")
+    {
+      ptr_A = (SparseMatrix_CSR<fp_type> *)ptr_B;
+      ptr_A->assembleStorage();
+    }
+    else if (fmt == "JDS")
+    {
+      ptr_A = (SparseMatrix_JDS<fp_type> *)ptr_B;
+      ptr_A->assembleStorage();
+    }
+    else if (fmt == "ELL")
+    {
+      ptr_A = (SparseMatrix_ELL<fp_type> *)ptr_B;
+      ptr_A->assembleStorage();
+    }
+    else
+    {
+      std::cout << "Wrong Format! Will return a nullptr." << endl;
+    }
+    return ptr_A;
+    //return ptr_B;
   }
 
 } // namespace SpMV
