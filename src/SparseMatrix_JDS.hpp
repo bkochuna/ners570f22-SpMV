@@ -25,6 +25,11 @@ Jagged Diagonal Sparse Matrix (JDS) implementation
 // Class declaration
 // ==============================================================================
 namespace SpMV {
+  /**
+   * @brief Class representing a sparse matrix in JDS format.
+   *
+   * @tparam fp_type Numeric type to use for matrix entries.
+   */
   template <class fp_type>
   class SparseMatrix_JDS : public SparseMatrix<fp_type> {
     public:
@@ -44,11 +49,12 @@ namespace SpMV {
        *
        * @param rows Number of rows
        * @param cols Number of columns
-       * @param perm Vector of row permutations
-       * @param jd_ptr Vector of jagged diagonal pointers
-       * @param col_ind Vector of column indeces
-       * @param jdiag Vector of actual matrix values
-       * @param max_row_size Maximum row size value for matrix
+       * @param perm Vector of row permutations, should be nrows long
+       * @param jd_ptr Vector of jagged diagonal pointers (where in the flattened arrays each column starts and ends),
+       * should be max_row_size + 1 long
+       * @param col_ind Vector of column indices, should have one entry for each nonzero in the matrix
+       * @param jdiag Vector of actual matrix values, should have one entry for each nonzero in the matrix
+       * @param max_row_size Maximum row size in the matrix
        */
       SparseMatrix_JDS(const size_t nrows,
                        const size_t ncols,
@@ -121,20 +127,20 @@ namespace SpMV {
 
     this->_colIndices = new size_t[this->_nnz];
     this->_values = new fp_type[this->_nnz];
-    for (int i=0; i<this->_nnz; i++) {
-      this->_colIndices[i]=col_ind[i];
-      this->_values[i]=jdiag[i];
+    for (int i = 0; i < this->_nnz; i++) {
+      this->_colIndices[i] = col_ind[i];
+      this->_values[i] = jdiag[i];
     }
     this->_jdPtrs = new size_t[this->_maxRowSize + 1];
-    for (int i=0; i<this->_maxRowSize+1; i++) {
-      this->_jdPtrs[i]=jd_ptr[i];
+    for (int i = 0; i < this->_maxRowSize + 1; i++) {
+      this->_jdPtrs[i] = jd_ptr[i];
     }
 
     vector<size_t> vecPerm(perm, perm + nrows);
     this->_rowPerm = vecPerm;
 
     this->_state = assembled;
-    
+
     assert(this->_state == assembled);
   }
 
