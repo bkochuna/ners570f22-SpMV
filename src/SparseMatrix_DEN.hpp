@@ -45,6 +45,13 @@ namespace SpMV
                 assert(this->_state==undefined);
                 this->_state=initialized;
                 this->Aij=a;
+                size_t nnz = 0;
+                for (int i=0; i<nrows; i++) {
+                    for (int j=0; j<ncols; j++) {
+                        if (Aij[i][j]!=0.0) {nnz++}
+                    }
+                }
+                this->_nnz = nnz;
                 this->_state=assembled;
 
                 assert(this->_state==assembled);
@@ -202,10 +209,7 @@ namespace SpMV
             delete[] this->n_cols;    //delete the variable
 
         }
-        
     }
-
-
 }
 
 #endif
