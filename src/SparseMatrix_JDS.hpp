@@ -49,7 +49,7 @@ namespace SpMV {
        * @param jd_ptr Vector of jagged diagonal pointers
        * @param max_row_size Maximum row size value for matrix
        */
-      SparseMatrix_JDS(const size_t nrows, const size_t ncols, size_t perm[], size_t jdiag[], int col_ind[], fp_type jd_ptr[], size_t max_row_size) : SparseMatrix<fp_type>::SparseMatrix(nrows, ncols);
+      SparseMatrix_JDS(const size_t nrows, const size_t ncols, size_t perm[], fp_type jdiag[], int col_ind[], size_t jd_ptr[], size_t max_row_size) : SparseMatrix<fp_type>::SparseMatrix(nrows, ncols);
 
       /**
        * @brief Destructor for JDS Sparse Matrix format. Destory objects created
@@ -100,7 +100,7 @@ namespace SpMV {
   // ==============================================================================
 
   template <class fp_type>
-  SparseMatrix_JDS<fp_type>::SparseMatrix_JDS(const size_t nrows, const size_t ncols, size_t perm[], size_t jdiag[], int col_ind[], fp_type jd_ptr[], size_t max_row_size) : SparseMatrix<fp_type>::SparseMatrix(nrows, ncols) {
+  SparseMatrix_JDS<fp_type>::SparseMatrix_JDS(const size_t nrows, const size_t ncols, size_t perm[], fp_type jdiag[], int col_ind[], size_t jd_ptr[], size_t max_row_size) : SparseMatrix<fp_type>::SparseMatrix(nrows, ncols) {
         this->_nnz = (size_t) sizeof(jdiag)/sizeof(jdiag[0]);
         vector<size_t> vecPerm(perm,nrows);
 
