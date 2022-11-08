@@ -34,7 +34,9 @@ namespace SpMV
             void assembleStorage();
             
             // Return a new SparseMatrix
+
             SparseMatrix<fp_type>* getFormat();
+
             
             void computeMatVecProduct(/*some args*/);
             
@@ -72,7 +74,9 @@ namespace SpMV
 /*************/
 
     template <class fp_type>
+
     SparseMatrix<fp_type>* SparseMatrix_DEN<fp_type>::getFormat()
+
     {
         assert(this->_state == assembled);
         cout << "Hello from SparseMatrix_DEN::getFormat!" << endl;
@@ -84,7 +88,9 @@ namespace SpMV
           _unAssemble();
         //
         SparseMatrix<fp_type> B;
+
         SparseMatrix<fp-type>* ptr_B = B;
+
         // newMat -> _nrows, _ncols, _nnz, _buildCoeff = mat->
         // newMat -> assemble
         // number of rows
@@ -97,6 +103,7 @@ namespace SpMV
         B._buildCoeff = this->_buildCoeff;
         // assemble
         B.assembleStorage();
+
         /*
         // tranform
         if (fmt == "DEN")
@@ -111,6 +118,7 @@ namespace SpMV
         */
         //
         return ptr_B;
+
     }
 
 /************************/
@@ -134,9 +142,11 @@ namespace SpMV
     {
         assert(this->_state == assembled);
 
+
         this->n_rows = NULL;  //set the variable to NULL
         this->n_cols = NULL;  //set the variable to NULL
         free(this->Aij);      //free the pointer
+
 
         this->Aij = nullptr;
 
@@ -158,6 +168,7 @@ namespace SpMV
 
         if (this->Aij != nullptr)
         {
+
             free(this->Aij);          //free the pointer
             this->Aij = nullptr;
             delete[] this->Aij;       //delete the pointer
@@ -167,12 +178,15 @@ namespace SpMV
         {
             this-> n_rows = NULL;     //set the variable to NULL
             delete[] this->n_rows;    //delete the variable
+
         }
 
         if (this->n_cols != NULL)
         {
+
             this-> n_cols = NULL;     //set the variable to NULL
             delete[] this->n_cols;    //delete the variable
+
         }
         
     }
