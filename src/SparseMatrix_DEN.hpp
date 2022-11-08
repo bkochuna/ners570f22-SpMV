@@ -72,7 +72,7 @@ namespace SpMV
             
             void computeMatVecProduct(/*some args*/);
             
-            void unAssemble();
+            void _unAssemble();
     };
 
 // ==============================================================================
@@ -166,13 +166,11 @@ namespace SpMV
 /**************/
 
     template <class fp_type>
-    void SparseMatrix_DEN<fp_type>::unAssemble()
+    void SparseMatrix_DEN<fp_type>::_unAssemble()
     {
         assert(this->_state == assembled);
 
 
-        this->n_rows = NULL;  //set the variable to NULL
-        this->n_cols = NULL;  //set the variable to NULL
         free(this->Aij);      //free the pointer
 
 
@@ -197,25 +195,10 @@ namespace SpMV
         if (this->Aij != nullptr)
         {
 
-            free(this->Aij);          //free the pointer
             this->Aij = nullptr;
             delete[] this->Aij;       //delete the pointer
         }
 
-        if (this->n_rows != NULL)      
-        {
-            this-> n_rows = NULL;     //set the variable to NULL
-            delete[] this->n_rows;    //delete the variable
-
-        }
-
-        if (this->n_cols != NULL)
-        {
-
-            this-> n_cols = NULL;     //set the variable to NULL
-            delete[] this->n_cols;    //delete the variable
-
-        }
     }
 }
 
