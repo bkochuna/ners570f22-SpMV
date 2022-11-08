@@ -13,11 +13,6 @@ include(add_unit_test)
 # Include the src directory to include in unit tests
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/src")
 
-# set_target_properties(SpMV PROPERTIES PUBLIC_HEADER "SparseMatrix.hpp;SparseMatrix_JDS.hpp;")
-
-# # # Install
-# install(TARGETS SpMV LIBRARY DESTINATION lib PUBLIC_HEADER DESTINATION include)
-
 # Add directories
 add_subdirectory(src)
 add_subdirectory(examples)
@@ -39,3 +34,8 @@ endif()
 
 execute_process(COMMAND ${Python_EXECUTABLE} -m pip install ${_pip_args} pre-commit)
 execute_process(COMMAND pre-commit install)
+
+set_target_properties(SpMV PROPERTIES PUBLIC_HEADER "SparseMatrix.hpp;SparseMatrix_COO.hpp;SparseMatrix_JDS.hpp;SparseMatrix_ELL.hpp;SparseMatrix_CSR.hpp;SparseMatrix_DEN.hpp;unit_test_framework.cpp")
+set_target_properties(SpMV PROPERTIES LINKER_LANGUAGE CXX)
+# Install
+install(TARGETS SpMV LIBRARY DESTINATION lib PUBLIC_HEADER DESTINATION include)
