@@ -1,4 +1,8 @@
 #include "SparseMatrix.hpp"
+<<<<<<< HEAD
+=======
+#include "SparseMatrix_COO.hpp"
+>>>>>>> b045fc8d40a89454938b838d95a8426eb9c11d1d
 #include "SparseMatrix_CSR.hpp"
 #include "SparseMatrix_DEN.hpp"
 
