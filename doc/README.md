@@ -1,5 +1,6 @@
 This folder for documentation.
 
+<<<<<<< HEAD
 To build the documentation, you need to install doxygen and graphviz (e.g `sudo apt install doxygen graphviz` on Ubuntu).
 
 Then run `doxygen doxy.config` in this folder.
@@ -26,3 +27,6 @@ These are the functions that are critical to this package:
 `getFormat`: getting the format in CSR
 
 `_unAssemble()`: Unassemble the CSR format
+=======
+Nothing yet.
+>>>>>>> origin/main
