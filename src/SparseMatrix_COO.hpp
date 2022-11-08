@@ -1,8 +1,30 @@
+/*
+=============================================================================
+Coordinate Matrix format (COO) implementation
+=============================================================================
+@File    :   SparseMatrix_COO.hpp
+@Date    :   2022/10/16
+@Description :
+*/
 #ifndef __SPMV570_COO__
 #define __SPMV570_COO__
 
+#pragma once
+
+// =============================================================================
+// Standard Library Includes
+// =============================================================================
+#include <algorithm>
+#include <vector>
+
+// =============================================================================
+// Extension Includes
+// =============================================================================
 #include "SparseMatrix.hpp"
 
+// ==============================================================================
+// Class declaration
+// ==============================================================================
 namespace SpMV
 {
     template <class fp_type>
@@ -21,8 +43,22 @@ namespace SpMV
             {
                 cout << "Hello From SparseMartix_COO" << endl;
             };
+	    virtual ~SparseMatrix_COO();
             void assembleStorage();
-            /*Some return type*/ void getFormat(/*some args*/);
+            void _unAssemble();
+
+            SparseMartix_COO<fp_type> getFormat();
+    /**
+       * @brief Compute the product of this matrix and a vector in COO format (y = Ax)
+       *
+       * @note The contents of y are overwritten by this operation
+       *
+       * @param x Array to multiply with
+       * @param y Array to store result in
+       */
+      void computeMatVecProduct(const fp_type x[], fp_type y[]);
+            SparseMartix<fp_type> getFormat();
+
 
     };
 
@@ -47,19 +83,98 @@ namespace SpMV
         }
 
         // Destroy _buildCoeff
+        _buildCoeff.clear()
+            //this->_clearBuildCoeff();
 
         this->_state = assembled;
         assert(this->_state == assembled);
     }
+    
+    template <class fp_type>
+              void SparseMatrix_COO<fp_type>::_unAssemble()
+            {
+                   assert(this->_state == assembled);
+                  
+                    //this->_buildCoeff[ make_pair(_nnz,_nnz), _nnz ] = make_pair(I,J),val;
+                    size_t n=0;
+                    for(n=0; n<this->_nnz; n++)
+                    {
+                        _buildCoeff.append(make_pair(I[n],J[n]),val[n]); 
+                        //this->_buildCoeff[make_pair(I[n],J[n]),val[n]]; 
+                        //this->_nnz = this->_buildCoeff.size();
+                       // I[n]   = coeff.first.first;
+                        //J[n]   = coeff.first.second;
+                        //val[n] = coeff.second;
+         
+                    }
+                   free(this->J);
+                   free(this->I);
+                   free(this->val);
+                   this->_state = unassembled;
+                   assert(this->_state == unassembled);
+               }
 
     template <class fp_type>
-    void SparseMatrix_COO<fp_type>::getFormat()
+    void SparseMatrix_COO<fp_type>::~SparseMatrix_COO()
     {
-        assert(this->_state == assembled);
-        cout << "Hello from SparseMatrix_COO::getFormat!" << endl;
-        
-        //return new SparseMatrix(this->_ncols,this->_nrows);
+	    // Deallocate memory and assign null pointer
+	    if (this->I != nullptr)
+	    {
+		    free(this->I);
+		    this->I = nullptr;
+	    }
+	    if (this->J != nullptr)
+            {
+                    free(this->J);
+                    this->J = nullptr;
+            }
+	    if (this->val != nullptr)
+            {
+                    free(this->val);
+                    this->val = nullptr;
+            }
     }
+
+    template <class fp_type>
+  void SparseMatrix_COO<fp_type>::computeMatVecProduct(const fp_type x[], fp_type y[]) {
+    if (this->_state != assembled) {
+      assembleStorage();
+    }
+    // --- Check that the matrix is assembled ---
+    assert(this->_state == assembled);
+
+    // Zero the output vector
+    #pragma omp parallel for simd schedule(static)
+        for (int ii = 0; ii < this->_nnz; ii++) {
+        y[ii] = 0.0;
+        }
+    // --- Compute the matrix vector product ---
+    #pragma omp parallel for simd schedule(static)
+        for (int ii = 0; ii < this->_nnz; ii++) {
+    #pragma omp atomic
+            y[this->J[ii]]+=this->val[ii]*x[this->I[ii]];
+        }
+    }
+
+    template <class fp_type>
+    SparseMatrix<fp_type> SparseMatrix_COO<fp_type>::getFormat()
+    {
+        cout << "Hello from SparseMatrix_COO::getFormat!" << endl;
+        if(this->_state == assembled): _unAssemble();
+        SparseMartix<fp_type> B;
+        
+        B._ncols = this->_ncols;
+        B._nrows = this->_nrows;
+        B._nnz = this->_nnz;
+        B._buildCoeff = this->_buildCoeff;
+        B.assembleStorage()
+        return B;
+    }
+    
+    
 }
 
 #endif
+
+
+
