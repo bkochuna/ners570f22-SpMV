@@ -1,11 +1,13 @@
 # NERS 570: **Sp**arse **M**at**V**ec library
 
 ![Formatting](https://github.com/bkochuna/ners570f22-SpMV/actions/workflows/formatting-linting.yaml/badge.svg)
+![Tests](https://github.com/bkochuna/ners570f22-SpMV/actions/workflows/tests.yml/badge.svg)
 
 All PR's to this repo must pass formatting and linting checks before they can be merged.
 To have these checks performed locally on your commits, run the following commands:
 
 ```bash
+pip install pre-commit
 pre-commit install
 ```
 

@@ -1,5 +1,5 @@
 /*
-============================================================================+
+=============================================================================
 Jagged Diagonal Sparse Matrix (JDS) implementation
 =============================================================================
 @File    :   SparseMatrix_JDS.hpp
@@ -18,6 +18,7 @@ Jagged Diagonal Sparse Matrix (JDS) implementation
 // Extension Includes
 // =============================================================================
 #include "SparseMatrix.hpp"
+#include "SparseMatrix_JDS.hpp"
 
 // ==============================================================================
 // Class declaration
@@ -29,8 +30,8 @@ namespace SpMV {
       /**
        * @brief Construct a new JDS Sparse Matrix of given dimensions
        *
-       * @param nrows Number of rows
-       * @param ncols Number of columns
+       * @param rows Number of rows
+       * @param cols Number of columns
        */
       SparseMatrix_JDS(const size_t nrows, const size_t ncols) : SparseMatrix<fp_type>::SparseMatrix(nrows, ncols) {}
 
@@ -49,6 +50,12 @@ namespace SpMV {
        * @param max_row_size Maximum row size value for matrix
        */
       SparseMatrix_JDS(const size_t nrows, const size_t ncols, size_t perm[], size_t jdiag[], int col_ind[], fp_type jd_ptr[], size_t max_row_size) : SparseMatrix<fp_type>::SparseMatrix(nrows, ncols);
+
+       * @brief Destructor for JDS Sparse Matrix format. Destory objects created
+       *
+       */
+      virtual ~SparseMatrix_JDS();
+
       /**
        * @brief Assemble the JDS data structures from the general map based data structure used in the building phase
        *
@@ -57,9 +64,9 @@ namespace SpMV {
 
       /**
        * @brief I don't know what this does
-       *
+       *  // transform to the exact format
        */
-      /*Some return type*/ void getFormat(/*some args*/);
+      SparseMatrix<fp_type>* getFormat(string fmt);
 
       /**
        * @brief Compute the product of this matrix and a vector (y = Ax)
@@ -176,12 +183,14 @@ namespace SpMV {
     this->_jdPtrs = new size_t[this->_maxRowSize + 1];
     this->_jdPtrs[0] = 0;
 
-    // Descend down each column until we hit a row that doesn't have an entry for that column
+    // Descend down each column from largest to smallest row until we hit a row that doesn't have an entry for that
+    // column
     for (int colInd = 0; colInd < this->_maxRowSize; colInd++) {
-      int rowInd = 0;
-      for (rowInd = 0; rowInd < this->_nrows; rowInd++) {
-        if (rowSizes[rowInd] < colInd) {
-          this->_jdPtrs[colInd + 1] = entryCount + 1;
+      int ii = 0;
+      for (ii = 0; ii < this->_nrows; ii++) {
+        int rowInd = this->_rowPerm[ii];
+        if (rowSizes[rowInd] <= colInd) {
+          this->_jdPtrs[colInd + 1] = entryCount;
           break;
         }
         this->_colIndices[entryCount] = colIndMatrix[rowInd][colInd];
@@ -190,8 +199,8 @@ namespace SpMV {
       }
       // If we reached the end of a column without hitting a row that didn't have an entry for that column, we need to
       // add the next jdPtr
-      if (rowInd == this->_nrows) {
-        this->_jdPtrs[colInd + 1] = entryCount + 1;
+      if (ii == this->_nrows) {
+        this->_jdPtrs[colInd + 1] = entryCount;
       }
     }
 
@@ -204,6 +213,24 @@ namespace SpMV {
   }
 
   template <class fp_type>
+  SparseMatrix_JDS<fp_type>::~SparseMatrix_JDS() {
+    if (_colIndices != NULL) {
+      delete[] this->_colIndices;
+      this->_colIndices = NULL;
+    }
+
+    if (_values != NULL) {
+      delete[] this->_values;
+      this->_values = NULL;
+    }
+
+    if (_jdPtrs != NULL) {
+      delete[] this->_jdPtrs;
+      this->_jdPtrs = NULL;
+    }
+  }
+
+  template <class fp_type>
   void SparseMatrix_JDS<fp_type>::computeMatVecProduct(const fp_type x[], fp_type y[]) {
     if (this->_state != assembled) {
       assembleStorage();
@@ -213,25 +240,90 @@ namespace SpMV {
 
 // Zero the output vector
 #pragma omp parallel for simd schedule(static)
-    for (int ii = 0; ii < this->_nrows; ii++) {
+    for (int ii = 0; ii < this->_ncols; ii++) {
       y[ii] = 0.0;
     }
 
-    // --- Compute the matrix vector product ---
-    // #pragma omp parallel for simd schedule(static) collapse(2)
+// --- Compute the matrix vector product ---
+#pragma omp parallel for simd schedule(static) collapse(2)
     for (int ii = 0; ii < this->_maxRowSize; ii++) {
       int colLength = this->_jdPtrs[ii + 1] - this->_jdPtrs[ii];
       int offset = this->_jdPtrs[ii];
       for (int jj = 0; jj < colLength; jj++) {
+#pragma omp atomic
         y[this->_rowPerm[jj]] += this->_values[offset + jj] * x[this->_colIndices[offset + jj]];
       }
     }
   }
 
   template <class fp_type>
-  void SparseMatrix_JDS<fp_type>::_unAssemble() {}
+  void SparseMatrix_JDS<fp_type>::_unAssemble() {
+    // Only makes sense to unassemble if the matrix is assembled
+    assert(this->_state == assembled);
+
+    // Set the state to building, otherwise `setCoefficient` will call this method and that results in a segfault
+    this->_state = building;
+
+    // --- Loop through all the assembled data and call `setCoefficient` to add it to the `_buildCeff` map ---
+    this->_nnz = 0; // Need to reset the nonzero count because setCoefficient will increment it
+    for (int ii = 0; ii < this->_maxRowSize; ii++) {
+      int colLength = this->_jdPtrs[ii + 1] - this->_jdPtrs[ii];
+      int offset = this->_jdPtrs[ii];
+      for (int jj = 0; jj < colLength; jj++) {
+        size_t rowInd = this->_rowPerm[jj];
+        size_t colInd = this->_colIndices[offset + jj];
+        fp_type val = this->_values[offset + jj];
+        this->setCoefficient(rowInd, colInd, val);
+      }
+    }
+
+    // --- Now that the matrix is un-assembled we can release all of the memory used for the assembled storage ---
+    if (_colIndices != NULL) {
+      delete[] this->_colIndices;
+      this->_colIndices = NULL;
+    }
+
+    if (_values != NULL) {
+      delete[] this->_values;
+      this->_values = NULL;
+    }
+
+    if (_jdPtrs != NULL) {
+      delete[] this->_jdPtrs;
+      this->_jdPtrs = NULL;
+    }
+  }
 
   template <class fp_type>
-  void SparseMatrix_JDS<fp_type>::getFormat() {}
+  SparseMatrix<fp_type>* SparseMatrix_JDS<fp_type>::getFormat(string fmt) {
+    if (this->_state == assembled):
+      _unAssemble();
+
+    // Create pointer to new matrix that will be returned
+    SparseMatrix<fp-type>* ptr_A = nullptr;
+
+    // --- Create the new matrix in the requested format for ptr_a to point to ---
+    if (fmt == "DEN") {
+      ptr_A = new SparseMatrix_DEN<fp_type>(this->_nrows, this->_ncols);
+    }
+    else if (fmt == "COO") {
+      ptr_A = new SparseMatrix_COO<fp_type>(this->_nrows, this->_ncols);
+    }
+    else if (fmt == "CSR") {
+      ptr_A = new SparseMatrix_CSR<fp_type>(this->_nrows, this->_ncols);
+    }
+    else if (fmt == "JDS") {
+      ptr_A = new SparseMatrix_JDS<fp_type>(this->_nrows, this->_ncols);
+    }
+    else if (fmt == "ELL") {
+      ptr_A = new SparseMatrix_ELL<fp_type>(this->_nrows, this->_ncols);
+    }
+
+    // Copy the nonzero entry data to the new matrix and assemble it
+    ptr_A->_buildCoeff = this->_buildCoeff;
+    ptr_A->assembleStorage();
+
+    return ptr_A;
+  }
 
 } // namespace SpMV
