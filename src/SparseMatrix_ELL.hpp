@@ -201,7 +201,7 @@ namespace SpMV
     }
 
     template <class fp_type>
-    void SparseMatrix_ELL<fp_type>::unAssemble() {
+    void SparseMatrix_ELL<fp_type>::_unAssemble() {
 
         assert(this->_state == assembled);
 
