@@ -59,11 +59,13 @@ template <class fp_type> void SparseMatrix_CSR<fp_type>::assembleStorage() {
   this->val = new fp_type[this->_nnz];
   this->ptr = new size_t[this->_nnz];
 
+  // we start to assemble our matrix here
   size_t n = 0;
   size_t i = 0;
   for (auto coeff : this->_buildCoeff) {
     while (n < this->_nnz && I[n] == coeff.first.first) {
 
+      // set the columns, values and row pinters
       I[n] = coeff.first.first;
       val[n] = coeff.second;
       n += 1;
@@ -75,6 +77,7 @@ template <class fp_type> void SparseMatrix_CSR<fp_type>::assembleStorage() {
   // Destroy _buildCoeff
   this->_clearBuildCoeff();
 
+  // now the state is assembled and make sure it assembled
   this->_state = assembled;
   assert(this->_state == assembled);
 }
@@ -84,7 +87,7 @@ template <class fp_type> SparseMatrix_CSR<fp_type>::~SparseMatrix_CSR() {
   cout << "this->_ncols=" << this->_ncols << endl;
   cout << "this->_nrows=" << this->_nrows << endl;
   cout << "this->_nnz  =" << this->_nnz << endl;
-
+  // delete all the memory allocated pointers
   delete[] this->val;
   delete[] this->I;
   delete[] this->ptr;
