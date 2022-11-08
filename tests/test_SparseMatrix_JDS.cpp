@@ -176,7 +176,8 @@ TEST(RandomMatVec) {
   }
 }
 
-// Test the fuctionality of getFormat
+// Test the fuctionality of getFormat, this is currently commented out until the other matrix types are available
+/**
 TEST(getFormatFunction) {
   // Create an NxN JDS matrix
   SpMV::SparseMatrix_JDS<double> newMat(N, N);
@@ -197,16 +198,17 @@ TEST(getFormatFunction) {
   // comment out these lines to get the code compiled and the tests passed
   // uncomment these lines after all of the different matrix types are merged into the main branch
 
-  // SpMV::SparseMatrix<double> *ptr_test_COO = newMat.getFormat("COO");
-  // ASSERT_EQUAL(ptr_test_COO->getNumRows(), N);
-  // ASSERT_EQUAL(ptr_test_COO->getNumCols(), N);
-  // ASSERT_EQUAL(ptr_test_COO->getNumNonZeros(), N);
+  SpMV::SparseMatrix<double> *ptr_test_COO = newMat.getFormat("COO");
+  ASSERT_EQUAL(ptr_test_COO->getNumRows(), N);
+  ASSERT_EQUAL(ptr_test_COO->getNumCols(), N);
+  ASSERT_EQUAL(ptr_test_COO->getNumNonZeros(), N);
 
-  // SpMV::SparseMatrix<double> *ptr_test_ELL = newMat.getFormat("ELL");
-  // ASSERT_EQUAL(ptr_test_ELL->getNumRows(), N);
-  // ASSERT_EQUAL(ptr_test_ELL->getNumCols(), N);
-  // ASSERT_EQUAL(ptr_test_ELL->getNumNonZeros(), N);
+  SpMV::SparseMatrix<double> *ptr_test_ELL = newMat.getFormat("ELL");
+  ASSERT_EQUAL(ptr_test_ELL->getNumRows(), N);
+  ASSERT_EQUAL(ptr_test_ELL->getNumCols(), N);
+  ASSERT_EQUAL(ptr_test_ELL->getNumNonZeros(), N);
 }
+*/
 
 // Run the tests
 TEST_MAIN();
