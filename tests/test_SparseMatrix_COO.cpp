@@ -144,5 +144,15 @@ TEST(RandomMatVec) {
   }
 }
 
+// Test if getformat function works for ELL
+TEST(getFormat){
+  // Create an NxN COO matrix
+  SpMV::SparseMatrix_COO<fp_type> matrix(N, N);
+  SpMV::SparseMatrix<fp_type>* ptr_B = nullptr;
+  string fmt = "ELL";
+  ptr_B = martix.getFormat(fmt);
+  ASSERT_EQUAL(ptr_B->getNumCols, N);
+  ASSERT_EQUAL(ptr_B->getNumRows, N);
+}
 // Run the tests
 TEST_MAIN();
