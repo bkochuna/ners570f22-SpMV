@@ -39,4 +39,3 @@ set_target_properties(SpMV PROPERTIES PUBLIC_HEADER "SparseMatrix.hpp;SparseMatr
 set_target_properties(SpMV PROPERTIES LINKER_LANGUAGE CXX)
 # Install
 install(TARGETS SpMV LIBRARY DESTINATION lib PUBLIC_HEADER DESTINATION include)
-
