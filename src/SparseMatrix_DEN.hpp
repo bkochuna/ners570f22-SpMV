@@ -28,6 +28,19 @@ namespace SpMV
         
         public:
             SparseMatrix_DEN(const size_t nrows, const size_t ncols) : SparseMatrix<fp_type>::SparseMatrix(nrows,ncols){}
+
+            /**
+             * @brief Overloaded constructor:
+             * Construct a new DEN Sparse Matrix of given dimensions AND dense input array
+             * 
+             * @note Skips the building phase
+             *
+             * @param rows Number of rows
+             * @param cols Number of columns
+             * @param perm Vector of row permutations
+             * @param a Dense array of entries
+             */
+            SparseMatrix_DEN(const size_t nrows, const size_t ncols, fp_type **a) : SparseMatrix<fp_type>::SparseMatrix(nrows,ncols);
             
             virtual ~SparseMatrix_DEN();
             
@@ -44,7 +57,21 @@ namespace SpMV
 // ==============================================================================
 // Method implementations
 // ==============================================================================
+/**************************/
+/* Overloaded Constructor */
+/**************************/
 
+    template <class fp_type>
+    SparseMatrix_DEN(const size_t nrows, const size_t ncols, fp_type **a) : SparseMatrix<fp_type>::SparseMatrix(nrows,ncols)
+    {
+        assert(this->_state==undefined);
+        this->_state=initialized;
+        this->Aij=a;
+        this->_state=assembled;
+
+        assert(this->_state==assembled);
+
+    }
 /*******************/
 /* assembleStorage */
 /*******************/
