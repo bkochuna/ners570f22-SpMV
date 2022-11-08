@@ -38,19 +38,26 @@ namespace SpMV {
       /**
        * @brief Overloaded constructor:
        * Construct a new JDS Sparse Matrix of given dimensions AND JDS data structures
-       * 
+       *
        * @note Skips the building phase
        *
        * @param rows Number of rows
        * @param cols Number of columns
        * @param perm Vector of row permutations
-       * @param jdiag Vector of actual matrix values
-       * @param col_ind Vector of column indeces
        * @param jd_ptr Vector of jagged diagonal pointers
+       * @param col_ind Vector of column indeces
+       * @param jdiag Vector of actual matrix values
        * @param max_row_size Maximum row size value for matrix
        */
-      SparseMatrix_JDS(const size_t nrows, const size_t ncols, size_t perm[], size_t jdiag[], int col_ind[], fp_type jd_ptr[], size_t max_row_size) : SparseMatrix<fp_type>::SparseMatrix(nrows, ncols);
+      SparseMatrix_JDS(const size_t nrows,
+                       const size_t ncols,
+                       size_t perm[],
+                       fp_type jdiag[],
+                       int col_ind[],
+                       size_t jd_ptr[],
+                       size_t max_row_size);
 
+      /**
        * @brief Destructor for JDS Sparse Matrix format. Destory objects created
        *
        */
@@ -66,7 +73,7 @@ namespace SpMV {
        * @brief I don't know what this does
        *  // transform to the exact format
        */
-      SparseMatrix<fp_type>* getFormat(string fmt);
+      SparseMatrix<fp_type> *getFormat(string fmt);
 
       /**
        * @brief Compute the product of this matrix and a vector (y = Ax)
@@ -99,20 +106,27 @@ namespace SpMV {
   // ==============================================================================
 
   template <class fp_type>
-  SparseMatrix_JDS<fp_type>::SparseMatrix_JDS(const size_t nrows, const size_t ncols, size_t perm[], size_t jdiag[], int col_ind[], fp_type jd_ptr[], size_t max_row_size) : SparseMatrix<fp_type>::SparseMatrix(nrows, ncols) {
-        this->_nnz = (size_t) sizeof(jdiag)/sizeof(jdiag[0]);
-        vector<size_t> vecPerm(perm,nrows);
+  SparseMatrix_JDS<fp_type>::SparseMatrix_JDS(const size_t nrows,
+                                              const size_t ncols,
+                                              size_t perm[],
+                                              fp_type jdiag[],
+                                              int col_ind[],
+                                              size_t jd_ptr[],
+                                              size_t max_row_size)
+      : SparseMatrix<fp_type>::SparseMatrix(nrows, ncols) {
+    this->_nnz = (size_t)sizeof(jdiag) / sizeof(jdiag[0]);
+    vector<size_t> vecPerm(perm, perm + nrows);
 
-        this->_state = building;
-        this->_rowPerm = vecPerm;
-        this->_values = jdiag;
-        this->_colIndices = col_ind;
-        this->_jdPtrs = jd_ptr;
-        this->_maxRowSize = max_row_size;
-        this->state=assembled;
+    this->_state = building;
+    this->_rowPerm = vecPerm;
+    this->_values = jdiag;
+    this->_colIndices = col_ind;
+    this->_jdPtrs = jd_ptr;
+    this->_maxRowSize = max_row_size;
+    this->state = assembled;
 
-        assert(this->_state == assembled);
-      }
+    assert(this->_state == assembled);
+  }
 
   template <class fp_type>
   void SparseMatrix_JDS<fp_type>::assembleStorage() {
@@ -295,12 +309,12 @@ namespace SpMV {
   }
 
   template <class fp_type>
-  SparseMatrix<fp_type>* SparseMatrix_JDS<fp_type>::getFormat(string fmt) {
+  SparseMatrix<fp_type> *SparseMatrix_JDS<fp_type>::getFormat(string fmt) {
     if (this->_state == assembled):
       _unAssemble();
 
     // Create pointer to new matrix that will be returned
-    SparseMatrix<fp-type>* ptr_A = nullptr;
+    SparseMatrix<fp - type> *ptr_A = nullptr;
 
     // --- Create the new matrix in the requested format for ptr_a to point to ---
     if (fmt == "DEN") {
