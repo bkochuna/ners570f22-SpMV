@@ -25,12 +25,18 @@ namespace SpMV
                     break;
                 case COO
                     //SparseMatrix_COO
+                    ptr_A = new SparseMatrix_COO<fp_type>(matx._nrows, matx._ncols);
+                    ptr_A->_buildCoeff = matx._buildCoeff;
+                    ptr_A->assembleStorage();
                     break;
                 case CSR
                     //SparseMatrix_CSR
                     break;
                 case ELL
                     //SparseMatrix_ELL
+                    ptr_A = new SparseMatrix_DEN<fp_type>(matx._nrows, matx._ncols);
+                    ptr_A->_buildCoeff = matx._buildCoeff;
+                    ptr_A->assembleStorage();
                     break;
                 case JDS
                     //SparseMatrix_JDS
