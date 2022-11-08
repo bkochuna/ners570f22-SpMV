@@ -121,20 +121,19 @@ namespace SpMV
     }
 
     template <class fp_type> SparseMatrix_ELL<fp_type>::~SparseMatrix_ELL() {
-    	cout << "Hello from SparseMatrix_ELL Destructor!" << endl;
 
         if (this->I != NULL) {
-            free(this->I);
+            delete[] this->I;
             this->I = NULL;
         }
 
         if (this->J != NULL) {
-            free(this->J);
+            delete[] this->J;
             this->J = NULL;
         }
 
         if this(->val != NULL) {
-            free(this->val);
+            delete[] this->val;
             this->val = NULL;
         }
     }
