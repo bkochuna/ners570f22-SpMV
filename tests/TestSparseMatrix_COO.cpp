@@ -43,7 +43,7 @@ TEST(assemble_Test_COO) {
  ASSERT_EQUAL(matrix.getState(), SpMV::assembled);
  // Check unasemble state
  matrix._unAssemble();
- ASSERT_EQUAL(matrix.getState(), SpMV::unassembled);
+ ASSERT_EQUAL(matrix.getState(), SpMV::building);
  // Check for not correct result
  ASSERT_NOT_EQUAL(matrix.getState(), SpMV::assembled); 
 }
@@ -81,7 +81,7 @@ TEST(alternateBuildingTest) {
  
  // Check unasemble state
  matrix._unAssemble();
- ASSERT_EQUAL(matrix.getState(), SpMV::unassembled);
+ ASSERT_EQUAL(matrix.getState(), SpMV::building);
  
  // Check for not correct result
  ASSERT_NOT_EQUAL(matrix.getState(), SpMV::assembled); 
