@@ -64,28 +64,32 @@ TEST(buildingTest) {
 // Check that the matrix has the correct entries after calling alternate constructor
 TEST(alternateBuildingTest) {
   // creating example from HW2 assignment sheet
-  fp_type jdiag[17] = {6, 9, 3, 10, 9, 5, 7, 6, 8, -3, 13, -1, 5, -2, 7, 1, 4};
-  size_t col_ind[17] = {2, 2, 1, 1, 5, 5, 4, 3, 3, 2, 6, 6, 5, 5, 4, 4, 6};
-  size_t perm[6] = {4, 2, 3, 1, 5, 6};
-  size_t jd_ptr[4] = {1, 7, 13, 17};
+  fp_type jdiag[17] = {6, 10, 9, 3, 9, 5, 7, -3, 6, 8, 13, -1, 5, 1, -2, 7, 4};
+  size_t col_ind[17] = {1, 0, 1, 0, 4, 5, 3, 1, 2, 2, 5, 5, 4, 2, 4, 3, 5};
+  size_t perm[6] = {3, 0, 1, 2, 4, 5};
+  size_t jd_ptr[5] = {0, 6, 12, 16, 17};
   size_t rows = 6;
   size_t cols = 6;
   size_t maxrows = 4;
 
-  fp_type matMul[6];
-  fp_type testVec[6] = {0, 1, 0, 0, 0, 0};
-  fp_type expectedEntry = -3;
-
   // Create an NxN JDS matrix
   SpMV::SparseMatrix_JDS<fp_type> matrix(rows, cols, perm, jdiag, col_ind, jd_ptr, maxrows);
-  matrix.computeMatVecProduct(testVec, matMul);
-  ASSERT_EQUAL(matMul[0], expectedEntry);
 
-  // Check that numRows and numCols are N, that numNonZeros = 0, and that the matrix is in the initialized state
+  // Check that numRows and numCols are N, that numNonZeros = 0, and that the matrix is in the assembled state
   ASSERT_EQUAL(matrix.getNumRows(), rows);
   ASSERT_EQUAL(matrix.getNumCols(), cols);
   ASSERT_EQUAL(matrix.getNumNonZeros(), 17);
-  ASSERT_EQUAL(matrix.getState(), SpMV::building);
+  ASSERT_EQUAL(matrix.getState(), SpMV::assembled);
+
+  // Check that matvec produces the expected result
+  fp_type matMul[cols];
+  fp_type testVec[cols] = {0, 1, 0, 0, 0, 0};
+  fp_type expectedEntry[cols] = {-3, 9, 0, 6, 0, 0};
+
+  matrix.computeMatVecProduct(testVec, matMul);
+  for (size_t ii = 0; ii < cols; ii++) {
+    ASSERT_EQUAL(matMul[ii], expectedEntry[ii]);
+  }
 }
 
 // Check that we get the expected behaviour from y = A*x when A is a diagonal
@@ -192,16 +196,16 @@ TEST(getFormatFunction) {
   // Test getFormat
   // comment out these lines to get the code compiled and the tests passed
   // uncomment these lines after all of the different matrix types are merged into the main branch
-  
-  //SpMV::SparseMatrix<double> *ptr_test_COO = newMat.getFormat("COO");
-  //ASSERT_EQUAL(ptr_test_COO->getNumRows(), N);
-  //ASSERT_EQUAL(ptr_test_COO->getNumCols(), N);
-  //ASSERT_EQUAL(ptr_test_COO->getNumNonZeros(), N);
 
-  //SpMV::SparseMatrix<double> *ptr_test_ELL = newMat.getFormat("ELL");
-  //ASSERT_EQUAL(ptr_test_ELL->getNumRows(), N);
-  //ASSERT_EQUAL(ptr_test_ELL->getNumCols(), N);
-  //ASSERT_EQUAL(ptr_test_ELL->getNumNonZeros(), N);
+  // SpMV::SparseMatrix<double> *ptr_test_COO = newMat.getFormat("COO");
+  // ASSERT_EQUAL(ptr_test_COO->getNumRows(), N);
+  // ASSERT_EQUAL(ptr_test_COO->getNumCols(), N);
+  // ASSERT_EQUAL(ptr_test_COO->getNumNonZeros(), N);
+
+  // SpMV::SparseMatrix<double> *ptr_test_ELL = newMat.getFormat("ELL");
+  // ASSERT_EQUAL(ptr_test_ELL->getNumRows(), N);
+  // ASSERT_EQUAL(ptr_test_ELL->getNumCols(), N);
+  // ASSERT_EQUAL(ptr_test_ELL->getNumNonZeros(), N);
 }
 
 // Run the tests
