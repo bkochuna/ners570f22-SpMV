@@ -16,6 +16,7 @@ JDS Matrix unit tests
 // Extension Includes
 // =============================================================================
 #include "SparseMatrix_JDS.hpp"
+#include "SparseMatrix.hpp"
 #include "unit_test_framework.hpp"
 
 // ==============================================================================
@@ -169,6 +170,35 @@ TEST(RandomMatVec) {
       ASSERT_ALMOST_EQUAL(y[ii], y_expected[ii], 1e-10);
     }
   }
+}
+
+// Test the fuctionality of getFormat
+TEST(getFormatFunction) {
+  // Create an NxN JDS matrix
+  SpMV::SparseMatrix_JDS<double> newMat(N, N);
+
+  // Check that numRows and numCols are N, that numNonZeros = 0, and that the
+  // matrix is in the initialized state
+  ASSERT_EQUAL(newMat.getNumRows(), N);
+  ASSERT_EQUAL(newMat.getNumCols(), N);
+  ASSERT_EQUAL(newMat.getNumNonZeros(), 0);
+  ASSERT_EQUAL(newMat.getState(), SpMV::initialized);
+
+  // Set the diagonals to 1 (create an identity matrix)
+  for (size_t ii = 0; ii < N; ii++) {
+    newMat.setCoefficient(ii, ii, 1.0);
+  }
+
+  // Test getFormat
+  SpMV::SparseMatrix<double>* ptr_test_COO = newMat.getFormat("COO");
+  ASSERT_EQUAL(ptr_test_COO->getNumRows(), N);
+  ASSERT_EQUAL(ptr_test_COO->getNumCols(), N);
+  ASSERT_EQUAL(ptr_test_COO->getNumNonZeros(), N);
+
+  SpMV::SparseMatrix<double>* ptr_test_ELL = newMat.getFormat("ELL");
+  ASSERT_EQUAL(ptr_test_ELL->getNumRows(), N);
+  ASSERT_EQUAL(ptr_test_ELL->getNumCols(), N);
+  ASSERT_EQUAL(ptr_test_ELL->getNumNonZeros(), N);
 }
 
 // Run the tests
