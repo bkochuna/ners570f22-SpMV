@@ -30,14 +30,16 @@ public:
 
   void getFormat(/*some args*/);
 
+
+
   void computeMatVecProduct(const fp_type *x, fp_type *y);
 
   //   SparseMatrix_CSR(const int nrows, const int ncols);
 
 private:
-  size_t *I = nullptr;
-  fp_type *val = nullptr;
-  size_t *ptr = nullptr;
+  size_t *I = nullptr;    // Column pointer
+  fp_type *val = nullptr; // non zero value
+  size_t *ptr = nullptr;  // row pointer
   void _unAssemble();
 }; // class SparseMatrix_CSR
 
@@ -50,15 +52,17 @@ template <class fp_type> void SparseMatrix_CSR<fp_type>::assembleStorage() {
   cout << "Hello from SparseMatrix_COO::assembleStorage!" << endl;
 
   // Convert this buildCoeff dictionary to I, J, val
-  this->I = (size_t *)malloc(this->_nnz * sizeof(size_t));
-  this->val = (fp_type *)malloc(this->_nnz * sizeof(fp_type));
-  this->ptr = (unsigned int *)malloc(((this->rows) + 1) * sizeof(unsigned int));
+  this->I = new int[this->_nnz];
+  this->val = new fp_type[this->_nnz];
+  this->ptr = new size_t[this->_nnz];
 
+  // we start to assemble our matrix here
   size_t n = 0;
   size_t i = 0;
   for (auto coeff : this->_buildCoeff) {
     while (n < this->_nnz && I[n] == coeff.first.first) {
 
+      // set the columns, values and row pinters
       I[n] = coeff.first.first;
       val[n] = coeff.second;
       n += 1;
@@ -68,7 +72,9 @@ template <class fp_type> void SparseMatrix_CSR<fp_type>::assembleStorage() {
   }
 
   // Destroy _buildCoeff
+  this->_clearBuildCoeff();
 
+  // now the state is assembled and make sure it assembled
   this->_state = assembled;
   assert(this->_state == assembled);
 }
@@ -78,16 +84,7 @@ template <class fp_type> SparseMatrix_CSR<fp_type>::~SparseMatrix_CSR() {
   cout << "this->_ncols=" << this->_ncols << endl;
   cout << "this->_nrows=" << this->_nrows << endl;
   cout << "this->_nnz  =" << this->_nnz << endl;
-  if (this->val != NULL)
-    free(this->val);
-  if (this->I != NULL)
-    free(this->I);
-  if (this->ptr != NULL)
-    free(this->ptr->ptr);
-  this->val = NULL;
-  this->I = NULL;
-  this->ptr = NULL;
-
+  // delete all the memory allocated pointers
   delete[] this->val;
   delete[] this->I;
   delete[] this->ptr;
@@ -121,6 +118,7 @@ void SparseMatrix_CSR<fp_type>::computeMatVecProduct(const fp_type *x,
 
 template <class fp_type> void SparseMatrix_CSR<fp_type>::getFormat() {
   cout << "Hello from SparseMatrix_CSR::getFormat!" << endl;
+
   if (this->_state == assembled)
     _unAssemble();
   SparseMatrix<fp_type> B;
@@ -130,6 +128,7 @@ template <class fp_type> void SparseMatrix_CSR<fp_type>::getFormat() {
   B._buildCoeff = this->_buildCoeff;
   B.assembleStorage();
   return B;
+
 }
 
 template <class fp_type> void SparseMatrix_CSR<fp_type>::_unAssemble() {
