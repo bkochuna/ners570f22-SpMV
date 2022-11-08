@@ -34,7 +34,7 @@ namespace SpMV
                     break;
                 case ELL
                     //SparseMatrix_ELL
-                    ptr_A = new SparseMatrix_DEN<fp_type>(matx._nrows, matx._ncols);
+                    ptr_A = new SparseMatrix_ELL<fp_type>(matx._nrows, matx._ncols);
                     ptr_A->_buildCoeff = matx._buildCoeff;
                     ptr_A->assembleStorage();
                     break;
