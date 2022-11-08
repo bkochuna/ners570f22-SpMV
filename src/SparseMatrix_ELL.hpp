@@ -1,5 +1,4 @@
-#ifndef __SPMV570_ELL__
-#define __SPMV570_ELL__
+#pragma once
 
 #include "SparseMatrix.hpp"
 
@@ -227,5 +226,3 @@ namespace SpMV
 
 
 }
-
-#endif
