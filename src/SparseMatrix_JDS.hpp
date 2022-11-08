@@ -43,9 +43,9 @@ namespace SpMV {
        * @param rows Number of rows
        * @param cols Number of columns
        * @param perm Vector of row permutations
-       * @param jdiag Vector of jagged diagonal pointers
+       * @param jdiag Vector of actual matrix values
        * @param col_ind Vector of column indeces
-       * @param jd_ptr Vector of actual matrix values
+       * @param jd_ptr Vector of jagged diagonal pointers
        * @param max_row_size Maximum row size value for matrix
        */
       SparseMatrix_JDS(const size_t nrows, const size_t ncols, size_t perm[], size_t jdiag[], int col_ind[], fp_type jd_ptr[], size_t max_row_size) : SparseMatrix<fp_type>::SparseMatrix(nrows, ncols);
