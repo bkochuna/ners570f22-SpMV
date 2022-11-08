@@ -57,7 +57,7 @@ namespace SpMV
        * @param y Array to store result in
        */
       void computeMatVecProduct(const fp_type x[], fp_type y[]);
-            SparseMartix<fp_type> getFormat();
+            SparseMartix<fp_type> getFormat(string fmt);
 
 
     };
