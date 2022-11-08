@@ -84,7 +84,7 @@ namespace SpMV
         }
 
         // Destroy _buildCoeff
-        _buildCoeff.clear()
+        this->_buildCoeff.clear();
 
         this->_state = assembled;
         assert(this->_state == assembled);
@@ -102,8 +102,8 @@ namespace SpMV
                    free(this->J);
                    free(this->I);
                    free(this->val);
-                   this->_state = unassembled;
-                   assert(this->_state == unassembled);
+                   this->_state = building;
+                   assert(this->_state == building);
     }
 
     template <class fp_type>
