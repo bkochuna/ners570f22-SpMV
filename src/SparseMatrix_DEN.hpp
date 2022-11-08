@@ -11,6 +11,8 @@ Dense Matrix Format (DEN) implementation
 #define __SPMV570_DEN__
 
 #include "SparseMatrix.hpp"
+// I think we may need to include other forms of
+// .hpp files here to get it complied.
 
 // ==============================================================================
 // Class declaration
@@ -34,9 +36,7 @@ namespace SpMV
             void assembleStorage();
             
             // Return a new SparseMatrix
-
-            SparseMatrix<fp_type>* getFormat();
-
+            SparseMatrix<fp_type>* getFormat(string fmt);
             
             void computeMatVecProduct(/*some args*/);
             
@@ -75,8 +75,7 @@ namespace SpMV
 
     template <class fp_type>
 
-    SparseMatrix<fp_type>* SparseMatrix_DEN<fp_type>::getFormat()
-
+    SparseMatrix<fp_type>* SparseMatrix_DEN<fp_type>::getFormat(string fmt)
     {
         assert(this->_state == assembled);
         cout << "Hello from SparseMatrix_DEN::getFormat!" << endl;
@@ -85,10 +84,10 @@ namespace SpMV
         */
         if (this->_state == assembled)
         {
-          _unAssemble();
+          unAssemble();
         }
         // Create pointer to new matrix that will be returned
-        SparseMatrix<fp-type>* ptr_A = nullptr;
+        SparseMatrix<fp_type>* ptr_A = nullptr;
         // --- Create the new matrix in the requested format for ptr_a to point to ---
         if (fmt == "DEN") {
           ptr_A = new SparseMatrix_DEN<fp_type>(this->_nrows, this->_ncols);
