@@ -127,22 +127,24 @@ namespace SpMV
     }
 
     template <class fp_type>
-  void SparseMatrix_COO<fp_type>::computeMatVecProduct(const fp_type x[], fp_type y[]) {
-    if (this->_state != assembled) {
-      assembleStorage();
-    }
-    // --- Check that the matrix is assembled ---
-    assert(this->_state == assembled);
-
-    // Zero the output vector
-    #pragma omp parallel for simd schedule(static)
-        for (int ii = 0; ii < this->_nnz; ii++) {
-        y[ii] = 0.0;
+    void SparseMatrix_COO<fp_type>::computeMatVecProduct(const fp_type x[], fp_type y[]) {
+        if (this->_state != assembled)
+        {
+            assembleStorage();
         }
-    // --- Compute the matrix vector product ---
-    #pragma omp parallel for simd schedule(static)
-        for (int ii = 0; ii < this->_nnz; ii++) {
-    #pragma omp atomic
+        // --- Check that the matrix is assembled ---
+        assert(this->_state == assembled);
+        // Zero the output vector
+        #pragma omp parallel for simd schedule(static)
+        for (int ii = 0; ii < this->_nnz; ii++)
+        {
+            y[ii] = 0.0;
+        }
+        // --- Compute the matrix vector product ---
+        #pragma omp parallel for simd schedule(static)
+        for (int ii = 0; ii < this->_nnz; ii++)
+        {
+            #pragma omp atomic
             y[this->J[ii]]+=this->val[ii]*x[this->I[ii]];
         }
     }
