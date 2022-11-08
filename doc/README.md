@@ -6,8 +6,6 @@ Then run `doxygen doxy.config` in this folder.
 
 You can then view the documentation by opening `html/index.html` in your browser.
 
-(From JDS format doc)
-
 
 # CSR format
 
@@ -28,5 +26,3 @@ These are the functions that are critical to this package:
 `getFormat`: getting the format in CSR
 
 `_unAssemble()`: Unassemble the CSR format
-
-

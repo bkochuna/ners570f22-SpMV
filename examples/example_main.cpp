@@ -1,5 +1,3 @@
-
-
 #include "SparseMatrix.hpp"
 #include "SparseMatrix_COO.hpp"
 #include "SparseMatrix_CSR.hpp"
@@ -22,7 +20,8 @@ int main(int argc, char *argv[]) {
   ptr_B = (SpMV::SparseMatrix_COO<double> *)ptr_A;
 
   ptr_C = (SpMV::SparseMatrix_DEN<double> *)ptr_C;
-  ptr_D = new SpMV::SparseMatrix_CSR<double>(5, 8);
+  ptr_D = (SpMV::SparseMatrix_CSR<double> *)ptr_D;
+
   ptr_B->setCoefficient(1, 1, 1.0);
   ptr_B->setCoefficient(2, 2, 2.0);
   ptr_B->setCoefficient(1, 1, -1.0);
@@ -32,7 +31,6 @@ int main(int argc, char *argv[]) {
 
   ptr_D->setCoefficient(1, 1, 1.0);
   ptr_D->setCoefficient(2, 2, 2.0);
-  ptr_D->setCoefficient(1, 1, -1.0);
 
   ptr_A->assembleStorage();
   ptr_C->assembleStorage();
