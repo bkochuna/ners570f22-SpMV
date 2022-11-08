@@ -114,7 +114,7 @@ namespace SpMV {
                                               size_t jd_ptr[],
                                               size_t max_row_size)
       : SparseMatrix<fp_type>::SparseMatrix(nrows, ncols) {
-    this->_nnz = (size_t)sizeof(jdiag) / sizeof(jdiag[0]);
+    this->_nnz = jd_ptr[max_row_size];
     vector<size_t> vecPerm(perm, perm + nrows);
 
     this->_state = building;
