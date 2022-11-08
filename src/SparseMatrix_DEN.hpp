@@ -134,9 +134,9 @@ namespace SpMV
     {
         assert(this->_state == assembled);
 
-        this->n_rows = NULL;
-        this->n_cols = NULL;
-        free(this->Aij);
+        this->n_rows = NULL;  //set the variable to NULL
+        this->n_cols = NULL;  //set the variable to NULL
+        free(this->Aij);      //free the pointer
 
         this->Aij = nullptr;
 
@@ -158,21 +158,21 @@ namespace SpMV
 
         if (this->Aij != nullptr)
         {
-            free(this->Aij);
+            free(this->Aij);          //free the pointer
             this->Aij = nullptr;
-            delete[] this->Aij;
+            delete[] this->Aij;       //delete the pointer
         }
 
-        if (this->n_rows != NULL)
+        if (this->n_rows != NULL)      
         {
-            this-> n_rows = NULL;
-            delete[] this->n_rows;
+            this-> n_rows = NULL;     //set the variable to NULL
+            delete[] this->n_rows;    //delete the variable
         }
 
         if (this->n_cols != NULL)
         {
-            this-> n_cols = NULL;
-            delete[] this->n_cols;
+            this-> n_cols = NULL;     //set the variable to NULL
+            delete[] this->n_cols;    //delete the variable
         }
         
     }
