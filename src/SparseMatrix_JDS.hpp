@@ -18,7 +18,8 @@ Jagged Diagonal Sparse Matrix (JDS) implementation
 // Extension Includes
 // =============================================================================
 #include "SparseMatrix.hpp"
-#include "SparseMatrix_JDS.hpp"
+// #include "SparseMatrix_COO.hpp"
+// #include "SparseMatrix_DEN.hpp"
 
 // ==============================================================================
 // Class declaration
@@ -53,7 +54,7 @@ namespace SpMV {
                        const size_t ncols,
                        size_t perm[],
                        fp_type jdiag[],
-                       int col_ind[],
+                       size_t col_ind[],
                        size_t jd_ptr[],
                        size_t max_row_size);
 
@@ -70,8 +71,7 @@ namespace SpMV {
       void assembleStorage();
 
       /**
-       * @brief I don't know what this does
-       *  // transform to the exact format
+       * @brief Convert matrix to an alternate format
        */
       SparseMatrix<fp_type> *getFormat(string fmt);
 
@@ -110,7 +110,7 @@ namespace SpMV {
                                               const size_t ncols,
                                               size_t perm[],
                                               fp_type jdiag[],
-                                              int col_ind[],
+                                              size_t col_ind[],
                                               size_t jd_ptr[],
                                               size_t max_row_size)
       : SparseMatrix<fp_type>::SparseMatrix(nrows, ncols) {
@@ -123,7 +123,7 @@ namespace SpMV {
     this->_colIndices = col_ind;
     this->_jdPtrs = jd_ptr;
     this->_maxRowSize = max_row_size;
-    this->state = assembled;
+    this->_state = assembled;
 
     assert(this->_state == assembled);
   }
@@ -317,25 +317,25 @@ namespace SpMV {
     SparseMatrix<fp_type> *ptr_A = nullptr;
 
     // --- Create the new matrix in the requested format for ptr_a to point to ---
-    if (fmt == "DEN") {
-      ptr_A = new SparseMatrix_DEN<fp_type>(this->_nrows, this->_ncols);
-    }
-    else if (fmt == "COO") {
-      ptr_A = new SparseMatrix_COO<fp_type>(this->_nrows, this->_ncols);
-    }
-    else if (fmt == "CSR") {
-      ptr_A = new SparseMatrix_CSR<fp_type>(this->_nrows, this->_ncols);
-    }
-    else if (fmt == "JDS") {
-      ptr_A = new SparseMatrix_JDS<fp_type>(this->_nrows, this->_ncols);
-    }
-    else if (fmt == "ELL") {
-      ptr_A = new SparseMatrix_ELL<fp_type>(this->_nrows, this->_ncols);
-    }
+    // if (fmt == "DEN") {
+    //   ptr_A = new SparseMatrix_DEN<fp_type>(this->_nrows, this->_ncols);
+    // }
+    // else if (fmt == "COO") {
+    //   ptr_A = new SparseMatrix_COO<fp_type>(this->_nrows, this->_ncols);
+    // }
+    // else if (fmt == "CSR") {
+    //   ptr_A = new SparseMatrix_CSR<fp_type>(this->_nrows, this->_ncols);
+    // }
+    // else if (fmt == "JDS") {
+    //   ptr_A = new SparseMatrix_JDS<fp_type>(this->_nrows, this->_ncols);
+    // }
+    // else if (fmt == "ELL") {
+    //   ptr_A = new SparseMatrix_ELL<fp_type>(this->_nrows, this->_ncols);
+    // }
 
     // Copy the nonzero entry data to the new matrix and assemble it
-    ptr_A->_buildCoeff = this->_buildCoeff;
-    ptr_A->assembleStorage();
+    // ptr_A->_buildCoeff = this->_buildCoeff;
+    // ptr_A->assembleStorage();
 
     return ptr_A;
   }
