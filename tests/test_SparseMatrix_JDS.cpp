@@ -60,6 +60,33 @@ TEST(buildingTest) {
   ASSERT_EQUAL(matrix.getState(), SpMV::building);
 }
 
+// Check that the matrix has the correct entries after calling alternate constructor
+TEST(alternateBuildingTest) {
+  // creating example from HW2 assignment sheet
+  fp_type jdiag[17]={6,9,3,10,9,5,7,6,8,-3,13,-1,5,-2,7,1,4};
+  int col_ind[17]={2,2,1,1,5,5,4,3,3,2,6,6,5,5,4,4,6};
+  size_t perm[6]={4,2,3,1,5,6};
+  size_t jd_ptr[4]={1,7,13,17};
+  size_t rows=6;
+  size_t cols=6;
+  size_t maxrows=4;
+
+  fp_type matMul[6];
+  fp_type testVec[6]={0,1,0,0,0,0};
+  fp_type expectedEntry = -3;
+
+  // Create an NxN JDS matrix
+  SpMV::SparseMatrix_JDS<fp_type> matrix(rows, cols, perm, jdiag, col_ind, jd_ptr,maxrows);
+  matrix.computeMatVecProduct(testVec,matMul);
+  ASSERT_EQUAL(matMul[0],expectedEntry);
+
+  // Check that numRows and numCols are N, that numNonZeros = 0, and that the matrix is in the initialized state
+  ASSERT_EQUAL(matrix.getNumRows(), rows);
+  ASSERT_EQUAL(matrix.getNumCols(), cols);
+  ASSERT_EQUAL(matrix.getNumNonZeros(), 17);
+  ASSERT_EQUAL(matrix.getState(), SpMV::building);
+}
+
 // Check that we get the expected behaviour from y = A*x when A is a diagonal
 // matrix
 TEST(DiagonalMatVec) {

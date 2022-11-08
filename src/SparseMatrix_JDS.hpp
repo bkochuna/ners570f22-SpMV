@@ -36,6 +36,21 @@ namespace SpMV {
       SparseMatrix_JDS(const size_t nrows, const size_t ncols) : SparseMatrix<fp_type>::SparseMatrix(nrows, ncols) {}
 
       /**
+       * @brief Overloaded constructor:
+       * Construct a new JDS Sparse Matrix of given dimensions AND JDS data structures
+       * 
+       * @note Skips the building phase
+       *
+       * @param rows Number of rows
+       * @param cols Number of columns
+       * @param perm Vector of row permutations
+       * @param jdiag Vector of actual matrix values
+       * @param col_ind Vector of column indeces
+       * @param jd_ptr Vector of jagged diagonal pointers
+       * @param max_row_size Maximum row size value for matrix
+       */
+      SparseMatrix_JDS(const size_t nrows, const size_t ncols, size_t perm[], size_t jdiag[], int col_ind[], fp_type jd_ptr[], size_t max_row_size) : SparseMatrix<fp_type>::SparseMatrix(nrows, ncols);
+
        * @brief Destructor for JDS Sparse Matrix format. Destory objects created
        *
        */
@@ -82,6 +97,22 @@ namespace SpMV {
   // ==============================================================================
   // Method implementations
   // ==============================================================================
+
+  template <class fp_type>
+  SparseMatrix_JDS<fp_type>::SparseMatrix_JDS(const size_t nrows, const size_t ncols, size_t perm[], size_t jdiag[], int col_ind[], fp_type jd_ptr[], size_t max_row_size) : SparseMatrix<fp_type>::SparseMatrix(nrows, ncols) {
+        this->_nnz = (size_t) sizeof(jdiag)/sizeof(jdiag[0]);
+        vector<size_t> vecPerm(perm,nrows);
+
+        this->_state = building;
+        this->_rowPerm = vecPerm;
+        this->_values = jdiag;
+        this->_colIndices = col_ind;
+        this->_jdPtrs = jd_ptr;
+        this->_maxRowSize = max_row_size;
+        this->state=assembled;
+
+        assert(this->_state == assembled);
+      }
 
   template <class fp_type>
   void SparseMatrix_JDS<fp_type>::assembleStorage() {
@@ -267,53 +298,32 @@ namespace SpMV {
   SparseMatrix<fp_type>* SparseMatrix_JDS<fp_type>::getFormat(string fmt) {
     if (this->_state == assembled):
       _unAssemble();
-    // variables
-    SparseMatrix<fp_type> B;
-    SparseMatrix<fp-type>* ptr_B = B;
+
+    // Create pointer to new matrix that will be returned
     SparseMatrix<fp-type>* ptr_A = nullptr;
-    // newMat -> _nrows, _ncols, _nnz, _buildCoeff
-    // number of rows
-    B._nrows = this->_nrows;
-    // number of columns
-    B._ncols = this->_ncols;
-    // nonzero values
-    B._nnz = this->_nnz;
-    // _buildCoeff 
-    B._buildCoeff = this->_buildCoeff;
-    // newMat -> assemble
-    B.assembleStorage();
-    // tranform as the format
-    if (fmt == "DEN")
-    {
-      ptr_A = (SparseMatrix_DEN<fp_type> *)ptr_B;
-      ptr_A->assembleStorage();
+
+    // --- Create the new matrix in the requested format for ptr_a to point to ---
+    if (fmt == "DEN") {
+      ptr_A = new SparseMatrix_DEN<fp_type>(this->_nrows, this->_ncols);
     }
-    else if (fmt == "COO")
-    {
-      ptr_A = (SparseMatrix_COO<fp_type> *)ptr_B;
-      ptr_A->assembleStorage();
+    else if (fmt == "COO") {
+      ptr_A = new SparseMatrix_COO<fp_type>(this->_nrows, this->_ncols);
     }
-    else if (fmt == "CSR")
-    {
-      ptr_A = (SparseMatrix_CSR<fp_type> *)ptr_B;
-      ptr_A->assembleStorage();
+    else if (fmt == "CSR") {
+      ptr_A = new SparseMatrix_CSR<fp_type>(this->_nrows, this->_ncols);
     }
-    else if (fmt == "JDS")
-    {
-      ptr_A = (SparseMatrix_JDS<fp_type> *)ptr_B;
-      ptr_A->assembleStorage();
+    else if (fmt == "JDS") {
+      ptr_A = new SparseMatrix_JDS<fp_type>(this->_nrows, this->_ncols);
     }
-    else if (fmt == "ELL")
-    {
-      ptr_A = (SparseMatrix_ELL<fp_type> *)ptr_B;
-      ptr_A->assembleStorage();
+    else if (fmt == "ELL") {
+      ptr_A = new SparseMatrix_ELL<fp_type>(this->_nrows, this->_ncols);
     }
-    else
-    {
-      std::cout << "Wrong Format! Will return a nullptr." << endl;
-    }
+
+    // Copy the nonzero entry data to the new matrix and assemble it
+    ptr_A->_buildCoeff = this->_buildCoeff;
+    ptr_A->assembleStorage();
+
     return ptr_A;
-    //return ptr_B;
   }
 
 } // namespace SpMV
