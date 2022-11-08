@@ -310,11 +310,11 @@ namespace SpMV {
 
   template <class fp_type>
   SparseMatrix<fp_type> *SparseMatrix_JDS<fp_type>::getFormat(string fmt) {
-    if (this->_state == assembled):
+    if (this->_state == assembled) {
       _unAssemble();
-
+    }
     // Create pointer to new matrix that will be returned
-    SparseMatrix<fp - type> *ptr_A = nullptr;
+    SparseMatrix<fp_type> *ptr_A = nullptr;
 
     // --- Create the new matrix in the requested format for ptr_a to point to ---
     if (fmt == "DEN") {
