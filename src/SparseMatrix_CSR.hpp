@@ -22,19 +22,16 @@ template <class fp_type> class SparseMatrix_CSR : public SparseMatrix<fp_type> {
 public:
   SparseMatrix_CSR(const size_t nrows, const size_t ncols)
       : SparseMatrix<fp_type>::SparseMatrix(nrows, ncols) {}
+  SparseMatrix_CSR(const size_t nrows, const size_t ncols, size_t *I,
+                   fp_type *val, size_t *ptr)
+      : SparseMatrix<fp_type>::SparseMatrix(nrows, ncols) {}
   virtual ~SparseMatrix_CSR();
   void assembleStorage();
 
   void getFormat(/*some args*/);
 
-  /**
-   * @brief Compute the product of this matrix and a vector (y = Ax)
-   *
-   * @note The contents of y are overwritten by this operation
-   *
-   * @param x Input array of fp_type to multiply with
-   * @param y Array of fp_type to store result in
-   */
+
+
   void computeMatVecProduct(const fp_type *x, fp_type *y);
 
   //   SparseMatrix_CSR(const int nrows, const int ncols);
@@ -121,8 +118,17 @@ void SparseMatrix_CSR<fp_type>::computeMatVecProduct(const fp_type *x,
 
 template <class fp_type> void SparseMatrix_CSR<fp_type>::getFormat() {
   cout << "Hello from SparseMatrix_CSR::getFormat!" << endl;
-  if (this->_state == assembled): _unAssemble();
+
+  if (this->_state == assembled)
+    _unAssemble();
   SparseMatrix<fp_type> B;
+  B._ncols = this->_ncols;
+  B._nrows = this->_nrows;
+  B._nnz = this->_nnz;
+  B._buildCoeff = this->_buildCoeff;
+  B.assembleStorage();
+  return B;
+
 }
 
 template <class fp_type> void SparseMatrix_CSR<fp_type>::_unAssemble() {
