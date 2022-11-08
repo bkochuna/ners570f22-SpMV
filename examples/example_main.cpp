@@ -1,5 +1,6 @@
 #include "SparseMatrix.hpp"
 #include "SparseMatrix_COO.hpp"
+#include "SparseMatrix_CSR.hpp"
 #include "SparseMatrix_DEN.hpp"
 
 template class SpMV::SparseMatrix<float>;  // Forces binary code to be generated
