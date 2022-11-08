@@ -6,6 +6,10 @@
 #include <vector>
 
 #define N 10
+#define M 34
+#define RAND_VALUE ((fp_type)rand() / (RAND_MAX))
+#define SPARSITY 0.15
+#define NUM_MATVEC_TESTS 61
 
 // Tests both double and float implementation
 #ifdef TEST_DOUBLE
@@ -91,5 +95,71 @@ TEST(alternateBuildingTest) {
 
   
 }
-
+// Checks the behaviour from y = A*x when A is a diagonal matrix
+TEST(DiagonalMatVec) {
+  srand(0);
+  // Create an NxN COO matrix
+  SpMV::SparseMatrix_COO<fp_type> matrix(N, N);
+  // Create vectors
+  fp_type x[N], y[N], y_expected[N];
+  // Set the diagonals to random values
+  for (size_t ii = 0; ii < N; ii++) {
+    y_expected[ii] = RAND_VALUE;
+    matrix.setCoefficient(ii, ii, y_expected[ii]);
+  }
+  matrix.assembleStorage();
+  // Set x to random values
+  for (unsigned int ii = 0; ii < N; ii++) {
+    x[ii] = RAND_VALUE;
+    y_expected[ii] *= x[ii];
+  }
+  // Do the matrix vector multiplication and check that y = x
+  matrix.computeMatVecProduct(x, y);
+  for (unsigned int ii = 0; ii < N; ii++) {
+    ASSERT_EQUAL(y[ii], y_expected[ii]);
+  }
+  // To test that the _unassemble/assemble process works correctly, update the values of one of the diagonal entries,
+  // recompute the matVec and check the result is as expected
+  matrix.setCoefficient(0, 0, 1.0);
+  matrix.assembleStorage();
+  ASSERT_EQUAL(matrix.getState(), SpMV::assembled);
+  ASSERT_EQUAL(matrix.getNumNonZeros(), N);
+  matrix.computeMatVecProduct(x, y);
+  ASSERT_EQUAL(y[0], x[0]);
+}
+// Tests a series of random matrix-vector products on MxN sparse matrix
+TEST(RandomMatVec) {
+  srand(0);
+  for (int n = 0; n < NUM_MATVEC_TESTS; n++) {
+    // Create an MxN COO matrix
+    SpMV::SparseMatrix_COO<fp_type> matrix(M, N);
+    // Create the vector to be multiplied, the vector to store the MatVec result in, and the vector to store the
+    // expected result in
+    fp_type x[N], y[N], y_expected[N];
+    // Set x to random values, expected y to 0
+    for (unsigned int ii = 0; ii < N; ii++) {
+      x[ii] = RAND_VALUE;
+      y_expected[ii] = 0.0;
+    }
+    // Go through each entry of the matrix and randomly assign random values
+    for (unsigned int rowInd = 0; rowInd < M; rowInd++) {
+      for (unsigned int colInd = 0; colInd < N; colInd++) {
+        if (RAND_VALUE < SPARSITY) {
+          // Set the coefficient to a random value
+          fp_type value = RAND_VALUE;
+          matrix.setCoefficient(rowInd, colInd, value);
+          // Add the value to the expected result
+          y_expected[rowInd] += value * x[colInd];
+        }
+      }
+    }
+    // Assemble the matrix
+    matrix.assembleStorage();
+    // Do the matrix vector multiplication and check that y contains the row sums of the matrix
+    matrix.computeMatVecProduct(x, y);
+    for (unsigned int ii = 0; ii < N; ii++) {
+      ASSERT_ALMOST_EQUAL(y[ii], y_expected[ii], 1e-10);
+    }
+  }
+}
 TEST_MAIN(); 
