@@ -244,17 +244,17 @@ namespace SpMV {
 
   template <class fp_type>
   SparseMatrix_JDS<fp_type>::~SparseMatrix_JDS() {
-    if (_colIndices != NULL) {
+    if (this->_colIndices != NULL) {
       delete[] this->_colIndices;
       this->_colIndices = NULL;
     }
 
-    if (_values != NULL) {
+    if (this->_values != NULL) {
       delete[] this->_values;
       this->_values = NULL;
     }
 
-    if (_jdPtrs != NULL) {
+    if (this->_jdPtrs != NULL) {
       delete[] this->_jdPtrs;
       this->_jdPtrs = NULL;
     }
@@ -308,17 +308,17 @@ namespace SpMV {
     }
 
     // --- Now that the matrix is un-assembled we can release all of the memory used for the assembled storage ---
-    if (_colIndices != NULL) {
+    if (this->_colIndices != NULL) {
       delete[] this->_colIndices;
       this->_colIndices = NULL;
     }
 
-    if (_values != NULL) {
+    if (this->_values != NULL) {
       delete[] this->_values;
       this->_values = NULL;
     }
 
-    if (_jdPtrs != NULL) {
+    if (this->_jdPtrs != NULL) {
       delete[] this->_jdPtrs;
       this->_jdPtrs = NULL;
     }
