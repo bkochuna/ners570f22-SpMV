@@ -83,42 +83,34 @@ namespace SpMV
         /*
         Code for implementing getFormat for DEN
         */
-        //
-        if (this->_state == assembled):
+        if (this->_state == assembled)
+        {
           _unAssemble();
-        //
-        SparseMatrix<fp_type> B;
-
-        SparseMatrix<fp-type>* ptr_B = B;
-
-        // newMat -> _nrows, _ncols, _nnz, _buildCoeff = mat->
-        // newMat -> assemble
-        // number of rows
-        B._nrows = this->_nrows;
-        // number of columns
-        B._ncols = this->_ncols;
-        //
-        B._nnz = this->_nnz;
-        // _buildCoeff 
-        B._buildCoeff = this->_buildCoeff;
-        // assemble
-        B.assembleStorage();
-
-        /*
-        // tranform
-        if (fmt == "DEN")
-        {
         }
-        else if (fmt == "COO")
-        {
-        
+        // Create pointer to new matrix that will be returned
+        SparseMatrix<fp-type>* ptr_A = nullptr;
+        // --- Create the new matrix in the requested format for ptr_a to point to ---
+        if (fmt == "DEN") {
+          ptr_A = new SparseMatrix_DEN<fp_type>(this->_nrows, this->_ncols);
         }
-        
-        ptr_B = ptr_A;
-        */
-        //
-        return ptr_B;
+        else if (fmt == "COO") {
+          ptr_A = new SparseMatrix_COO<fp_type>(this->_nrows, this->_ncols);
+        }
+        else if (fmt == "CSR") {
+          ptr_A = new SparseMatrix_CSR<fp_type>(this->_nrows, this->_ncols);
+        }
+        else if (fmt == "JDS") {
+          ptr_A = new SparseMatrix_JDS<fp_type>(this->_nrows, this->_ncols);
+        }
+        else if (fmt == "ELL") {
+          ptr_A = new SparseMatrix_ELL<fp_type>(this->_nrows, this->_ncols);
+        }
 
+        // Copy the nonzero entry data to the new matrix and assemble it
+        ptr_A->_buildCoeff = this->_buildCoeff;
+        ptr_A->assembleStorage();
+
+        return ptr_A;
     }
 
 /************************/
