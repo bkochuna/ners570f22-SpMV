@@ -71,8 +71,6 @@ namespace SpMV
     void SparseMatrix_ELL<fp_type>::assembleStorage()
     {
         assert(this->_state == building);
-        cout << "Hello from SparseMatrix_ELL::assembleStorage!" << endl;
-
         //Find the max number of nonzero elements in a given row
         this->max_nnz = 0;
         size_t tmp_max = 0;
@@ -90,7 +88,6 @@ namespace SpMV
         if (tmp_max > this->max_nnz) {
             this->max_nnz = tmp_max;
         }
-
         //Allocate the data and column index arrays
         this->J = new size_t*[this->_nrows];
         this->val = new fp_type*[this->_nrows];
@@ -139,7 +136,7 @@ namespace SpMV
     }
 
     template <class fp_type>
-    SparseMatrix<fp_type> *SparseMatrix_JDS<fp_type>::getFormat(string fmt) {
+    SparseMatrix<fp_type> *SparseMatrix_ELL<fp_type>::getFormat(string fmt) {
     if (this->_state == assembled) {_unAssemble();}
     // Create pointer to new matrix that will be returned
     SparseMatrix<fp_type> *ptr_A = nullptr;
