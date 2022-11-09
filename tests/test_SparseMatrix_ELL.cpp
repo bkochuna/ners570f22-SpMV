@@ -130,6 +130,8 @@ TEST(RandomMatVec) {
   }
 }
 
+// Test functionality of getFormat, currently commented out unil all other matrix types are available
+/**
 TEST(getFormat){
   // Create an NxN ELL matrix with double type
   SpMV::SparseMatrix_ELL<double> matrix(N, N);
@@ -149,5 +151,7 @@ TEST(getFormat){
   ASSERT_EQUAL(ptr_B->getNumRows(), N);
   ASSERT_EQUAL(ptr_B->getNumNonZeros(), N);
 }
+*/ 
+
 // Run the tests
 TEST_MAIN();

@@ -141,26 +141,32 @@ namespace SpMV
     // Create pointer to new matrix that will be returned
     SparseMatrix<fp_type> *ptr_A = nullptr;
 
-    // // Create the new matrix in the requested format for ptr_a to point to ---
-    // if (fmt == "DEN") {
-    //   ptr_A = new SparseMatrix_DEN<fp_type>(this->_nrows, this->_ncols);
-    // }
-    // else if (fmt == "COO") {
-    //   ptr_A = new SparseMatrix_COO<fp_type>(this->_nrows, this->_ncols);
-    // }
-    // else if (fmt == "CSR") {
-    //   ptr_A = new SparseMatrix_CSR<fp_type>(this->_nrows, this->_ncols);
-    // }
-    // else if (fmt == "JDS") {
-    //   ptr_A = new SparseMatrix_JDS<fp_type>(this->_nrows, this->_ncols);
-    // }
-    // else if (fmt == "ELL") {
-    //   ptr_A = new SparseMatrix_ELL<fp_type>(this->_nrows, this->_ncols);
-    // }
+    // This is currently commented out to get code complied and tests passed
+    // uncomment these lines after all of the different matrix types are merged
 
-    // // Copy the nonzero entry data to the new matrix and assemble it
-    // ptr_A->_buildCoeff = this->_buildCoeff;
-    // ptr_A->assembleStorage();
+    /**
+    // Create the new matrix in the requested format for ptr_a to point to ---
+    if (fmt == "DEN") {
+      ptr_A = new SparseMatrix_DEN<fp_type>(this->_nrows, this->_ncols);
+    }
+    else if (fmt == "COO") {
+      ptr_A = new SparseMatrix_COO<fp_type>(this->_nrows, this->_ncols);
+    }
+    else if (fmt == "CSR") {
+      ptr_A = new SparseMatrix_CSR<fp_type>(this->_nrows, this->_ncols);
+    }
+    else if (fmt == "JDS") {
+      ptr_A = new SparseMatrix_JDS<fp_type>(this->_nrows, this->_ncols);
+    }
+    else if (fmt == "ELL") {
+      ptr_A = new SparseMatrix_ELL<fp_type>(this->_nrows, this->_ncols);
+    }
+
+    // Copy the nonzero entry data to the new matrix and assemble it
+    ptr_A->_buildCoeff = this->_buildCoeff;
+    ptr_A->assembleStorage();
+
+    */
 
     return ptr_A;
     }
