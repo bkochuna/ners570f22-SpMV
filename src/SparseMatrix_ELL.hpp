@@ -129,7 +129,7 @@ namespace SpMV
             this->J = NULL;
         }
 
-        if this(->val != NULL) {
+        if (this->val != NULL) {
             delete[] this->val;
             this->val = NULL;
         }
@@ -195,10 +195,10 @@ namespace SpMV
     #pragma omp parallel for simd schedule(static) collapse(2)
         for (int i=0; i< this->_nrows; i++) {
             for (int j=0; j< this->_maxRow; j++) {
-                jj = j + this->_maxRow*i; //this row assumes that all elements in the columns are stored in contiguous memory pointers and allows indexing through one single index
-                c = this->J[jj];
+                j = j + this->_maxRow*i; //this row assumes that all elements in the columns are stored in contiguous memory pointers and allows indexing through one single index
+                c = this->J[j];
                 if ((c >= 0) && (c < this->_nrows))
-                    y[i] += this->val[jj] * x[c];
+                    y[i] += this->val[j] * x[c];
             }
         }
     }
@@ -214,7 +214,7 @@ namespace SpMV
         // assumes data array and column index array are 2d arrays (two levels of pointers)
         // and also assumes empty values at end of row in column index arrays are -1
         for (i = 0; i < this->_nrows; i++) {
-            j = 0
+            j = 0;
             while ((j < this->max_nnz) && (J[i][j] != -1)) {
                 this->_buildCoeff[ make_pair(i, J[i][j]) ] = val[i][j];
                 j += 1; 
