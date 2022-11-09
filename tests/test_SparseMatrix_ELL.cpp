@@ -131,7 +131,7 @@ TEST(RandomMatVec) {
 }
 
 TEST(getFormat){
-  // Create an NxN COO matrix with double type
+  // Create an NxN ELL matrix with double type
   SpMV::SparseMatrix_ELL<double> matrix(N, N);
   // Check if the number of columns and rows is N and the state of the matrix is initialized
   ASSERT_EQUAL(matrix.getNumRows(), N);
@@ -144,10 +144,10 @@ TEST(getFormat){
 
   //test if getformat works for ELL
   string fmt = "ELL";
-  ptr_B = martix.getFormat(fmt);
+  ptr_B = matrix.getFormat(fmt);
   ASSERT_EQUAL(ptr_B->getNumCols(), N);
   ASSERT_EQUAL(ptr_B->getNumRows(), N);
-  ASSERT_EQUAL(ptr_B->getNumNonZeros(), 0);
+  ASSERT_EQUAL(ptr_B->getNumNonZeros(), N);
 }
 // Run the tests
 TEST_MAIN();
