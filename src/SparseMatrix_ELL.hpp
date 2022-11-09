@@ -22,8 +22,17 @@ namespace SpMV
              * @param nrows Number of rows
              * @param ncols Number of columns
              */
+             
+             
             SparseMatrix_ELL(const size_t nrows, const size_t ncols) : SparseMatrix<fp_type>::SparseMatrix(nrows,ncols) {};
-            /* Overloaded constructor I have no idea if this is right */
+            
+               
+            SparseMatrix_ELL(const size_t nrows,
+                       const size_t ncols,
+                       size_t col_ind[],
+                       size_t val[]
+                       size_t max_nnz[]);
+          
             // SparseMatrix_ELL(const size_t nrows, const size_t ncols, size_t data[],size_t nnz[]):SparseMatrix(nrows,ncols);
             
             /**
@@ -65,6 +74,24 @@ namespace SpMV
 
 
     };
+  template <class fp_type>
+  SparseMatrix_ELL<fp_type>::SparseMatrix_ELL(const size_t nrows,
+                                              const size_t ncols,
+                                              size_t max_nnz[],
+                                              size_t maxnnz_row[])
+      : SparseMatrix<fp_type>::SparseMatrix(nrows, ncols) {
+    this->_state = building;
+    this->J = size_t*[this->_nrows];
+    this->val = fp_type*[this->_nrows];
+    for (int i = 0; i < this->_nrows; i++) {
+            this->J[i] = size_t[this->maxnnz_row];
+            this->val[i] = size_t[this->max_nnz];
+        }
+    this->_state = assembled;
+
+    assert(this->_state == assembled);
+  }
+
 
     template <class fp_type>
     void SparseMatrix_ELL<fp_type>::assembleStorage()
