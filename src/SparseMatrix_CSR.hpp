@@ -150,7 +150,7 @@ template <class fp_type> void SparseMatrix_CSR<fp_type>::_unAssemble() {
     // number of components in a row
     if (ii < n - 1) {
       int len = ptr[ii + 1] - ptr[ii]
-    }; else {
+    } else {
       int len = nnz - ptr[ii];
     }
     // loop over the components in the row
