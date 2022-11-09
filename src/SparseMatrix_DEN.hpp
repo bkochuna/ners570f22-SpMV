@@ -195,8 +195,9 @@ namespace SpMV
         if (this->Aij != nullptr)
         {
 
-            this->Aij = nullptr;
             delete[] this->Aij;       //delete the pointer
+            this->Aij = nullptr;
+
         }
 
     }
