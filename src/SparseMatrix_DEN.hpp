@@ -116,7 +116,7 @@ namespace SpMV
         */
         if (this->_state == assembled)
         {
-          unAssemble();
+            _unAssemble();
         }
         // Create pointer to new matrix that will be returned
         SparseMatrix<fp_type>* ptr_A = nullptr;
@@ -161,9 +161,9 @@ namespace SpMV
         */
     }
 
-/**************/
-/* unAssemble */
-/**************/
+/***************/
+/* _unAssemble */
+/***************/
 
     template <class fp_type>
     void SparseMatrix_DEN<fp_type>::_unAssemble()
