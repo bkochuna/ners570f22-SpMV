@@ -143,7 +143,8 @@ std::ostream &operator<<(std::ostream &os, const TestFailure &test_failure);
 
 // ----------------------------------------------------------------------------
 
-// demangle, print_helper, and print contributed by Amir Kamil <akamil@umich.edu>
+// demangle, print_helper, and print contributed by Amir Kamil
+// <akamil@umich.edu>
 
 // Demangles a string produced by std::type_info::name.
 std::string demangle(const char *typeinfo_name);
