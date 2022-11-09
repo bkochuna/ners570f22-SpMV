@@ -140,7 +140,7 @@ TEST(getFormat){
   ASSERT_EQUAL(matrix.getState(), SpMV::initialized);
    
   // create a pointer 
-  SpMV::SparseMatrix<fp_type>* ptr_B = nullptr;
+  SpMV::SparseMatrix<double> *ptr_B = nullptr;
 
   //test if getformat works for ELL
   string fmt = "ELL";
