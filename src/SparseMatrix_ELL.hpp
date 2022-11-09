@@ -42,7 +42,7 @@ namespace SpMV
              * @brief I don't know what this does
              *  // Could be getting the nonzero ncols and nrows and creating a new SparseMatrix...
              */
-            SparseMatrix<fp_type> void getFormat();
+            SparseMatrix<fp_type> *getFormat(string fmt);
             
             /**
              * @brief Compute the product of this matrix and a vector (y = Ax)
@@ -116,7 +116,8 @@ namespace SpMV
         assert(this->_state == assembled);
     }
 
-    template <class fp_type> SparseMatrix_ELL<fp_type>::~SparseMatrix_ELL() {
+    template <class fp_type> 
+    SparseMatrix_ELL<fp_type>::~SparseMatrix_ELL() {
 
         if (this->I != NULL) {
             delete[] this->I;
