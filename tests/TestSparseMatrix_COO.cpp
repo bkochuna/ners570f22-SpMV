@@ -1,6 +1,6 @@
 // Testing library required for testing
-#include "unit_test_framework.hpp"
 #include "SparseMatrix_COO.hpp"
+#include "unit_test_framework.hpp"
 
 // // Include code needed to test
 #include <vector>
@@ -27,73 +27,72 @@ using fp_type = float;
 #endif
 #endif
 
-// Check that the matrix has the correct number of rows, columns and non-zeros after setting some entries
+// Check that the matrix has the correct number of rows, columns and non-zeros
+// after setting some entries
 TEST(assemble_Test_COO) {
- // Create an NxN COO matrix
- SpMV::SparseMatrix_COO<fp_type> matrix(N, N);
- // Check that numRows and numCols are N, that numNonZeros = 0, and that the matrix is in the initialized state
- ASSERT_EQUAL(matrix.getNumRows(), N);
- ASSERT_EQUAL(matrix.getNumCols(), N);
- ASSERT_EQUAL(matrix.getNumNonZeros(), 0);
- // Set the diagonals to 1 (create an identity matrix)
- for (size_t ii = 0; ii < N; ii++) 
- {
+  // Create an NxN COO matrix
+  SpMV::SparseMatrix_COO<fp_type> matrix(N, N);
+  // Check that numRows and numCols are N, that numNonZeros = 0, and that the
+  // matrix is in the initialized state
+  ASSERT_EQUAL(matrix.getNumRows(), N);
+  ASSERT_EQUAL(matrix.getNumCols(), N);
+  ASSERT_EQUAL(matrix.getNumNonZeros(), 0);
+  // Set the diagonals to 1 (create an identity matrix)
+  for (size_t ii = 0; ii < N; ii++) {
     matrix.setCoefficient(ii, ii, 1.0);
- }
- // Check that numNonZeros = N, and that the matrix is in the building state
- ASSERT_EQUAL(matrix.getNumNonZeros(), N);
- // Assemble the matrix and check the status
- matrix.assembleStorage();
- ASSERT_EQUAL(matrix.getState(), SpMV::assembled);
- // Check unasemble state
- matrix._unAssemble();
- ASSERT_EQUAL(matrix.getState(), SpMV::unassembled);
- // Check for not correct result
- ASSERT_NOT_EQUAL(matrix.getState(), SpMV::assembled); 
+  }
+  // Check that numNonZeros = N, and that the matrix is in the building state
+  ASSERT_EQUAL(matrix.getNumNonZeros(), N);
+  // Assemble the matrix and check the status
+  matrix.assembleStorage();
+  ASSERT_EQUAL(matrix.getState(), SpMV::assembled);
+  // Check unasemble state
+  matrix._unAssemble();
+  ASSERT_EQUAL(matrix.getState(), SpMV::unassembled);
+  // Check for not correct result
+  ASSERT_NOT_EQUAL(matrix.getState(), SpMV::assembled);
 }
 
 TEST(alternateBuildingTest) {
- fp_type val[8]={3,4,7,81,20,-3,-14,6};
- size_t i[8]={1,2,3,5,6,10,11,12};
- size_t j[8]={1,7,7,6,10,13,11,12};
- size_t rows=14;
- size_t cols=14;
- size_t num_non_zero = 8; 
- SpMV::SparseMatrix_COO<fp_type> matrix(rows, cols);
- 
- for (size_t ii = 0; ii < num_non_zero; ii++) 
- {
-   matrix.setCoefficient(i[ii], j[ii], val[ii]);
- }
-  
- // Check that numNonZeros = 8
- ASSERT_EQUAL(matrix.getNumNonZeros(), 8);
- 
- // Assemble the matrix and check the status
- matrix.assembleStorage();
- ASSERT_EQUAL(matrix.getState(), SpMV::assembled);
- 
- // Check for not correct result
- ASSERT_NOT_EQUAL(matrix.getState(), SpMV::building); 
- 
- // Check that numRows and numCols are N, that numNonZeros = 0, and that the matrix is in the initialized state
- ASSERT_EQUAL(matrix.getNumRows(), rows);
- ASSERT_EQUAL(matrix.getNumCols(), cols);
- ASSERT_EQUAL(matrix.getNumNonZeros(), 8);
- ASSERT_TRUE(J[2], j[2]);
- ASSERT_FALSE(J[2], j[0]);
- 
- // Check unasemble state
- matrix._unAssemble();
- ASSERT_EQUAL(matrix.getState(), SpMV::unassembled);
- 
- // Check for not correct result
- ASSERT_NOT_EQUAL(matrix.getState(), SpMV::assembled); 
- 
- // check for empty unassemble
- ASSERT_TRUE(J.empty());
+  fp_type val[8] = {3, 4, 7, 81, 20, -3, -14, 6};
+  size_t i[8] = {1, 2, 3, 5, 6, 10, 11, 12};
+  size_t j[8] = {1, 7, 7, 6, 10, 13, 11, 12};
+  size_t rows = 14;
+  size_t cols = 14;
+  size_t num_non_zero = 8;
+  SpMV::SparseMatrix_COO<fp_type> matrix(rows, cols);
 
-  
+  for (size_t ii = 0; ii < num_non_zero; ii++) {
+    matrix.setCoefficient(i[ii], j[ii], val[ii]);
+  }
+
+  // Check that numNonZeros = 8
+  ASSERT_EQUAL(matrix.getNumNonZeros(), 8);
+
+  // Assemble the matrix and check the status
+  matrix.assembleStorage();
+  ASSERT_EQUAL(matrix.getState(), SpMV::assembled);
+
+  // Check for not correct result
+  ASSERT_NOT_EQUAL(matrix.getState(), SpMV::building);
+
+  // Check that numRows and numCols are N, that numNonZeros = 0, and that the
+  // matrix is in the initialized state
+  ASSERT_EQUAL(matrix.getNumRows(), rows);
+  ASSERT_EQUAL(matrix.getNumCols(), cols);
+  ASSERT_EQUAL(matrix.getNumNonZeros(), 8);
+  ASSERT_TRUE(J[2], j[2]);
+  ASSERT_FALSE(J[2], j[0]);
+
+  // Check unasemble state
+  matrix._unAssemble();
+  ASSERT_EQUAL(matrix.getState(), SpMV::unassembled);
+
+  // Check for not correct result
+  ASSERT_NOT_EQUAL(matrix.getState(), SpMV::assembled);
+
+  // check for empty unassemble
+  ASSERT_TRUE(J.empty());
 }
 // Checks the behaviour from y = A*x when A is a diagonal matrix
 TEST(DiagonalMatVec) {
@@ -118,8 +117,9 @@ TEST(DiagonalMatVec) {
   for (unsigned int ii = 0; ii < N; ii++) {
     ASSERT_EQUAL(y[ii], y_expected[ii]);
   }
-  // To test that the _unassemble/assemble process works correctly, update the values of one of the diagonal entries,
-  // recompute the matVec and check the result is as expected
+  // To test that the _unassemble/assemble process works correctly, update the
+  // values of one of the diagonal entries, recompute the matVec and check the
+  // result is as expected
   matrix.setCoefficient(0, 0, 1.0);
   matrix.assembleStorage();
   ASSERT_EQUAL(matrix.getState(), SpMV::assembled);
@@ -133,8 +133,8 @@ TEST(RandomMatVec) {
   for (int n = 0; n < NUM_MATVEC_TESTS; n++) {
     // Create an MxN COO matrix
     SpMV::SparseMatrix_COO<fp_type> matrix(M, N);
-    // Create the vector to be multiplied, the vector to store the MatVec result in, and the vector to store the
-    // expected result in
+    // Create the vector to be multiplied, the vector to store the MatVec result
+    // in, and the vector to store the expected result in
     fp_type x[N], y[N], y_expected[N];
     // Set x to random values, expected y to 0
     for (unsigned int ii = 0; ii < N; ii++) {
@@ -155,7 +155,8 @@ TEST(RandomMatVec) {
     }
     // Assemble the matrix
     matrix.assembleStorage();
-    // Do the matrix vector multiplication and check that y contains the row sums of the matrix
+    // Do the matrix vector multiplication and check that y contains the row
+    // sums of the matrix
     matrix.computeMatVecProduct(x, y);
     for (unsigned int ii = 0; ii < N; ii++) {
       ASSERT_ALMOST_EQUAL(y[ii], y_expected[ii], 1e-10);
@@ -164,21 +165,22 @@ TEST(RandomMatVec) {
 }
 
 // Test if getformat function works for ELL
-TEST(getFormat){
+TEST(getFormat) {
   // Create an NxN COO matrix with double type
   SpMV::SparseMatrix_COO<double> matrix(N, N);
-  // Check if the number of columns and rows is N and the state of the matrix is initialized
+  // Check if the number of columns and rows is N and the state of the matrix is
+  // initialized
   ASSERT_EQUAL(matrix.getNumRows(), N);
   ASSERT_EQUAL(matrix.getNumCols(), N);
   ASSERT_EQUAL(matrix.getNumNonZeros(), 0);
   ASSERT_EQUAL(matrix.getState(), SpMV::initialized);
-   
-  // create a pointer 
-  SpMV::SparseMatrix<fp_type>* ptr_B = nullptr;
+
+  // create a pointer
+  SpMV::SparseMatrix<fp_type> *ptr_B = nullptr;
   string fmt = "ELL";
   ptr_B = martix.getFormat(fmt);
   ASSERT_EQUAL(ptr_B->getNumCols(), N);
   ASSERT_EQUAL(ptr_B->getNumRows(), N);
   ASSERT_EQUAL(ptr_B->getNumNonZeros(), 0);
 }
-TEST_MAIN(); 
+TEST_MAIN();

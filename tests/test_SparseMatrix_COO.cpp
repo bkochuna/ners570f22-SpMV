@@ -4,7 +4,8 @@ COO Matrix unit tests
 =============================================================================
 @File    :   test_SparseMatrix_COO.cpp
 @Date    :   2022/11/07
-@Author  :   Doruk Aksoy (Replicating the work of Alasdair Christison Gray for JDS)
+@Author  :   Doruk Aksoy (Replicating the work of Alasdair Christison Gray for
+JDS)
 @Description :
 */
 
@@ -53,8 +54,8 @@ TEST(buildingTest) {
   matrix.assembleStorage();
   ASSERT_EQUAL(matrix.getState(), SpMV::assembled);
 
-  // Check that changing an existing value returns the matrix to a building state and doesn't change the number of
-  // non-zeros
+  // Check that changing an existing value returns the matrix to a building
+  // state and doesn't change the number of non-zeros
   matrix.setCoefficient(0, 0, 2.0);
   ASSERT_EQUAL(matrix.getNumNonZeros(), N);
   ASSERT_EQUAL(matrix.getState(), SpMV::building);
@@ -90,8 +91,9 @@ TEST(DiagonalMatVec) {
     ASSERT_EQUAL(y[ii], y_expected[ii]);
   }
 
-  // To test that the _unassemble/assemble process works correctly, update the values of one of the diagonal entries,
-  // recompute the matvec and check the result is as expected
+  // To test that the _unassemble/assemble process works correctly, update the
+  // values of one of the diagonal entries, recompute the matvec and check the
+  // result is as expected
   matrix.setCoefficient(0, 0, 1.0);
   matrix.assembleStorage();
   ASSERT_EQUAL(matrix.getState(), SpMV::assembled);
@@ -109,8 +111,8 @@ TEST(RandomMatVec) {
     // Create an MxN COO matrix
     SpMV::SparseMatrix_COO<fp_type> matrix(M, N);
 
-    // Create the vector to be multiplied, the vector to store the MatVec result in, and the vector to store the
-    // expected result in
+    // Create the vector to be multiplied, the vector to store the MatVec result
+    // in, and the vector to store the expected result in
     fp_type x[N], y[N], y_expected[N];
 
     // Set x to random values, expected y to 0
@@ -136,7 +138,8 @@ TEST(RandomMatVec) {
     // Assemble the matrix
     matrix.assembleStorage();
 
-    // Do the matrix vector multiplication and check that y contains the row sums of the matrix
+    // Do the matrix vector multiplication and check that y contains the row
+    // sums of the matrix
     matrix.computeMatVecProduct(x, y);
     for (unsigned int ii = 0; ii < N; ii++) {
       ASSERT_ALMOST_EQUAL(y[ii], y_expected[ii], 1e-10);
@@ -145,10 +148,10 @@ TEST(RandomMatVec) {
 }
 
 // Test if getformat function works for ELL
-TEST(getFormat){
+TEST(getFormat) {
   // Create an NxN COO matrix
   SpMV::SparseMatrix_COO<fp_type> matrix(N, N);
-  SpMV::SparseMatrix<fp_type>* ptr_B = nullptr;
+  SpMV::SparseMatrix<fp_type> *ptr_B = nullptr;
   string fmt = "ELL";
   ptr_B = martix.getFormat(fmt);
   ASSERT_EQUAL(ptr_B->getNumCols, N);
