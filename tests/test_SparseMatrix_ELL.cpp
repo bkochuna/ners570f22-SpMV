@@ -142,8 +142,8 @@ TEST(getFormat){
   // create a pointer 
   SpMV::SparseMatrix<fp_type>* ptr_B = nullptr;
 
-  //test if getformat works for JDS
-  string fmt = "JDS";
+  //test if getformat works for ELL
+  string fmt = "ELL";
   ptr_B = martix.getFormat(fmt);
   ASSERT_EQUAL(ptr_B->getNumCols(), N);
   ASSERT_EQUAL(ptr_B->getNumRows(), N);
