@@ -161,7 +161,7 @@ namespace SpMV {
       cout << "State error: This matrix is not assembled" << endl;
       return;
     }
-    outMat = getFormat(this, "COO");
+    outMat = this->getFormat("COO");
 
     // Open file
     ofstream outfile;
@@ -199,17 +199,12 @@ namespace SpMV {
     outfile << outMat._nnz << endl;
 
     // Write data of each nonzero matrix element
-      for{
-        int n = 0;
-        n < nnz;
-        i++
-      }
-      {
-        outfile << outMat.J[n];
-        outfile << outMat.I[n];
-        outfile << outMat.val[n] << endl;
-      }
-      outfile.close();
+    for (int n = 0; n < nnz; i++) {
+      outfile << outMat.J[n];
+      outfile << outMat.I[n];
+      outfile << outMat.val[n] << endl;
+    }
+    outfile.close();
   }
 
 } // namespace SpMV
