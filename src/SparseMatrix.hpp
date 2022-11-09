@@ -94,6 +94,16 @@ namespace SpMV {
       void setCoefficient(const size_t row, const size_t col, const fp_type aij);
 
       /**
+       * @brief Set multiple value of the matrix at the given row and column
+       *
+       * @param row_p Row pointer
+       * @param col_p Column pointer
+       * @param value_p Value pointer
+       * @param numValue Number of values
+       */
+      void setCoefficient(const size_t *row_p, const size_t *col_p, const fp_type *value_p, const int numValue);
+
+      /**
        * @brief Assemble the matrix
        *
        */
@@ -141,11 +151,28 @@ namespace SpMV {
   }
 
   template <class fp_type>
-  void SparseMatrix<fp_type>::getFormat() {
-    assert(this->_state == assembled);
+  void setCoefficient(const size_t *row_p, const size_t *col_p, const fp_type *value_p, const int numValue);
+  assert(this->_state != undefined);
 
-    // return new SparseMatrix(this->_ncols,this->_nrows);
+  if (this->_state == assembled)
+    this->_unAssemble();
+
+  this->_state = building;
+
+  for (int ival = 0; ival < numValue; i++) {
+    this->_buildCoeff[make_pair(*(row_p + ival), *(col_p, ival))] = *(value_p + ival);
   }
+
+  this->_nnz = this->_buildCoeff.size();
+  assert(this->_state == building);
+}
+
+template <class fp_type>
+void SparseMatrix<fp_type>::getFormat() {
+  assert(this->_state == assembled);
+
+  // return new SparseMatrix(this->_ncols,this->_nrows);
+}
 
 } // namespace SpMV
 
