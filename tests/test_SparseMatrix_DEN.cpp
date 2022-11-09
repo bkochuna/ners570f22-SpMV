@@ -11,8 +11,8 @@ DEN Matrix unit tests
 // =============================================================================
 // Extension Includes
 // =============================================================================
-#include "SparseMatrix_DEN.hpp"
 #include "SparseMatrix.hpp"
+#include "SparseMatrix_DEN.hpp"
 #include "unit_test_framework.hpp"
 
 // ==============================================================================
