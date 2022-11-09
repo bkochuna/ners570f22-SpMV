@@ -52,7 +52,7 @@ template <class fp_type> void SparseMatrix_CSR<fp_type>::assembleStorage() {
   cout << "Hello from SparseMatrix_COO::assembleStorage!" << endl;
 
   // Convert this buildCoeff dictionary to I, J, val
-  this->I = new int[this->_nnz];
+  this->I = new size_t[this->_nnz];
   this->val = new fp_type[this->_nnz];
   this->ptr = new size_t[this->_nnz];
 
