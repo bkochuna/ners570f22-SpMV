@@ -21,8 +21,8 @@ namespace SpMV {
   template <class fp_type>
   class SparseMatrix_DEN : public SparseMatrix<fp_type> {
     private:
-      size_t n_rows; // number of rows of the dense matrix
-      size_t n_cols; // number of cols of the dense matrix
+      size_t _nrows; // number of rows of the dense matrix
+      size_t _ncols; // number of cols of the dense matrix
       fp_type *Aij = nullptr;
 
     public:
@@ -161,12 +161,25 @@ namespace SpMV {
   void SparseMatrix_DEN<fp_type>::_unAssemble() {
     assert(this->_state == assembled);
 
-    delete[] this->Aij; // delete the pointer
-
-    this->Aij = nullptr;
-
     this->_state = building;
+
     assert(this->_state == building);
+
+    size_t r = this->_nrows;
+    size_t c = this->_ncols;
+
+    this->_nnz = 0;
+
+    for (size_t i = 0; i < r; i++) {
+      for (size_t j = 0; j < c; j++) {
+        this->setCoefficient(i, j, Aij[i][j]);
+      }
+    }
+
+    if (this->Aij != nullptr) {
+      delete[] this->Aij;
+      this->Aij = nullptr;
+    }
   }
 
   /**************/
