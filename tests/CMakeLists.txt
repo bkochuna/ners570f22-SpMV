@@ -4,5 +4,7 @@
 # add_unit_test(file-name)
 #
 # Where file-name does not have .cpp
+
+add_unit_test(testSpMVFactory)
 add_unit_test(example)
 add_unit_test(test_SparseMatrix_JDS)
