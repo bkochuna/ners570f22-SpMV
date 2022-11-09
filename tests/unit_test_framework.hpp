@@ -34,117 +34,110 @@ using Test_func_t = void (*)();
 #define FP_TYPE double
 #endif
 
-#define TEST(name)                                                             \
-  static void name();                                                          \
-  static TestRegisterer register_##name((#name), name);                        \
+#define TEST(name)                                                                                                     \
+  static void name();                                                                                                  \
+  static TestRegisterer register_##name((#name), name);                                                                \
   static void name()
 
-#define TEST_MAIN()                                                            \
-  int main(int argc, char **argv) {                                            \
-    return TestSuite::get().run_tests(argc, argv);                             \
-  }                                                                            \
+#define TEST_MAIN()                                                                                                    \
+  int main(int argc, char **argv) { return TestSuite::get().run_tests(argc, argv); }                                   \
   TEST_SUITE_INSTANCE();
 
 struct TestCase {
-  TestCase(const std::string &name_, Test_func_t test_func_)
-      : name(name_), test_func(test_func_) {}
+    TestCase(const std::string &name_, Test_func_t test_func_) : name(name_), test_func(test_func_) {}
 
-  void run(bool quiet_mode);
-  void print(bool quiet_mode);
+    void run(bool quiet_mode);
+    void print(bool quiet_mode);
 
-  std::string name;
-  Test_func_t test_func;
-  std::string failure_msg{};
-  std::string exception_msg{};
+    std::string name;
+    Test_func_t test_func;
+    std::string failure_msg{};
+    std::string exception_msg{};
 };
 
 class TestSuite {
-public:
-  static TestSuite &get() {
-    if (not instance) {
-      instance = new TestSuite;
-    }
-    return *instance;
-  }
-
-  void add_test(const std::string &test_name, Test_func_t test) {
-    tests_.insert({test_name, TestCase{test_name, test}});
-  }
-
-  int run_tests(int argc, char **argv);
-  void print_results();
-
-  void enable_quiet_mode() { quiet_mode = true; }
-
-  std::ostream &print_test_names(std::ostream &os) {
-    for (const auto &test_pair : tests_) {
-      os << test_pair.first << '\n';
-    }
-    return os;
-  }
-
-  friend class TestSuiteDestroyer;
-
-private:
-  TestSuite() {
-    auto func = []() {
-      if (TestSuite::incomplete) {
-        std::cout << "ERROR: premature call to exit()" << std::endl;
-        std::abort();
+  public:
+    static TestSuite &get() {
+      if (not instance) {
+        instance = new TestSuite;
       }
-    };
-    std::atexit(func);
+      return *instance;
+    }
+
+    void add_test(const std::string &test_name, Test_func_t test) {
+      tests_.insert({test_name, TestCase{test_name, test}});
+    }
+
+    int run_tests(int argc, char **argv);
+    void print_results();
+
+    void enable_quiet_mode() { quiet_mode = true; }
+
+    std::ostream &print_test_names(std::ostream &os) {
+      for (const auto &test_pair : tests_) {
+        os << test_pair.first << '\n';
+      }
+      return os;
+    }
+
+    friend class TestSuiteDestroyer;
+
+  private:
+    TestSuite() {
+      auto func = []() {
+        if (TestSuite::incomplete) {
+          std::cout << "ERROR: premature call to exit()" << std::endl;
+          std::abort();
+        }
+      };
+      std::atexit(func);
 #ifdef _GLIBCXX_HAVE_AT_QUICK_EXIT
-    std::at_quick_exit(func);
+      std::at_quick_exit(func);
 #endif
-  }
-  TestSuite(const TestSuite &) = delete;
-  bool operator=(const TestSuite &) = delete;
-  ~TestSuite() {}
+    }
+    TestSuite(const TestSuite &) = delete;
+    bool operator=(const TestSuite &) = delete;
+    ~TestSuite() {}
 
-  std::vector<std::string> get_test_names_to_run(int argc, char **argv);
+    std::vector<std::string> get_test_names_to_run(int argc, char **argv);
 
-  static TestSuite *instance;
-  std::map<std::string, TestCase> tests_;
+    static TestSuite *instance;
+    std::map<std::string, TestCase> tests_;
 
-  bool quiet_mode = false;
-  static bool incomplete;
+    bool quiet_mode = false;
+    static bool incomplete;
 };
 
 class TestSuiteDestroyer {
-public:
-  ~TestSuiteDestroyer() { delete TestSuite::instance; }
+  public:
+    ~TestSuiteDestroyer() { delete TestSuite::instance; }
 };
 
 class TestRegisterer {
-public:
-  TestRegisterer(const std::string &test_name, Test_func_t test) {
-    TestSuite::get().add_test(test_name, test);
-  }
+  public:
+    TestRegisterer(const std::string &test_name, Test_func_t test) { TestSuite::get().add_test(test_name, test); }
 };
 
 class TestFailure {
-public:
-  TestFailure(std::string reason, int line_number, const char *assertion_text)
-      : reason_m(std::move(reason)), line_number_m(line_number),
-        assertion_text_m(assertion_text) {}
+  public:
+    TestFailure(std::string reason, int line_number, const char *assertion_text)
+        : reason_m(std::move(reason)), line_number_m(line_number), assertion_text_m(assertion_text) {}
 
-  std::ostream &print(std::ostream &os) const {
-    os << "In " << assertion_text_m << ", line " << line_number_m << ":\n"
-       << reason_m << '\n';
-    return os;
-  }
+    std::ostream &print(std::ostream &os) const {
+      os << "In " << assertion_text_m << ", line " << line_number_m << ":\n" << reason_m << '\n';
+      return os;
+    }
 
-  std::string to_string() const {
-    std::ostringstream oss;
-    print(oss);
-    return oss.str();
-  }
+    std::string to_string() const {
+      std::ostringstream oss;
+      print(oss);
+      return oss.str();
+    }
 
-private:
-  std::string reason_m;
-  int line_number_m;
-  const char *assertion_text_m;
+  private:
+    std::string reason_m;
+    int line_number_m;
+    const char *assertion_text_m;
 };
 std::ostream &operator<<(std::ostream &os, const TestFailure &test_failure);
 
@@ -157,13 +150,13 @@ std::ostream &operator<<(std::ostream &os, const TestFailure &test_failure);
 std::string demangle(const char *typeinfo_name);
 
 // forward declaration of print
-template <class T> std::ostream &print(std::ostream &os, const T &t);
+template <class T>
+std::ostream &print(std::ostream &os, const T &t);
 
 // This version of print_helper will be called when T has an available
 // stream insertion operator overload.
 template <class T>
-auto print_helper(std::ostream &os, const T &t, int, int)
-    -> decltype(os << t) & {
+auto print_helper(std::ostream &os, const T &t, int, int) -> decltype(os << t) & {
   return os << t;
 }
 
@@ -236,7 +229,8 @@ std::ostream &print_helper(std::ostream &os, const T &, ...) {
 // If T has an available stream insertion operator overload, that
 // operator is used. Otherwise, a generic representation of the object
 // is printed to os.
-template <class T> std::ostream &print(std::ostream &os, const T &t) {
+template <class T>
+std::ostream &print(std::ostream &os, const T &t) {
   // The extra parameters are needed so that the first overload of
   // print_helper is preferred, followed by the third one.
   return print_helper(os, t, 0, 0);
@@ -244,28 +238,24 @@ template <class T> std::ostream &print(std::ostream &os, const T &t) {
 
 // ----------------------------------------------------------------------------
 
-#define ASSERT_EQUAL(first, second)                                            \
-  assert_equal((first), (second), __LINE__,                                    \
-               "ASSERT_EQUAL(" #first ", " #second ")");
+#define ASSERT_EQUAL(first, second) assert_equal((first), (second), __LINE__, "ASSERT_EQUAL(" #first ", " #second ")");
 
-#define ASSERT_NOT_EQUAL(first, second)                                        \
-  assert_not_equal((first), (second), __LINE__,                                \
-                   "ASSERT_NOT_EQUAL(" #first ", " #second ")");
+#define ASSERT_NOT_EQUAL(first, second)                                                                                \
+  assert_not_equal((first), (second), __LINE__, "ASSERT_NOT_EQUAL(" #first ", " #second ")");
 
-#define ASSERT_SEQUENCE_EQUAL(first, second)                                   \
-  assert_sequence_equal((first), (second), __LINE__,                           \
-                        "ASSERT_SEQUENCE_EQUAL(" #first ", " #second ")");
+#define ASSERT_SEQUENCE_EQUAL(first, second)                                                                           \
+  assert_sequence_equal((first), (second), __LINE__, "ASSERT_SEQUENCE_EQUAL(" #first ", " #second ")");
 
-#define ASSERT_TRUE(value)                                                     \
-  assert_true((value), __LINE__, "ASSERT_TRUE(" #value ")");
+#define ASSERT_TRUE(value) assert_true((value), __LINE__, "ASSERT_TRUE(" #value ")");
 
-#define ASSERT_FALSE(value)                                                    \
-  assert_false((value), __LINE__, "ASSERT_FALSE(" #value ")");
+#define ASSERT_FALSE(value) assert_false((value), __LINE__, "ASSERT_FALSE(" #value ")");
 
-#define ASSERT_ALMOST_EQUAL(first, second, precision)                          \
-  assert_almost_equal((first), (second), (precision), __LINE__,                \
-                      "ASSERT_ALMOST_EQUAL(" #first ", " #second               \
-                      ", " #precision ")");
+#define ASSERT_ALMOST_EQUAL(first, second, precision)                                                                  \
+  assert_almost_equal((first),                                                                                         \
+                      (second),                                                                                        \
+                      (precision),                                                                                     \
+                      __LINE__,                                                                                        \
+                      "ASSERT_ALMOST_EQUAL(" #first ", " #second ", " #precision ")");
 
 // Template logic to produce a static assertion failure when comparing
 // incomparable types.
@@ -273,19 +263,15 @@ template <typename First, typename Second, typename = void>
 struct is_equality_comparable : std::false_type {};
 
 template <typename First, typename Second>
-using enable_if_equality_comparable = typename std::enable_if<
-    std::is_same<bool, decltype(std::declval<First>() ==
-                                std::declval<Second>())>::value and
-        std::is_same<bool, decltype(std::declval<First>() !=
-                                    std::declval<Second>())>::value and
-        (!std::is_array<typename std::remove_reference<First>::type>::value or
-         !std::is_array<typename std::remove_reference<Second>::type>::value),
-    void>::type;
+using enable_if_equality_comparable =
+    typename std::enable_if<std::is_same<bool, decltype(std::declval<First>() == std::declval<Second>())>::value and
+                                std::is_same<bool, decltype(std::declval<First>() != std::declval<Second>())>::value and
+                                (!std::is_array<typename std::remove_reference<First>::type>::value or
+                                 !std::is_array<typename std::remove_reference<Second>::type>::value),
+                            void>::type;
 
 template <typename First, typename Second>
-struct is_equality_comparable<First, Second,
-                              enable_if_equality_comparable<First, Second>>
-    : std::true_type {};
+struct is_equality_comparable<First, Second, enable_if_equality_comparable<First, Second> > : std::true_type {};
 
 // Overloads for equality comparisons.
 template <typename First, typename Second>
@@ -303,9 +289,7 @@ bool safe_equals_helper(std::size_t first, int second) {
   return second >= 0 && static_cast<long long>(first) == second;
 }
 
-bool safe_equals_helper(int first, std::size_t second) {
-  return first >= 0 && first == static_cast<long long>(second);
-}
+bool safe_equals_helper(int first, std::size_t second) { return first >= 0 && first == static_cast<long long>(second); }
 
 bool safe_not_equals_helper(std::size_t first, int second) {
   return second < 0 || static_cast<long long>(first) != second;
@@ -315,20 +299,15 @@ bool safe_not_equals_helper(int first, std::size_t second) {
   return first < 0 || first != static_cast<long long>(second);
 }
 
-template <typename First, typename Second, typename = void> struct safe_equals {
-  static_assert(is_equality_comparable<First, Second>::value,
-                "types cannot be compared with == and !=");
-  static bool equals(const First &first, const Second &second) {
-    return safe_equals_helper(first, second);
-  }
-  static bool not_equals(const First &first, const Second &second) {
-    return safe_not_equals_helper(first, second);
-  }
+template <typename First, typename Second, typename = void>
+struct safe_equals {
+    static_assert(is_equality_comparable<First, Second>::value, "types cannot be compared with == and !=");
+    static bool equals(const First &first, const Second &second) { return safe_equals_helper(first, second); }
+    static bool not_equals(const First &first, const Second &second) { return safe_not_equals_helper(first, second); }
 };
 
 template <typename First, typename Second>
-void assert_equal(First &&first, Second &&second, int line_number,
-                  const char *assertion_text) {
+void assert_equal(First &&first, Second &&second, int line_number, const char *assertion_text) {
   if (safe_equals<First, Second>::equals(first, second)) {
     return;
   }
@@ -340,8 +319,7 @@ void assert_equal(First &&first, Second &&second, int line_number,
 }
 
 template <typename First, typename Second>
-void assert_not_equal(First &&first, Second &&second, int line_number,
-                      const char *assertion_text) {
+void assert_not_equal(First &&first, Second &&second, int line_number, const char *assertion_text) {
   if (safe_equals<First, Second>::not_equals(first, second)) {
     return;
   }
@@ -355,8 +333,7 @@ void assert_not_equal(First &&first, Second &&second, int line_number,
 }
 
 template <typename First, typename Second>
-void assert_sequence_equal(First &&first, Second &&second, int line_number,
-                           const char *assertion_text) {
+void assert_sequence_equal(First &&first, Second &&second, int line_number, const char *assertion_text) {
   using std::begin;
   using std::end;
   auto it1 = begin(first);
@@ -404,9 +381,9 @@ void assert_sequence_equal(First &&first, Second &&second, int line_number,
 // DO NOT CHANGE THIS UNLESS YOU REEEEALLY KNOW WHAT
 // YOU'RE DOING. CONTACT akamil@umich.edu or jameslp@umich.edu IF
 // YOU HAVE QUESTIONS ABOUT THIS.
-#define TEST_SUITE_INSTANCE()                                                  \
-  static TestSuiteDestroyer destroyer;                                         \
-  bool TestSuite::incomplete = false;                                          \
+#define TEST_SUITE_INSTANCE()                                                                                          \
+  static TestSuiteDestroyer destroyer;                                                                                 \
+  bool TestSuite::incomplete = false;                                                                                  \
   TestSuite *TestSuite::instance = &TestSuite::get()
 
 void TestCase::run(bool quiet_mode) {
@@ -428,8 +405,7 @@ void TestCase::run(bool quiet_mode) {
     }
   } catch (std::exception &e) {
     std::ostringstream oss;
-    oss << "Uncaught " << demangle(typeid(e).name()) << " in test \"" << name
-        << "\": \n";
+    oss << "Uncaught " << demangle(typeid(e).name()) << " in test \"" << name << "\": \n";
     oss << e.what() << '\n';
     exception_msg = oss.str();
 
@@ -442,7 +418,8 @@ void TestCase::run(bool quiet_mode) {
 void TestCase::print(bool quiet_mode) {
   if (quiet_mode) {
     std::cout << name << ": ";
-  } else {
+  }
+  else {
     std::cout << name << ": ";
   }
 
@@ -451,12 +428,14 @@ void TestCase::print(bool quiet_mode) {
     if (not quiet_mode) {
       std::cout << failure_msg << std::endl;
     }
-  } else if (not exception_msg.empty()) {
+  }
+  else if (not exception_msg.empty()) {
     std::cout << "ERROR" << std::endl;
     if (not quiet_mode) {
       std::cout << exception_msg << std::endl;
     }
-  } else {
+  }
+  else {
     std::cout << "PASS" << std::endl;
   }
 }
@@ -464,20 +443,18 @@ void TestCase::print(bool quiet_mode) {
 // ----------------------------------------------------------------------------
 
 class ExitSuite : public std::exception {
-public:
-  ExitSuite(int status_ = 0) : status(status_) {}
-  int status;
+  public:
+    ExitSuite(int status_ = 0) : status(status_) {}
+    int status;
 };
 
 class SetComplete {
-public:
-  SetComplete(bool &incomplete_) : incomplete(incomplete_) {
-    incomplete = true;
-  }
-  ~SetComplete() { incomplete = false; }
+  public:
+    SetComplete(bool &incomplete_) : incomplete(incomplete_) { incomplete = true; }
+    ~SetComplete() { incomplete = false; }
 
-private:
-  bool &incomplete;
+  private:
+    bool &incomplete;
 };
 
 int TestSuite::run_tests(int argc, char **argv) {
@@ -503,23 +480,17 @@ int TestSuite::run_tests(int argc, char **argv) {
     tests_.at(test_name).print(quiet_mode);
   }
 
-  auto num_failures =
-      std::count_if(tests_.begin(), tests_.end(),
-                    [](std::pair<std::string, TestCase> test_pair) {
-                      return not test_pair.second.failure_msg.empty();
-                    });
-  auto num_errors =
-      std::count_if(tests_.begin(), tests_.end(),
-                    [](std::pair<std::string, TestCase> test_pair) {
-                      return not test_pair.second.exception_msg.empty();
-                    });
+  auto num_failures = std::count_if(tests_.begin(), tests_.end(), [](std::pair<std::string, TestCase> test_pair) {
+    return not test_pair.second.failure_msg.empty();
+  });
+  auto num_errors = std::count_if(tests_.begin(), tests_.end(), [](std::pair<std::string, TestCase> test_pair) {
+    return not test_pair.second.exception_msg.empty();
+  });
 
   if (not quiet_mode) {
     std::cout << "\n*** Summary ***" << std::endl;
-    std::cout << "Out of " << test_names_to_run.size()
-              << " tests run:" << std::endl;
-    std::cout << num_failures << " failure(s), " << num_errors << " error(s)"
-              << std::endl;
+    std::cout << "Out of " << test_names_to_run.size() << " tests run:" << std::endl;
+    std::cout << num_failures << " failure(s), " << num_errors << " error(s)" << std::endl;
   }
 
   if (num_failures == 0 and num_errors == 0) {
@@ -528,23 +499,20 @@ int TestSuite::run_tests(int argc, char **argv) {
   return 1;
 }
 
-std::vector<std::string> TestSuite::get_test_names_to_run(int argc,
-                                                          char **argv) {
+std::vector<std::string> TestSuite::get_test_names_to_run(int argc, char **argv) {
   std::vector<std::string> test_names_to_run;
   for (auto i = 1; i < argc; ++i) {
-    if (argv[i] == std::string("--show_test_names") or
-        argv[i] == std::string("-n")) {
+    if (argv[i] == std::string("--show_test_names") or argv[i] == std::string("-n")) {
 
       TestSuite::get().print_test_names(std::cout);
       std::cout << std::flush;
       throw ExitSuite();
-    } else if (argv[i] == std::string("--quiet") or
-               argv[i] == std::string("-q")) {
+    }
+    else if (argv[i] == std::string("--quiet") or argv[i] == std::string("-q")) {
       TestSuite::get().enable_quiet_mode();
-    } else if (argv[i] == std::string("--help") or
-               argv[i] == std::string("-h")) {
-      std::cout << "usage: " << argv[0]
-                << " [-h] [-n] [-q] [[TEST_NAME] ...]\n";
+    }
+    else if (argv[i] == std::string("--help") or argv[i] == std::string("-h")) {
+      std::cout << "usage: " << argv[0] << " [-h] [-n] [-q] [[TEST_NAME] ...]\n";
       std::cout << "optional arguments:\n"
                 << " -h, --help\t\t show this help message and exit\n"
                 << " -n, --show_test_names\t print the names of all "
@@ -557,23 +525,22 @@ std::vector<std::string> TestSuite::get_test_names_to_run(int argc,
                 << std::endl;
 
       throw ExitSuite();
-    } else {
+    }
+    else {
       test_names_to_run.push_back(argv[i]);
     }
   }
 
   if (test_names_to_run.empty()) {
-    std::transform(
-        std::begin(tests_), std::end(tests_),
-        std::back_inserter(test_names_to_run),
-        [](const std::pair<std::string, TestCase> &p) { return p.first; });
+    std::transform(std::begin(tests_),
+                   std::end(tests_),
+                   std::back_inserter(test_names_to_run),
+                   [](const std::pair<std::string, TestCase> &p) { return p.first; });
   }
   return test_names_to_run;
 }
 
-std::ostream &operator<<(std::ostream &os, const TestFailure &test_failure) {
-  return test_failure.print(os);
-}
+std::ostream &operator<<(std::ostream &os, const TestFailure &test_failure) { return test_failure.print(os); }
 
 //------------------------------------------------------------------------------
 
@@ -582,13 +549,13 @@ std::ostream &operator<<(std::ostream &os, const TestFailure &test_failure) {
 #include <cxxabi.h>
 std::string demangle(const char *typeinfo_name) {
   int status = 0;
-  char *demangled =
-      abi::__cxa_demangle(typeinfo_name, nullptr, nullptr, &status);
+  char *demangled = abi::__cxa_demangle(typeinfo_name, nullptr, nullptr, &status);
   if (status == 0) {
     std::string result = demangled;
     std::free(demangled);
     return result;
-  } else {
+  }
+  else {
     return typeinfo_name;
   }
 }
@@ -616,8 +583,7 @@ void assert_false(bool value, int line_number, const char *assertion_text) {
   throw TestFailure(reason.str(), line_number, assertion_text);
 }
 
-void assert_almost_equal(double first, double second, double precision,
-                         int line_number, const char *assertion_text) {
+void assert_almost_equal(double first, double second, double precision, int line_number, const char *assertion_text) {
   if (std::abs(first - second) <= precision) {
     return;
   }

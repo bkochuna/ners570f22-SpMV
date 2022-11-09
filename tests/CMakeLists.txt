@@ -6,3 +6,4 @@
 # Where file-name does not have .cpp
 add_unit_test(example)
 add_unit_test(TestSparseMatrix_COO)
+add_unit_test(test_SparseMatrix_JDS)
