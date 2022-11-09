@@ -157,10 +157,7 @@ namespace SpMV {
   template <class fp_type>
   void SparseMatrix<fp_type>::exportMatrix(char *fileName) {
     // Exit with warning if matrix is not assembled
-    if (this->_state != assembled) {
-      cout << "State error: This matrix is not assembled" << endl;
-      return;
-    }
+    assert(this->_state != assembled);
     outMat = this->getFormat("COO");
 
     // Open file
