@@ -140,8 +140,8 @@ TEST(getFormat){
   ASSERT_EQUAL(matrix.getNumCols(), N);
   ASSERT_EQUAL(matrix.getNumNonZeros(), 0);
   ASSERT_EQUAL(matrix.getState(), SpMV::initialized);
-   
-  // create a pointer 
+
+  // create a pointer
   SpMV::SparseMatrix<double> *ptr_B = nullptr;
 
   //test if getformat works for ELL
@@ -151,7 +151,7 @@ TEST(getFormat){
   ASSERT_EQUAL(ptr_B->getNumRows(), N);
   ASSERT_EQUAL(ptr_B->getNumNonZeros(), N);
 }
-*/ 
+*/
 
 // Run the tests
 TEST_MAIN();
