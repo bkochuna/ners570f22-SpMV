@@ -165,7 +165,6 @@ namespace SpMV {
     outfile.open(fileName);
 
     // Write preamble
-  private:
     char preamble = " %%MatrixMarket matrix coordinate real general"
                     " %================================================================================="
                     " %"
@@ -188,7 +187,7 @@ namespace SpMV {
                     " % Indices are 1-based, i.e. A(1,1) is the first element."
                     " %"
                     " %=================================================================================";
-    outfile << m.write << endl;
+    outfile << preamble << endl;
 
     // Write header line with matrix meta-data
     outfile << outMat._nrows;
