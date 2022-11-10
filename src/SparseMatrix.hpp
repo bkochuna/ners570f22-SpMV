@@ -158,14 +158,14 @@ namespace SpMV {
   void SparseMatrix<fp_type>::exportMatrix(char *fileName) {
     // Exit with warning if matrix is not assembled
     assert(this->_state != assembled);
-    outMat = this->getFormat("COO");
+    SparseMatrix<fp_type> outMat = this->getFormat("COO");
 
     // Open file
-    ofstream outfile;
+    std::ofstream outfile;
     outfile.open(fileName);
 
     // Write preamble
-  private
+  private:
     char preamble = " %%MatrixMarket matrix coordinate real general"
                     " %================================================================================="
                     " %"
@@ -196,7 +196,7 @@ namespace SpMV {
     outfile << outMat._nnz << endl;
 
     // Write data of each nonzero matrix element
-    for (int n = 0; n < nnz; i++) {
+    for (int n = 0; n < _nnz; i++) {
       outfile << outMat.J[n];
       outfile << outMat.I[n];
       outfile << outMat.val[n] << endl;
