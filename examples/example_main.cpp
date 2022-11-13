@@ -1,5 +1,4 @@
-#include "SparseMatrix.hpp"
-#include "SparseMatrix_JDS.hpp"
+#include "SpMV.hpp"
 
 int main(int argc, char *argv[]) {
   std::cout << "Hello World!" << std::endl;
