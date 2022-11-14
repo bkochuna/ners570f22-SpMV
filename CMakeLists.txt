@@ -6,21 +6,6 @@ enable_language(CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# Make add_unit_test visual to the project in more than just the cmake directory
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-include(add_unit_test)
-
-# Include the src directory to include in unit tests
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/src")
-
-# Add directories
-add_subdirectory(src)
-add_subdirectory(examples)
-
-# Allow unit tests and add testing directory
-enable_testing()
-add_subdirectory(tests)
-
 # Install the pre-commit hook if it has not been installed
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.git/hooks/pre-commit")
   MESSAGE(STATUS "Skipping pre-commit hook install (Already installed)")
@@ -41,3 +26,19 @@ else()
   execute_process(COMMAND ${Python_EXECUTABLE} -m pip install ${_pip_args} pre-commit)
   execute_process(COMMAND pre-commit install)
 endif()
+
+
+# Make add_unit_test visual to the project in more than just the cmake directory
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+include(add_unit_test)
+
+# Include the src directory to include in unit tests
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/src")
+
+# Add directories
+add_subdirectory(src)
+add_subdirectory(examples)
+
+# Allow unit tests and add testing directory
+enable_testing()
+add_subdirectory(tests)
