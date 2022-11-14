@@ -1,6 +1,7 @@
 #Define the SpMV library target
 add_library(SpMV
             SparseMatrix.cpp
+	    SparseMatrix_COO.cpp
             SparseMatrix_JDS.cpp
 )
 

@@ -1,8 +1,26 @@
+/*
+=============================================================================
+COOrdinate Sparse Matrix (COO) implementation
+=============================================================================
+@File    :   SparseMatrix_COO.hpp
+@Date    :
+@Description :
+*/
 #ifndef __SPMV570_COO__
 #define __SPMV570_COO__
 
+// =============================================================================
+// Standard Library Includes
+// =============================================================================
+
+// =============================================================================
+// Project Includes
+// =============================================================================
 #include "SparseMatrix.hpp"
 
+// ==============================================================================
+// Class declaration
+// ==============================================================================
 namespace SpMV {
   /**
    * @brief A sparse matrix stored in COO (coordinate format)
@@ -17,6 +35,14 @@ namespace SpMV {
       size_t *J = nullptr;    ///< Column indices list
       fp_type *val = nullptr; ///< Non-zero entries list
 
+      /**
+       * @brief Convert the assembled matrix data back to the format used for building
+       *
+       * @note Calling this function will also clear the assembled matrix data
+       *
+       */
+      void _unAssemble();
+
     public:
       /**
        * @brief Construct a new COO Sparse Matrix of given dimensions
@@ -24,51 +50,34 @@ namespace SpMV {
        * @param rows Number of rows
        * @param cols Number of columns
        */
-      SparseMatrix_COO(const size_t nrows, const size_t ncols) : SparseMatrix<fp_type>::SparseMatrix(nrows, ncols) {
-        cout << "Hello From SparseMartix_COO" << endl;
-      };
+      SparseMatrix_COO(const size_t nrows, const size_t ncols) : SparseMatrix<fp_type>::SparseMatrix(nrows, ncols){};
+
+      /**
+       * @brief Destructor for COO Sparse Matrix format. Destory objects created
+       *
+       */
+      virtual ~SparseMatrix_COO();
 
       /**
        * @brief Assemble the COO data structures
        *
+       * @note object state after call is "assembled"
+       *
+       * Converts the SparseMatrix generic map format stored in _buildcoeff to the COO specific
+       * the COO specific data structure and deallocates the map
        */
       void assembleStorage();
 
       /**
-       * @brief I don't know what this does
+       * @brief Compute the product of this matrix and a vector (y = Ax)
        *
+       * @note The contents of y are overwritten by this operation
+       *
+       * @param x Array to multiply with
+       * @param y Array to store result in
        */
-      /*Some return type*/ void getFormat(/*some args*/);
+      void computeMatVecProduct(const fp_type x[], fp_type y[]);
   };
 
-  template <class fp_type>
-  void SparseMatrix_COO<fp_type>::assembleStorage() {
-    assert(this->_state == building);
-    cout << "Hello from SparseMatrix_COO::assembleStorage!" << endl;
-
-    // Convert this buildCoeff dictionary to I, J, val
-    this->I = (size_t *)malloc(this->_nnz * sizeof(size_t));
-    this->J = (size_t *)malloc(this->_nnz * sizeof(size_t));
-    this->val = (fp_type *)malloc(this->_nnz * sizeof(fp_type));
-
-    // Destroy _buildCoeff
-
-    this->_state = assembled;
-    assert(this->_state == assembled);
-  }
-
-  template <class fp_type>
-  void SparseMatrix_COO<fp_type>::getFormat() {
-    assert(this->_state == assembled);
-    cout << "Hello from SparseMatrix_COO::getFormat!" << endl;
-
-    template <class fp_type>
-    void SparseMatrix_COO<fp_type>::getFormat() {
-      assert(this->_state == assembled);
-      cout << "Hello from SparseMatrix_COO::getFormat!" << endl;
-
-      // return new SparseMatrix(this->_ncols,this->_nrows);
-    }
-  }
-
+} // namespace SpMV
 #endif
