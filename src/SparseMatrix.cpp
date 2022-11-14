@@ -1,7 +1,5 @@
 #include "SparseMatrix.hpp"
 
-#include <cassert>
-
 using namespace SpMV;
 
 template class SpMV::SparseMatrix<float>;  // Forces binary code to be generated for float data type

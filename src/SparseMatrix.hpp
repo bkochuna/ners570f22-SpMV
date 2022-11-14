@@ -1,6 +1,7 @@
 #ifndef _SPMV570_
 #define _SPMV570_
 
+#include <cassert>
 #include <cstddef>
 #include <iostream>
 #include <map>
