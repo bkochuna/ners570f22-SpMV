@@ -98,12 +98,6 @@ namespace SpMV {
       virtual void assembleStorage() = 0;
 
       /**
-       * @brief I don't know what this does
-       *
-       */
-      virtual void getFormat();
-
-      /**
        * @brief Compute the matrix vector product y = A*x
        *
        * @param x Vector x

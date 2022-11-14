@@ -77,11 +77,6 @@ namespace SpMV {
       void assembleStorage();
 
       /**
-       * @brief Convert matrix to an alternate format
-       */
-      SparseMatrix<fp_type> *getFormat(string fmt);
-
-      /**
        * @brief Compute the product of this matrix and a vector (y = Ax)
        *
        * @note The contents of y are overwritten by this operation

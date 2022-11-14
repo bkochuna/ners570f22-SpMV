@@ -32,10 +32,3 @@ void SparseMatrix<fp_type>::setCoefficient(const size_t row, const size_t col, c
   this->_nnz = this->_buildCoeff.size();
   assert(this->_state == building);
 }
-
-template <class fp_type>
-void SparseMatrix<fp_type>::getFormat() {
-  assert(this->_state == assembled);
-
-  // return new SparseMatrix(this->_ncols,this->_nrows);
-}
