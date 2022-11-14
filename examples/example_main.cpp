@@ -1,7 +1,10 @@
 #include "SpMV.hpp"
+#include <iostream>
+
+using namespace std;
 
 int main(int argc, char *argv[]) {
-  std::cout << "Hello World!" << std::endl;
+  cout << "Hello World!" << endl;
 
   SpMV::SparseMatrix_JDS<double> *ptr_A = new SpMV::SparseMatrix_JDS<double>(5, 8);
 

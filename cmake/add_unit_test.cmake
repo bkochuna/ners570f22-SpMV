@@ -4,6 +4,10 @@ macro(add_unit_test test_name)
   add_executable(${test_name}_double  ${test_name}.cpp)
   add_executable(${test_name}_float ${test_name}.cpp)
 
+  # Define test link dependency SpMV
+  target_link_libraries(${test_name}_double SpMV)
+  target_link_libraries(${test_name}_float SpMV)
+
   # Compile with -D for what type fp_type is
   target_compile_options(${test_name}_double PRIVATE -D __SPMV_FPTYPE__=double)
   target_compile_options(${test_name}_float PRIVATE -D __SPMV_FPTYPE__=float)

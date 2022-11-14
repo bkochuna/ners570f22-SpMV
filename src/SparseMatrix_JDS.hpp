@@ -12,6 +12,7 @@ Jagged Diagonal Sparse Matrix (JDS) implementation
 // Standard Library Includes
 // =============================================================================
 #include <algorithm>
+#include <cassert>
 #include <vector>
 
 // =============================================================================
