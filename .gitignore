@@ -7,6 +7,9 @@ doc/html/
 # Ignore the build directory
 build/
 
+# Ignore VIM swap files
+*.swp
+
 # ==============================================================================
 # Standard C++ gitignore file from GitHub
 # ==============================================================================
