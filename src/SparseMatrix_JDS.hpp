@@ -6,7 +6,8 @@ Jagged Diagonal Sparse Matrix (JDS) implementation
 @Date    :   2022/10/16
 @Description :
 */
-#pragma once
+#ifndef __SPMV570_JDS__
+#define __SPMV570_JDS__
 
 // =============================================================================
 // Standard Library Includes
@@ -19,8 +20,6 @@ Jagged Diagonal Sparse Matrix (JDS) implementation
 // Extension Includes
 // =============================================================================
 #include "SparseMatrix.hpp"
-// #include "SparseMatrix_COO.hpp"
-// #include "SparseMatrix_DEN.hpp"
 
 // ==============================================================================
 // Class declaration
@@ -109,3 +108,4 @@ namespace SpMV {
   };                                // class SparseMatrix_JDS
 
 } // namespace SpMV
+#endif
