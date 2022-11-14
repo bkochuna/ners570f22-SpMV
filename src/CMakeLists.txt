@@ -1,7 +1,7 @@
 #Define the SpMV library target
 add_library(SpMV
             SparseMatrix.cpp
-            SparseMatrix_JDS.hpp
+            SparseMatrix_JDS.cpp
 )
 
 # Set a CMake variable as a list of private headers to include for installation
