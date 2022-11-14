@@ -21,19 +21,26 @@ add_subdirectory(examples)
 enable_testing()
 add_subdirectory(tests)
 
-# install pre-commit via pip for git formatting/linting hooks
-# Code adapted from https://www.scivision.dev/cmake-install-python-package/
-find_package(Python COMPONENTS Interpreter REQUIRED)
-
-# Do a user install if not using a virtual environment
-if(DEFINED ENV{VIRTUAL_ENV} OR DEFINED ENV{CONDA_PREFIX})
-  set(_pip_args)
+# Install the pre-commit hook if it has not been installed
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.git/hooks/pre-commit")
+  MESSAGE(STATUS "Skipping pre-commit hook install (Already installed)")
 else()
-  set(_pip_args "--user")
-endif()
+  MESSAGE(STATUS "git pre-commit hook does not exist!")
+  MESSAGE(STATUS "Installing git pre-commit hook...")
+  # install pre-commit via pip for git formatting/linting hooks
+  # Code adapted from https://www.scivision.dev/cmake-install-python-package/
+  find_package(Python COMPONENTS Interpreter REQUIRED)
 
-execute_process(COMMAND ${Python_EXECUTABLE} -m pip install ${_pip_args} pre-commit)
-execute_process(COMMAND pre-commit install)
+  # Do a user install if not using a virtual environment
+  if(DEFINED ENV{VIRTUAL_ENV} OR DEFINED ENV{CONDA_PREFIX})
+    set(_pip_args)
+  else()
+    set(_pip_args "--user")
+  endif()
+
+  execute_process(COMMAND ${Python_EXECUTABLE} -m pip install ${_pip_args} pre-commit)
+  execute_process(COMMAND pre-commit install)
+endif()
 
 set_target_properties(SpMV PROPERTIES PUBLIC_HEADER "SparseMatrix.hpp;SparseMatrix_COO.hpp;SparseMatrix_JDS.hpp;SparseMatrix_ELL.hpp;SparseMatrix_CSR.hpp;SparseMatrix_DEN.hpp;unit_test_framework.cpp")
 set_target_properties(SpMV PROPERTIES LINKER_LANGUAGE CXX)
